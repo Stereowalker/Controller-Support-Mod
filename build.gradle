@@ -1,0 +1,164 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+		maven { url = 'https://repo.spongepowered.org/maven' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, modId+".refmap.json"
+}
+
+version = modMinecraftVersion + "-" +modVersion
+group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = modFilename
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', Forge Version: ' + modForgeVersion)
+
+repositories {
+    maven {url = "https://repo.spongepowered.org/maven"} // mixin
+}
+
+minecraft {
+    mappings channel: mappingsChannel, version: mappingsVersion
+    //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client {
+            workingDirectory project.file('run/client')
+            property 'forge.logging.markers', 'REGISTRIES'
+			arg "-mixin.config="+modId+".mixins.json"
+			
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+			
+			args '--username', 'CodeHexIO', '--uuid', 'c5751ce1d50e4d47ca120e1ea1c75542'
+
+            mods {
+                modId {
+                    source sourceSets.main
+                }
+            }
+        }
+		
+		player2 {
+            workingDirectory project.file('run/client2')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be changed as needed. 
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+			arg "-mixin.config="+modId+".mixins.json"
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+			
+			args '--username', 'Dev', '--uuid', 'b4640bf0c41d3c36b901fd2d90b64431'
+
+            mods {
+                modId {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run/server')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be changed as needed. 
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+			arg "-mixin.config="+modId+".mixins.json"
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                modId {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modForgeVersion
+	annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+	compile 'org.spongepowered:mixin:0.8'
+	compile fileTree(include: ['*.jar'], dir: 'libs')
+}
+
+// Process resources on build
+processResources {
+	// This will ensure that this task is redone when the versions change.
+	inputs.property 'version', modVersion
+	// Replace stuff in mods.toml, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include 'META-INF/mods.toml'
+		// Replace version
+		expand 'version': modVersion
+	}
+	// Copy everything else except the mods.toml
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'META-INF/mods.toml'
+	}
+}
+
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": modFilename,
+            "Specification-Vendor": "Stereowalker",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": modVersion,
+            "Implementation-Vendor" :"Stereowalker",
+            "MixinConfigs": modId+".mixins.json",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish task
+// we define a custom artifact that is sourced from the reobfJar output task
+// and then declare that to be published
+// Note you'll need to add a repository here
+//def reobfFile = file("$buildDir/reobfJar/output.jar")
+//def reobfArtifact = artifacts.add('default', reobfFile) {
+//    type 'jar'
+//    builtBy 'reobfJar'
+//}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}

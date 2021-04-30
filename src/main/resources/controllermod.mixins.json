@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.stereowalker.controllermod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "controllermod.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
