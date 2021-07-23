@@ -99,6 +99,8 @@ public class ControllerMod
 
 	public void clientRegistries(final FMLClientSetupEvent event){
 		ControllerBindings.registerAll();
+
+		controllerSettings.loadOptions();
 	}
 
 	public static ResourceLocation location(String name)

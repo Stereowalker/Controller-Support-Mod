@@ -167,8 +167,6 @@ public class ControllerSettings {
 	public ControllerSettings(Minecraft mcIn, File mcDataDir) {
 		this.mc = mcIn;
 		this.optionsFile = new File(mcDataDir, "controller-options.txt");
-
-		this.loadOptions();
 	}
 
 	public void setKeyBindingCode(ControllerModel model, ControllerBinding keyBindingIn, String inputIn) {
