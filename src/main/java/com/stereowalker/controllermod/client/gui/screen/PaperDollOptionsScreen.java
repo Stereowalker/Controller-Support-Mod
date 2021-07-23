@@ -41,7 +41,7 @@ public class PaperDollOptionsScreen extends Screen {
 		addOption(true, 4, Config.isMoving);
 		addOption(false, 4, Config.isRiding);
 		addOption(true, 5, Config.isSpinning);
-		addOption(false, 5, settings.paperDoll.showSwimming, (get) -> settings.paperDoll.showSwimming = get, new TranslationTextComponent("gui.paper_doll.sprinting"));
+		addOption(false, 5, settings.paperDoll.showSprinting, (get) -> settings.paperDoll.showSprinting= get, new TranslationTextComponent("gui.paper_doll.sprinting"));
 		addOption(true, 6, settings.paperDoll.showSwimming, (get) -> settings.paperDoll.showSwimming = get, new TranslationTextComponent("gui.paper_doll.swimming"));
 		addOption(false, 6, Config.isUsing);
 		this.addButton(new Button(this.width / 2 - 100, this.height  / 6 + 168, 200, 20, new TranslationTextComponent("gui.done"), (p_212984_1_) -> {
