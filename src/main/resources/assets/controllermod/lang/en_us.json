@@ -41,6 +41,7 @@
 	"gui.paper_doll.crawling": "Crawling",
 	"gui.paper_doll.sprinting": "Sprinting",
 	"gui.paper_doll.crouching": "Crouching",
+	"gui.paper_doll.flying": "Flying",
 	
 	"gui.positive_triggers": "Positive Triggers",
 	"gui.negative_triggers": "Negative Triggers",

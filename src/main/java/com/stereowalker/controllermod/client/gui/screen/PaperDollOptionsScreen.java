@@ -35,7 +35,7 @@ public class PaperDollOptionsScreen extends Screen {
 		addOption(true, 1, settings.paperDoll.showCrawling, (get) -> settings.paperDoll.showCrawling = get, new TranslationTextComponent("gui.paper_doll.crawling"));
 		addOption(false, 1, settings.paperDoll.showCrouching, (get) -> settings.paperDoll.showCrouching = get, new TranslationTextComponent("gui.paper_doll.crouching"));
 		addOption(true, 2, Config.isElytraFlying);
-		addOption(false, 2, Config.isFlying);
+		addOption(false, 2, settings.paperDoll.showFlying, (get) -> settings.paperDoll.showFlying = get, new TranslationTextComponent("gui.paper_doll.flying"));
 		addOption(true, 3, Config.isHurt);
 		addOption(false, 3, Config.isJumping);
 		addOption(true, 4, Config.isMoving);

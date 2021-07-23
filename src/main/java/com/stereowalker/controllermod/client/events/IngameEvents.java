@@ -57,7 +57,6 @@ public class IngameEvents {
 			}
 			renderHeadYaw = newRenderHeadYaw;
 		}
-		boolean isFlying = Config.isFlying.get() && (player.abilities.isFlying);
 		boolean isElytraFlying = Config.isElytraFlying.get() && (player.isElytraFlying());
 		boolean isRiding = Config.isRiding.get() && (player.isPassenger());
 		boolean isSpinning = Config.isSpinning.get() && (player.isSpinAttacking());
@@ -72,7 +71,8 @@ public class IngameEvents {
 			if (!Config.hidePaperDoll.get()) {
 				if ((isAttacking || isBurning || 
 					paperDoll.renderCrawling(player) || 
-					paperDoll.renderCrouching(player) || isElytraFlying || isFlying || isHurt || isJumping || isMoving || isRiding || isSpinning || 
+					paperDoll.renderCrouching(player) || isElytraFlying || 
+					paperDoll.renderFlying(player) || isHurt || isJumping || isMoving || isRiding || isSpinning || 
 					paperDoll.renderSprinting(player) || 
 					paperDoll.renderSwimming(player) || isUsing || isAlwaysOn)) {
 					paperDollShownTicks = 0;

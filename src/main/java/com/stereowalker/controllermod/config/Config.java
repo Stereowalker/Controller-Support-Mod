@@ -19,7 +19,6 @@ public class Config {
 	public static ForgeConfigSpec.BooleanValue hideCoordinates;
 	public static ForgeConfigSpec.BooleanValue hidePaperDoll;
 	//PaperDollOptions
-	public static ForgeConfigSpec.BooleanValue isFlying;
 	public static ForgeConfigSpec.BooleanValue isElytraFlying;
 	public static ForgeConfigSpec.BooleanValue isRiding;
 	public static ForgeConfigSpec.BooleanValue isSpinning;
@@ -39,7 +38,6 @@ public class Config {
 				.define("developerOptions.debug_mode", false);
 
 		//PaperDoll
-		isFlying = client.define("Paper Doll.Flying", true);
 		isElytraFlying = client.define("Paper Doll.Elytra Flying", true);
 		isRiding = client.define("Paper Doll.Riding", true);
 		isSpinning = client.define("Paper Doll.Spinning", true);

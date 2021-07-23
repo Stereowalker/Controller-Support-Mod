@@ -237,6 +237,10 @@ public class ControllerSettings {
 					if ("paperDoll_showCrouching".equals(s)) {
 						this.paperDoll.showCrouching = "true".equals(s1);
 					}
+					
+					if ("paperDoll_showFlying".equals(s)) {
+						this.paperDoll.showFlying = "true".equals(s1);
+					}
 
 					if ("customControls_positiveTriggerAxes".equals(s)) {
 						String[] pts = s1.split(",");
@@ -318,10 +322,11 @@ public class ControllerSettings {
 				}
 			}
 			printwriter.println("customControls_negativeTriggerAxes:"+neg);
-			printwriter.println("paperDoll_showSwimming:"+this.paperDoll.showSwimming);
 			printwriter.println("paperDoll_showCrawling:"+this.paperDoll.showCrawling);
-			printwriter.println("paperDoll_showSprinting:"+this.paperDoll.showSprinting);
 			printwriter.println("paperDoll_showCrouching:"+this.paperDoll.showCrouching);
+			printwriter.println("paperDoll_showFlying:"+this.paperDoll.showFlying);
+			printwriter.println("paperDoll_showSprinting:"+this.paperDoll.showSprinting);
+			printwriter.println("paperDoll_showSwimming:"+this.paperDoll.showSwimming);
 			for(ControllerModel model : ControllerModel.values()) {
 				for(ControllerBinding keybinding : this.controllerBindings) {
 					printwriter.println(model.getModelName() + "_binding_" + keybinding.getDescripti() + ":" + keybinding.getButtonOnController(model) + ":" + keybinding.getInputType(model)+ ":" + keybinding.isAxisInverted(model));
