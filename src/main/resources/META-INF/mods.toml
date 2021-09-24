@@ -1,6 +1,6 @@
 
 modLoader="javafml"
-loaderVersion="[34,)"
+loaderVersion="[37,)"
 license="All Rights Reserved"
 issueTrackerURL="https://github.com/Stereowalker/Controller-Support-Mod/issues"
 logoFile="Splitscreen and Controller Mod.png"
@@ -10,27 +10,22 @@ version="${version}"
 displayName="Controller Support"
 updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Controller-Support-Mod/master/update.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/controller-mod"
-credits="Obviously you for downloading this mod"
+credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
 authors="Stereowalker"
 description='''
 Grants the ablility to play Minecraft with controllers and gives opportunity to those who want to play split-screen.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.controllermod]] #optional
-    # the modid of the dependency
     modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[34.1.5,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    versionRange="[37,)" #mandatory
     ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="CLIENT"
 # Here's another dependency
 [[dependencies.controllermod]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3,]"
+    versionRange="[1.17.1,1.18]"
     ordering="NONE"
     side="CLIENT"
