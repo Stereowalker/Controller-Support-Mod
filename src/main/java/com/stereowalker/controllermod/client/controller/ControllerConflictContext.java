@@ -1,7 +1,7 @@
 package com.stereowalker.controllermod.client.controller;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 
 public enum ControllerConflictContext implements IKeyConflictContext
@@ -11,10 +11,11 @@ public enum ControllerConflictContext implements IKeyConflictContext
      * Gui key bindings are only used when a {@link GuiScreen} is open.
      */
     GUI {
-        @Override
+        @SuppressWarnings("resource")
+		@Override
         public boolean isActive()
         {
-            return Minecraft.getInstance().currentScreen != null && !CONTAINER.isActive();
+            return Minecraft.getInstance().screen != null && !CONTAINER.isActive();
         }
 
         @Override
@@ -25,13 +26,14 @@ public enum ControllerConflictContext implements IKeyConflictContext
     },
 
     /**
-     * Gui key bindings are only used when a {@link ContainerScreen} is open.
+     * Gui key bindings are only used when a {@link AbstractContainerScreen} is open.
      */
     CONTAINER {
-        @Override
+        @SuppressWarnings("resource")
+		@Override
         public boolean isActive()
         {
-            return Minecraft.getInstance().currentScreen instanceof ContainerScreen<?>;
+            return Minecraft.getInstance().screen instanceof AbstractContainerScreen<?>;
         }
 
         @Override

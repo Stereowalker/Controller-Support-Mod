@@ -7,19 +7,19 @@ import java.util.Map;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWJoystickCallbackI;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.VirtualMouseHelper;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.config.Config;
 
-import net.minecraft.client.GameSettings;
-import net.minecraft.client.KeyboardListener;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -28,15 +28,16 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 public class ControllerUtil {
 	public static VirtualMouseHelper virtualmouse = new VirtualMouseHelper(Minecraft.getInstance());
 
-	static long handle = Minecraft.getInstance().getMainWindow().getHandle();
+	static long handle = Minecraft.getInstance().getWindow().getWindow();
 
-	static MouseHelper mouse() {
-		return Minecraft.getInstance().mouseHelper;
+	@SuppressWarnings("resource")
+	static MouseHandler mouse() {
+		return Minecraft.getInstance().mouseHandler;
 	}
 
-	static KeyboardListener keyboard = (Minecraft.getInstance()).keyboardListener;
+	static KeyboardHandler keyboard = (Minecraft.getInstance()).keyboardHandler;
 
-	static GameSettings settings = (Minecraft.getInstance()).gameSettings;
+	static Options settings = (Minecraft.getInstance()).options;
 
 	public static double dead_zone = ((Double)Config.deadzone.get()).doubleValue();
 
@@ -56,8 +57,8 @@ public class ControllerUtil {
 		return /*GLFW.glfwJoystickIsGamepad(controller) &&*/ GLFW.glfwJoystickPresent(controller);
 	}
 
-	public static int getKeybindCode(KeyBinding keybinding) {
-		return keybinding.getKey().getKeyCode();
+	public static int getKeybindCode(KeyMapping keybinding) {
+		return keybinding.getKey().getValue();
 	}
 
 	public static String getControllerInputId(int input) {
@@ -94,11 +95,11 @@ public class ControllerUtil {
 		for (int i = 32; i <= 348; i++) {
 			int state = GLFW.glfwGetKey(handle, i);
 			if (state == 1)
-				keyboard.onKeyEvent(handle, i, 0, 0, 0); 
+				keyboard.keyPress(handle, i, 0, 0, 0); 
 		} 
 		for (int j = 0; j <= 7; j++) {
-			virtualmouse.mouseButtonCallback(handle, j, 0, 0);
-			mouse().mouseButtonCallback(handle, j, 0, 0);
+			virtualmouse.onPress(handle, j, 0, 0);
+			mouse().onPress(handle, j, 0, 0);
 		} 
 		keyMap.forEach((key, value)-> {
 			value = 0;
@@ -158,7 +159,7 @@ public class ControllerUtil {
 		return 0.0F;
 	}
 	
-	public static void updateButtonState(String buttonId, Controller controller, InputMappings.Type keyType, int buttonOnComputer, InputType inputType) {
+	public static void updateButtonState(String buttonId, Controller controller, InputConstants.Type keyType, int buttonOnComputer, InputType inputType) {
 		if (buttonId != null && buttonId != " " && buttonId != "???") {
 			float controllerButton =2.0F; 
 			for (int i = 0; i < controller.getButtons().capacity(); i++) {
@@ -183,72 +184,72 @@ public class ControllerUtil {
 			if (buttonId == "DOWN") controllerButton = DOWN;
 			if (buttonId == "LEFT") controllerButton = LEFT;
 			if (buttonId == "RIGHT") controllerButton = RIGHT;
-			if (keyType == InputMappings.Type.KEYSYM) {
+			if (keyType == InputConstants.Type.KEYSYM) {
 				if (keyMap.isEmpty()) putKeysInMap(keyMap);
 				if (keyToggleMap.isEmpty()) putKeysInMap(keyToggleMap);
 				if (inputType == InputType.PRESS) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)keyMap.get(buttonId)).intValue() == 0) {
 						keyMap.put(buttonId, Integer.valueOf(1));
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 1, 0);
+						keyboard.keyPress(handle, buttonOnComputer, 0, 1, 0);
 					} 
 					if (controllerButton <= dead_zone && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
 						keyMap.put(buttonId, Integer.valueOf(0));
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 0, 0);
+						keyboard.keyPress(handle, buttonOnComputer, 0, 0, 0);
 					} 
 				} 
 				if (inputType == InputType.TOGGLE) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 0) {
 						keyMap.put(buttonId, Integer.valueOf(1));
 						keyToggleMap.put(buttonId, Integer.valueOf(1));
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 1, 0);
+						keyboard.keyPress(handle, buttonOnComputer, 0, 1, 0);
 					} 
 					if (controllerButton <= dead_zone && ((Integer)keyMap.get(buttonId)).intValue() == 1)
 						keyMap.put(buttonId, Integer.valueOf(0)); 
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 1) {
 						keyMap.put(buttonId, Integer.valueOf(1));
 						keyToggleMap.put(buttonId, Integer.valueOf(0));
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 0, 0);
+						keyboard.keyPress(handle, buttonOnComputer, 0, 0, 0);
 					} 
 				} 
 				if (inputType == InputType.HOLD) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D))
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 1, 0); 
+						keyboard.keyPress(handle, buttonOnComputer, 0, 1, 0); 
 					if (controllerButton <= dead_zone)
-						keyboard.onKeyEvent(handle, buttonOnComputer, 0, 0, 0); 
+						keyboard.keyPress(handle, buttonOnComputer, 0, 0, 0); 
 				} 
 			} 
-			if (keyType == InputMappings.Type.MOUSE) {
+			if (keyType == InputConstants.Type.MOUSE) {
 				if (mouseMap.isEmpty()) putKeysInMap(mouseMap);
 				if (mouseToggleMap.isEmpty()) putKeysInMap(mouseToggleMap);
 				if (inputType == InputType.PRESS) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)mouseMap.get(buttonId)).intValue() == 0) {
 						mouseMap.put(buttonId, Integer.valueOf(1));
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 1, 0);
+						virtualmouse.onPress(handle, buttonOnComputer, 1, 0);
 					} 
 					if (controllerButton <= dead_zone && ((Integer)mouseMap.get(buttonId)).intValue() == 1) {
 						mouseMap.put(buttonId, Integer.valueOf(0));
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 0, 0);
+						virtualmouse.onPress(handle, buttonOnComputer, 0, 0);
 					} 
 				}
 				if (inputType == InputType.TOGGLE) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)mouseMap.get(buttonId)).intValue() == 0 && ((Integer)mouseToggleMap.get(buttonId)).intValue() == 0) {
 						mouseMap.put(buttonId, Integer.valueOf(1));
 						mouseToggleMap.put(buttonId, Integer.valueOf(1));
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 1, 0);
+						virtualmouse.onPress(handle, buttonOnComputer, 1, 0);
 					} 
 					if (controllerButton <= dead_zone && ((Integer)mouseMap.get(buttonId)).intValue() == 1)
 						mouseMap.put(buttonId, Integer.valueOf(0)); 
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D) && ((Integer)mouseMap.get(buttonId)).intValue() == 0 && ((Integer)mouseToggleMap.get(buttonId)).intValue() == 1) {
 						mouseMap.put(buttonId, Integer.valueOf(1));
 						mouseToggleMap.put(buttonId, Integer.valueOf(0));
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 0, 0);
+						virtualmouse.onPress(handle, buttonOnComputer, 0, 0);
 					} 
 				}
 				if (inputType == InputType.HOLD) {
 					if ((controllerButton > dead_zone && controllerButton <= 1.0D))
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 2, 0); 
+						virtualmouse.onPress(handle, buttonOnComputer, 2, 0); 
 					if (controllerButton <= dead_zone)
-						virtualmouse.mouseButtonCallback(handle, buttonOnComputer, 0, 0); 
+						virtualmouse.onPress(handle, buttonOnComputer, 0, 0); 
 				}
 			} 
 		} 
@@ -270,60 +271,60 @@ public class ControllerUtil {
 			LEFT = controller.getDpadLeft();
 			RIGHT = controller.getDpadRight();
 		}
-		int width = Minecraft.getInstance().getMainWindow().getWidth();
-		int height = Minecraft.getInstance().getMainWindow().getHeight();
+		int width = Minecraft.getInstance().getWindow().getWidth();
+		int height = Minecraft.getInstance().getWindow().getHeight();
 		float yMod = height / 480.0F;
 		float xMod = width / 854.0F;
-		if (virtualmouse.getMouseX() >= 0.0D && virtualmouse.getMouseX() <= width && virtualmouse.getMouseY() >= 0.0D && virtualmouse.getMouseY() <= height && !isCamera) {
+		if (virtualmouse.xpos() >= 0.0D && virtualmouse.xpos() <= width && virtualmouse.ypos() >= 0.0D && virtualmouse.ypos() <= height && !isCamera) {
 			if (xLAxis >= -1.0F && xLAxis < -dead_zone)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + xLAxis * menuSensitivity * 25.0D * xMod, virtualmouse.getMouseY() + 0.0D); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + xLAxis * menuSensitivity * 25.0D * xMod, virtualmouse.ypos() + 0.0D); 
 			if (xLAxis <= 1.0F && xLAxis > dead_zone)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + xLAxis * menuSensitivity * 25.0D * xMod, virtualmouse.getMouseY() + 0.0D); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + xLAxis * menuSensitivity * 25.0D * xMod, virtualmouse.ypos() + 0.0D); 
 			if (yLAxis >= -1.0F && yLAxis < -dead_zone)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + 0.0D, virtualmouse.getMouseY() + yLAxis * menuSensitivity * 25.0D * yMod); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + 0.0D, virtualmouse.ypos() + yLAxis * menuSensitivity * 25.0D * yMod); 
 			if (yLAxis <= 1.0F && yLAxis > dead_zone)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + 0.0D, virtualmouse.getMouseY() + yLAxis * menuSensitivity * 25.0D * yMod); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + 0.0D, virtualmouse.ypos() + yLAxis * menuSensitivity * 25.0D * yMod); 
 			if (RIGHT == 1)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + 0.25D * menuSensitivity * 25.0D * xMod, virtualmouse.getMouseY() + 0.0D); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + 0.25D * menuSensitivity * 25.0D * xMod, virtualmouse.ypos() + 0.0D); 
 			if (LEFT == 1)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() - 0.25D * menuSensitivity * 25.0D * xMod, virtualmouse.getMouseY() + 0.0D); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() - 0.25D * menuSensitivity * 25.0D * xMod, virtualmouse.ypos() + 0.0D); 
 			if (UP == 1)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + 0.0D, virtualmouse.getMouseY() - 0.25D * menuSensitivity * 25.0D * yMod); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + 0.0D, virtualmouse.ypos() - 0.25D * menuSensitivity * 25.0D * yMod); 
 			if (DOWN == 1)
-				virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX() + 0.0D, virtualmouse.getMouseY() + 0.25D * menuSensitivity * 25.0D * yMod); 
+				virtualmouse.onMove(handle, virtualmouse.xpos() + 0.0D, virtualmouse.ypos() + 0.25D * menuSensitivity * 25.0D * yMod); 
 		} else if (mouse().isMouseGrabbed() || isCamera) {
 			if (xLAxis >= -1.0F && xLAxis < -dead_zone)
-				mouse().cursorPosCallback(handle, mouse().getMouseX() + xLAxis * ingameSensitivity * 100.0D, mouse().getMouseY() + 0.0D); 
+				mouse().onMove(handle, mouse().xpos() + xLAxis * ingameSensitivity * 100.0D, mouse().ypos() + 0.0D); 
 			if (xLAxis <= 1.0F && xLAxis > dead_zone)
-				mouse().cursorPosCallback(handle, mouse().getMouseX() + xLAxis * ingameSensitivity * 100.0D, mouse().getMouseY() + 0.0D); 
+				mouse().onMove(handle, mouse().xpos() + xLAxis * ingameSensitivity * 100.0D, mouse().ypos() + 0.0D); 
 			if (yLAxis >= -1.0F && yLAxis < -dead_zone)
-				mouse().cursorPosCallback(handle, mouse().getMouseX() + 0.0D, mouse().getMouseY() + yLAxis * ingameSensitivity * 100.0D); 
+				mouse().onMove(handle, mouse().xpos() + 0.0D, mouse().ypos() + yLAxis * ingameSensitivity * 100.0D); 
 			if (yLAxis <= 1.0F && yLAxis > dead_zone)
-				mouse().cursorPosCallback(handle, mouse().getMouseX() + 0.0D, mouse().getMouseY() + yLAxis * ingameSensitivity * 100.0D); 
+				mouse().onMove(handle, mouse().xpos() + 0.0D, mouse().ypos() + yLAxis * ingameSensitivity * 100.0D); 
 		}
-		if (virtualmouse.getMouseX() < 0.0D) {
-			virtualmouse.cursorPosCallback(handle, 0.0D, virtualmouse.getMouseY());
-		} else if (virtualmouse.getMouseY() < 0.0D) {
-			virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX(), 0.0D);
-		} else if (virtualmouse.getMouseX() > width) {
-			virtualmouse.cursorPosCallback(handle, width, virtualmouse.getMouseY());
-		} else if (virtualmouse.getMouseY() > height) {
-			virtualmouse.cursorPosCallback(handle, virtualmouse.getMouseX(), height);
-		} else if (virtualmouse.getMouseX() == 0.0D && virtualmouse.getMouseY() == 0.0D) {
-			virtualmouse.cursorPosCallback(handle, (width / 2), (height / 2));
+		if (virtualmouse.xpos() < 0.0D) {
+			virtualmouse.onMove(handle, 0.0D, virtualmouse.ypos());
+		} else if (virtualmouse.ypos() < 0.0D) {
+			virtualmouse.onMove(handle, virtualmouse.xpos(), 0.0D);
+		} else if (virtualmouse.xpos() > width) {
+			virtualmouse.onMove(handle, width, virtualmouse.ypos());
+		} else if (virtualmouse.ypos() > height) {
+			virtualmouse.onMove(handle, virtualmouse.xpos(), height);
+		} else if (virtualmouse.xpos() == 0.0D && virtualmouse.ypos() == 0.0D) {
+			virtualmouse.onMove(handle, (width / 2), (height / 2));
 		} 
-		if (virtualmouse.getMouseX() != prevX || virtualmouse.getMouseY() != prevY)
-			mouse().cursorPosCallback(handle, virtualmouse.getMouseX(), virtualmouse.getMouseY()); 
-		prevX = virtualmouse.getMouseX();
-		prevY = virtualmouse.getMouseY();
+		if (virtualmouse.xpos() != prevX || virtualmouse.ypos() != prevY)
+			mouse().onMove(handle, virtualmouse.xpos(), virtualmouse.ypos()); 
+		prevX = virtualmouse.xpos();
+		prevY = virtualmouse.ypos();
 	}
 
 	public static void handleIngameInput(Controller controller, float xAxis, float yAxis) {
 		if (isListening) {
-			keyboard.enableRepeatEvents(false);
+			keyboard.setSendRepeatsToGui(false);
 			for (ControllerBinding binding : ControllerMod.getInstance().controllerSettings.controllerBindings) {
 				boolean flag = true;
-				if(ControllerMod.getInstance().controllerSettings.useAxisToMove && (binding.getDescripti() == settings.keyBindForward.getKeyDescription() || binding.getDescripti() == settings.keyBindRight.getKeyDescription() || binding.getDescripti() == settings.keyBindLeft.getKeyDescription() || binding.getDescripti() == settings.keyBindBack.getKeyDescription())) flag = false;
+				if(ControllerMod.getInstance().controllerSettings.useAxisToMove && (binding.getDescripti() == settings.keyUp.getName() || binding.getDescripti() == settings.keyRight.getName() || binding.getDescripti() == settings.keyLeft.getName() || binding.getDescripti() == settings.keyDown.getName())) flag = false;
 				if (flag && binding != null) {
 					if (binding.isBoundToButton(controller.getModel()) && (binding.getConflict() == KeyConflictContext.IN_GAME || binding.getConflict() == ControllerConflictContext.IN_GAME || binding.getConflict() == KeyConflictContext.UNIVERSAL))
 						controller.updateButtonState(binding);
@@ -343,9 +344,9 @@ public class ControllerUtil {
 			}
 			updateMousePosition(xAxis, yAxis, controller, false, true);
 			if (scoll >= -1.0F && scoll < -0.1F)
-				mouse().scrollCallback(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
+				mouse().onScroll(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
 			if (scoll <= 1.0F && scoll > 0.1F)
-				mouse().scrollCallback(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
+				mouse().onScroll(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
 		}
 	}
 
@@ -353,7 +354,7 @@ public class ControllerUtil {
 		if (isListening) {
 			for (ControllerBinding binding : ControllerMod.getInstance().controllerSettings.controllerBindings) {
 				boolean flag = true;
-				if (/* binding.getDescripti() == settings.keyBindInventory.getKeyDescription() || */binding.getDescripti() == settings.keyBindUseItem.getKeyDescription()) flag = false;
+				if (/* binding.getDescripti() == settings.keyBindInventory.getName() || */binding.getDescripti() == settings.keyUse.getName()) flag = false;
 				if (flag && binding != null) {
 					if (binding.isBoundToButton(controller.getModel()) && (binding.getConflict() == KeyConflictContext.GUI || binding.getConflict() == ControllerConflictContext.CONTAINER || binding.getConflict() == KeyConflictContext.UNIVERSAL))
 						controller.updateButtonState(binding);
@@ -363,9 +364,9 @@ public class ControllerUtil {
 
 		updateMousePosition(xAxis, yAxis, controller, false, false);
 		if (scoll >= -1.0F && scoll < -0.1D)
-			mouse().scrollCallback(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
+			mouse().onScroll(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
 		if (scoll <= 1.0F && scoll > 0.1D)
-			mouse().scrollCallback(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
+			mouse().onScroll(handle, 0.0D, -scoll * menuSensitivity * 100.0D / 20.0D); 
 	}
 
 	public static void setGamepadCallbacks(GLFWJoystickCallbackI p_216503_2_) {
@@ -398,8 +399,8 @@ public class ControllerUtil {
 			}
 		}
 
-		public ITextComponent getDisplayName() {
-			return new TranslationTextComponent("input_type." + this.name);
+		public Component getDisplayName() {
+			return new TranslatableComponent("input_type." + this.name);
 		}
 	}
 }

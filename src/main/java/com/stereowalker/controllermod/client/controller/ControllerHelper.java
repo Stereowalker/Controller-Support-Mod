@@ -6,7 +6,7 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.toasts.ControllerStatusToast;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 
 public class ControllerHelper {
 	private final Minecraft minecraft;
@@ -23,12 +23,12 @@ public class ControllerHelper {
 			GLFW.glfwGetGamepadName(jid);
 			controller = new Controller(jid, GLFW.glfwGetJoystickName(jid), GLFW.glfwGetJoystickGUID(jid), GLFW.glfwGetJoystickUserPointer(jid));
 			ControllerMod.getInstance().controllers.add(controller);
-			ControllerStatusToast.addOrUpdate(minecraft.getToastGui(), ControllerStatusToast.Type.CONNECT, new StringTextComponent(controller.getName()));
+			ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.CONNECT, new TextComponent(controller.getName()));
 		}
 		else if (disconnected) {
 			controller = ControllerMod.getInstance().getController(jid);
 			if (controller != null) {
-				ControllerStatusToast.addOrUpdate(minecraft.getToastGui(), ControllerStatusToast.Type.DISCONNECT, new StringTextComponent(controller.getName()));
+				ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.DISCONNECT, new TextComponent(controller.getName()));
 				ControllerMod.getInstance().controllers.remove(controller);
 			}
 		}

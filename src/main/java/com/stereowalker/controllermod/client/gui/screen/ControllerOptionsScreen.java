@@ -2,21 +2,21 @@ package com.stereowalker.controllermod.client.gui.screen;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractSlider;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +29,7 @@ public class ControllerOptionsScreen extends Screen {
 	private ControllerMod mod;
 
 	public ControllerOptionsScreen(Screen screenIn) {
-		super(new TranslationTextComponent("controller_options.title"));
+		super(new TranslatableComponent("controller_options.title"));
 		this.previousScreen = screenIn;
 		this.mod = ControllerMod.getInstance();
 	}
@@ -46,43 +46,43 @@ public class ControllerOptionsScreen extends Screen {
 		}
 		boolean hasName = GLFW.glfwGetJoystickName(ControllerUtil.controller) != null;
 		boolean controllerPresent = ControllerUtil.isControllerAvailable(ControllerUtil.controller);
-		prevController = this.addButton(new Button(this.width / 2 - 155, this.height  / 6, 20, 20, new StringTextComponent("<<"), (p_212984_1_) -> {
+		prevController = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6, 20, 20, new TextComponent("<<"), (p_212984_1_) -> {
 			if(ControllerUtil.controller>0)ControllerUtil.controller = ControllerUtil.controller-1;
 			if (!ControllerUtil.isControllerAvailable(ControllerUtil.controller)) ControllerUtil.enableController = false;
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		ITextComponent name;
+		Component name;
 		if (hasName) {
-			name = new TranslationTextComponent("<").appendString((ControllerUtil.controller+1)+"> "+GLFW.glfwGetJoystickName(ControllerUtil.controller)+" [").appendSibling(new TranslationTextComponent(ControllerUtil.isControllerAvailable(ControllerUtil.controller) ? "controller.connected" : "controller.disconnected")).appendString("]"+" : ").appendSibling(new TranslationTextComponent(ControllerUtil.enableController ? "options.on" : "options.off"));
+			name = new TranslatableComponent("<").append((ControllerUtil.controller+1)+"> "+GLFW.glfwGetJoystickName(ControllerUtil.controller)+" [").append(new TranslatableComponent(ControllerUtil.isControllerAvailable(ControllerUtil.controller) ? "controller.connected" : "controller.disconnected")).append("]"+" : ").append(new TranslatableComponent(ControllerUtil.enableController ? "options.on" : "options.off"));
 		} else {
-			name = new TranslationTextComponent("<").appendString((ControllerUtil.controller+1)+"> ");
+			name = new TranslatableComponent("<").append((ControllerUtil.controller+1)+"> ");
 		}
 		if (!controllerPresent) {
 			Config.controllerModel.set(ControllerModel.CUSTOM);
 		}
-		controller = this.addButton(new Button(this.width / 2 - 125, this.height  / 6, 250, 20, name, (p_212984_1_) -> {
+		controller = this.addRenderableWidget(new Button(this.width / 2 - 125, this.height  / 6, 250, 20, name, (p_212984_1_) -> {
 			ControllerUtil.enableController = !ControllerUtil.enableController;
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		nextController = this.addButton(new Button(this.width / 2 + 135, this.height  / 6, 20, 20, new StringTextComponent(">>"), (p_212984_1_) -> {
+		nextController = this.addRenderableWidget(new Button(this.width / 2 + 135, this.height  / 6, 20, 20, new TextComponent(">>"), (p_212984_1_) -> {
 			if(ControllerUtil.controller<ControllerMod.getInstance().getTotalConnectedControllers())ControllerUtil.controller = ControllerUtil.controller+1;
 			if (!ControllerUtil.isControllerAvailable(ControllerUtil.controller)) ControllerUtil.enableController = false;
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		this.addButton(new IngameSensitivitySlider(this, this.width / 2 - 155, this.height  / 6 + 24, 150));
-		this.addButton(new MenuSensitivitySlider(this, this.width / 2 + 5, this.height  / 6 + 24, 150));
-		this.addButton(new Button(this.width / 2 - 155, this.height  / 6 + 48, 150, 20, new TranslationTextComponent("gui.useAxisToMove").appendString(" : ").appendSibling(DialogTexts.optionsEnabled(ControllerMod.getInstance().controllerSettings.useAxisToMove)), (p_212984_1_) -> {
+		this.addRenderableWidget(new IngameSensitivitySlider(this, this.width / 2 - 155, this.height  / 6 + 24, 150));
+		this.addRenderableWidget(new MenuSensitivitySlider(this, this.width / 2 + 5, this.height  / 6 + 24, 150));
+		this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6 + 48, 150, 20, new TranslatableComponent("gui.useAxisToMove").append(" : ").append(CommonComponents.optionStatus(ControllerMod.getInstance().controllerSettings.useAxisToMove)), (p_212984_1_) -> {
 			ControllerMod.getInstance().controllerSettings.useAxisToMove = !ControllerMod.getInstance().controllerSettings.useAxisToMove;
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		this.addButton(new Button(this.width / 2 + 5, this.height  / 6 + 48, 150, 20, new TranslationTextComponent("gui.editControllerInput"), (p_212984_1_) -> {
-			this.getMinecraft().displayGuiScreen(new ControllerInputOptionsScreen(this, null, 0));
+		this.addRenderableWidget(new Button(this.width / 2 + 5, this.height  / 6 + 48, 150, 20, new TranslatableComponent("gui.editControllerInput"), (p_212984_1_) -> {
+			this.getMinecraft().setScreen(new ControllerInputOptionsScreen(this, null, 0));
 		}));
-		this.addButton(new Button(this.width / 2 - 155, this.height  / 6 + 72, 150, 20, new TranslationTextComponent("gui.paperDollOptions"), (p_212984_1_) -> {
-			this.minecraft.displayGuiScreen(new PaperDollOptionsScreen(previousScreen));
+		this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6 + 72, 150, 20, new TranslatableComponent("gui.paperDollOptions"), (p_212984_1_) -> {
+			this.minecraft.setScreen(new PaperDollOptionsScreen(previousScreen));
 		}));
-		Button trigger = this.addButton(new Button(this.width / 2 + 5, this.height  / 6 + 72, 150, 20, new TranslationTextComponent("gui.triggerSetup"), (p_212984_1_) -> {
-			this.getMinecraft().displayGuiScreen(new TriggerSetupScreen(this));
+		Button trigger = this.addRenderableWidget(new Button(this.width / 2 + 5, this.height  / 6 + 72, 150, 20, new TranslatableComponent("gui.triggerSetup"), (p_212984_1_) -> {
+			this.getMinecraft().setScreen(new TriggerSetupScreen(this));
 		}));
 		if (ControllerUtil.enableController && controllerPresent) {
 			trigger.active = (Config.controllerModel.get() == ControllerModel.CUSTOM || Config.debug_mode.get()) &&  mod.
@@ -93,17 +93,17 @@ public class ControllerOptionsScreen extends Screen {
 		else {
 			trigger.active = false;
 		}
-		this.addButton(new DeadzoneSlider(this, this.width / 2 - 155, this.height  / 6 + 96, 150));
-		this.addButton(new Button(this.width / 2 + 5, this.height  / 6 + 96, 150, 20, new TranslationTextComponent("gui.ingamePlayerNames").appendString(" : ").appendSibling(DialogTexts.optionsEnabled(Config.ingamePlayerNames.get())), (p_212984_1_) -> {
+		this.addRenderableWidget(new DeadzoneSlider(this, this.width / 2 - 155, this.height  / 6 + 96, 150));
+		this.addRenderableWidget(new Button(this.width / 2 + 5, this.height  / 6 + 96, 150, 20, new TranslatableComponent("gui.ingamePlayerNames").append(" : ").append(CommonComponents.optionStatus(Config.ingamePlayerNames.get())), (p_212984_1_) -> {
 			Config.ingamePlayerNames.set(!Config.ingamePlayerNames.get());
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		this.addButton(new Button(this.width / 2 - 155, this.height  / 6 + 120, 150, 20, new TranslationTextComponent("gui.hideCoordinates").appendString(" : ").appendSibling(DialogTexts.optionsEnabled(Config.hideCoordinates.get())), (p_212984_1_) -> {
+		this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6 + 120, 150, 20, new TranslatableComponent("gui.hideCoordinates").append(" : ").append(CommonComponents.optionStatus(Config.hideCoordinates.get())), (p_212984_1_) -> {
 			Config.hideCoordinates.set(!Config.hideCoordinates.get());
-			this.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+			this.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}));
-		this.addButton(new Button(this.width / 2 - 100, this.height  / 6 + 168, 200, 20, new TranslationTextComponent("gui.done"), (p_212984_1_) -> {
-			this.minecraft.displayGuiScreen(this.previousScreen);
+		this.addRenderableWidget(new Button(this.width / 2 - 100, this.height  / 6 + 168, 200, 20, new TranslatableComponent("gui.done"), (p_212984_1_) -> {
+			this.minecraft.setScreen(this.previousScreen);
 		}));
 		nextController.active = ControllerUtil.controller<ControllerMod.getInstance().getTotalConnectedControllers();
 		prevController.active = ControllerUtil.controller>0;
@@ -111,7 +111,7 @@ public class ControllerOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void onClose() {
+	public void removed() {
 		Config.enableControllers.set(ControllerUtil.enableController);
 		Config.ingameSensitivity.set(ControllerUtil.ingameSensitivity);
 		Config.menuSensitivity.set(ControllerUtil.menuSensitivity);
@@ -122,96 +122,78 @@ public class ControllerOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
-		AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
+		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class IngameSensitivitySlider extends AbstractSlider {
+	public class IngameSensitivitySlider extends AbstractSliderButton {
 		ControllerOptionsScreen screen;
 
 		public IngameSensitivitySlider(ControllerOptionsScreen screen, int x, int y, int width) {
-			super(x, y, width, 20, new TranslationTextComponent(""), ControllerUtil.ingameSensitivity);
-			this./*updateMessage*/func_230979_b_();
+			super(x, y, width, 20, new TranslatableComponent(""), ControllerUtil.ingameSensitivity);
+			this.updateMessage();
 			this.screen = screen;
 		}
 
 		@Override
-		protected void /*updateMessage*/func_230979_b_() {
-			String s = (float)this.sliderValue == (float)this.getYImage(false) ? I18n.format("options.off") : (int)((float)this.sliderValue * 100.0F) + "%";
-			this.setMessage(new TranslationTextComponent("gui.ingameSensitivity").appendString(": " + s));
+		protected void updateMessage() {
+			String s = (float)this.value == (float)this.getYImage(false) ? I18n.get("options.off") : (int)((float)this.value * 100.0F) + "%";
+			this.setMessage(new TranslatableComponent("gui.ingameSensitivity").append(": " + s));
 		}
 
 		@Override
-		protected void /*applyValue*/func_230972_a_() {
-			ControllerUtil.ingameSensitivity = this.sliderValue;
-			screen.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+		protected void applyValue() {
+			ControllerUtil.ingameSensitivity = this.value;
+			screen.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class MenuSensitivitySlider extends AbstractSlider {
+	public class MenuSensitivitySlider extends AbstractSliderButton {
 		ControllerOptionsScreen screen;
 
 		public MenuSensitivitySlider(ControllerOptionsScreen screen, int x, int y, int width) {
-			super(x, y, width, 20, new TranslationTextComponent(""), ControllerUtil.menuSensitivity);
-			this./*updateMessage*/func_230979_b_();
+			super(x, y, width, 20, new TranslatableComponent(""), ControllerUtil.menuSensitivity);
+			this.updateMessage();
 			this.screen = screen;
 		}
 
 		@Override
-		protected void /*updateMessage*/func_230979_b_() {
-			String s = (float)this.sliderValue == (float)this.getYImage(false) ? I18n.format("options.off") : (int)((float)this.sliderValue * 100.0F) + "%";
-			this.setMessage(new TranslationTextComponent("gui.menuSensitivity").appendString(": " + s));
+		protected void updateMessage() {
+			String s = (float)this.value == (float)this.getYImage(false) ? I18n.get("options.off") : (int)((float)this.value * 100.0F) + "%";
+			this.setMessage(new TranslatableComponent("gui.menuSensitivity").append(": " + s));
 		}
 
 		@Override
-		protected void /*applyValue*/func_230972_a_() {
-			ControllerUtil.menuSensitivity = this.sliderValue;
-			screen.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
-		}
-	}
-	
-	public static <T extends Enum<?>> T rotateEnumForward(T input, T[] values) {
-		if (input.ordinal() == values.length - 1) {
-			return values[0];
-		}
-		else {
-			return values[input.ordinal() + 1];
-		}
-	}
-	
-	public static <T extends Enum<?>> T rotateEnumBackward(T input, T[] values) {
-		if (input.ordinal() == values.length - 1) {
-			return values[0];
-		}
-		else {
-			return values[input.ordinal() + 1];
+		protected void applyValue() {
+			ControllerUtil.menuSensitivity = this.value;
+			screen.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public class DeadzoneSlider extends AbstractSlider {
+	public class DeadzoneSlider extends AbstractSliderButton {
 		ControllerOptionsScreen screen;
 
 		public DeadzoneSlider(ControllerOptionsScreen screen, int x, int y, int width) {
-			super(x, y, width, 20, new TranslationTextComponent(""), ControllerUtil.dead_zone);
-			this./*updateMessage*/func_230979_b_();
+			super(x, y, width, 20, new TranslatableComponent(""), ControllerUtil.dead_zone);
+			this.updateMessage();
 			this.screen = screen;
 		}
 
 		@Override
-		protected void /*updateMessage*/func_230979_b_() {
-			String s = (float)this.sliderValue == (float)this.getYImage(false) ? I18n.format("options.off") : (int)((float)this.sliderValue * 100.0F) + "%";
-			this.setMessage(new TranslationTextComponent("gui.deadzone").appendString(": " + s));
+		protected void updateMessage() {
+			String s = (float)this.value == (float)this.getYImage(false) ? I18n.get("options.off") : (int)((float)this.value * 100.0F) + "%";
+			this.setMessage(new TranslatableComponent("gui.deadzone").append(": " + s));
 		}
 
 		@Override
-		protected void /*applyValue*/func_230972_a_() {
-			ControllerUtil.dead_zone = this.sliderValue;
-			screen.minecraft.displayGuiScreen(new ControllerOptionsScreen(previousScreen));
+		protected void applyValue() {
+			ControllerUtil.dead_zone = this.value;
+			screen.minecraft.setScreen(new ControllerOptionsScreen(previousScreen));
 		}
 	}
 }

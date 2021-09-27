@@ -13,9 +13,10 @@ import com.stereowalker.controllermod.client.controller.ControllerHelper;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.config.ConfigBuilder;
+import com.stereowalker.unionlib.mod.UnionMod;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 @Mod(value = "controllermod")
 @OnlyIn(Dist.CLIENT)
-public class ControllerMod 
+public class ControllerMod extends UnionMod
 {
 	private static ControllerMod instance;
 	public static boolean debugMode;
@@ -39,21 +40,23 @@ public class ControllerMod
 	public ControllerSettings controllerSettings;
 	public static final Controller EMPTY_CONTROLLER = new Controller(-1, "Empty", "Empty", 0);
 
+	@SuppressWarnings("resource")
 	public ControllerMod() 
 	{
+		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon.png"), LoadType.CLIENT);
 		instance = this;
 		controllers = new ArrayList<Controller>();
 		
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigBuilder.client_config, "controllermod.client.toml");
 		ConfigBuilder.loadConfig(ConfigBuilder.client_config, FMLPaths.CONFIGDIR.get().resolve("controllermod.client.toml").toString());
 		
-		controllerSettings = new ControllerSettings(Minecraft.getInstance(), Minecraft.getInstance().gameDir);
+		controllerSettings = new ControllerSettings(Minecraft.getInstance(), Minecraft.getInstance().gameDirectory);
 		
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientRegistries);
 		MinecraftForge.EVENT_BUS.register(this);
 		debugMode = Config.debug_mode.get();
 		controllerHelper = new ControllerHelper(Minecraft.getInstance());
-		controllerHelper.registerCallbacks(Minecraft.getInstance().getMainWindow().getHandle());
+		controllerHelper.registerCallbacks(Minecraft.getInstance().getWindow().getWindow());
 		System.out.println("total Connected Controllers "+getTotalConnectedControllers());
 		for (int i = 0; i < getTotalConnectedControllers(); i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
@@ -103,7 +106,7 @@ public class ControllerMod
 		controllerSettings.loadOptions();
 	}
 
-	public static ResourceLocation location(String name)
+	public ResourceLocation location(String name)
 	{
 		return new ResourceLocation(MOD_ID, name);
 	}

@@ -6,13 +6,13 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants.Type;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings.Type;
 import net.minecraftforge.client.settings.KeyConflictContext;
 
 public class ControllerBindings {
@@ -29,31 +29,32 @@ public class ControllerBindings {
 	}, InputType.PRESS, ControllerConflictContext.CONTAINER);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);
-	public static final List<KeyBinding> excludedKeybinds = Lists.newArrayList();
+	public static final List<KeyMapping> excludedKeybinds = Lists.newArrayList();
 
+	@SuppressWarnings("resource")
 	public static void registerAll() {
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindInventory);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindJump);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindAttack);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindUseItem);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindSneak);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindTogglePerspective);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindDrop);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindLeft);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindRight);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindForward);
-		excludeKeybind(Minecraft.getInstance().gameSettings.keyBindBack);
+		excludeKeybind(Minecraft.getInstance().options.keyInventory);
+		excludeKeybind(Minecraft.getInstance().options.keyJump);
+		excludeKeybind(Minecraft.getInstance().options.keyAttack);
+		excludeKeybind(Minecraft.getInstance().options.keyUse);
+		excludeKeybind(Minecraft.getInstance().options.keyShift);
+		excludeKeybind(Minecraft.getInstance().options.keyTogglePerspective);
+		excludeKeybind(Minecraft.getInstance().options.keyDrop);
+		excludeKeybind(Minecraft.getInstance().options.keyLeft);
+		excludeKeybind(Minecraft.getInstance().options.keyRight);
+		excludeKeybind(Minecraft.getInstance().options.keyUp);
+		excludeKeybind(Minecraft.getInstance().options.keyDown);
 		
 		registerControllerBinding(SELECT_INPUT);
 		registerControllerBinding(SHIFT_MOVE_INPUT);
 //		BINDINGS.add(CLOSE_INVENTORY_INPUT);
-		for (KeyBinding key : Minecraft.getInstance().gameSettings.keyBindings) {
+		for (KeyMapping key : Minecraft.getInstance().options.keyMappings) {
 			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerBinding(key));
 		}
 	}
 
     /**
-     * Registers a KeyBinding.
+     * Registers a KeyMapping.
      * Call this during {@link net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent}.
      * This method is safe to call during parallel mod loading.
      */
@@ -62,7 +63,7 @@ public class ControllerBindings {
         ControllerMod.getInstance().controllerSettings.controllerBindings = ArrayUtils.add(ControllerMod.getInstance().controllerSettings.controllerBindings, key);
     }
     
-    public static synchronized void excludeKeybind(KeyBinding binding) {
+    public static synchronized void excludeKeybind(KeyMapping binding) {
     	if (!excludedKeybinds.contains(binding)) {
     		excludedKeybinds.add(binding);
     	}

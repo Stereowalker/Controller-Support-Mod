@@ -17,12 +17,12 @@ public class ControllerBindingEvents {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void keybindTick(ClientTickEvent playerEvent) {
-		if(mc.currentScreen==null) {
+		if(mc.screen==null) {
 			if (ControllerMod.getInstance().controllerSettings.controllerBindHotbarLeft.isDown(Config.controllerModel.get())) {
-				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getMainWindow().getHandle(), 0.0D, 1.0D);
+				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getWindow().getWindow(), 0.0D, 1.0D);
 			}
 			if (ControllerMod.getInstance().controllerSettings.controllerBindHotbarRight.isDown(Config.controllerModel.get())) {
-				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getMainWindow().getHandle(), 0.0D, -1.0D);
+				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getWindow().getWindow(), 0.0D, -1.0D);
 			}
 			
 		}

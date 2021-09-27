@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
+import com.mojang.blaze3d.platform.InputConstants.Type;
 import com.stereowalker.controllermod.client.controller.ControllerBinding;
 import com.stereowalker.controllermod.client.controller.ControllerConflictContext;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
@@ -25,10 +26,9 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType
 import com.stereowalker.controllermod.config.Config;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.InputMappings.Type;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.datafix.DefaultTypeReferences;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -104,57 +104,57 @@ public class ControllerSettings {
 		builder.put(ControllerModel.PS4, "axis5");
 	}, false, KeyConflictContext.GUI);
 
-	public final ControllerBinding controllerKeyBindInventory = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindInventory, (builder) -> {
+	public final ControllerBinding controllerKeyBindInventory = new ControllerBinding(Minecraft.getInstance().options.keyInventory, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button3");
 		builder.put(ControllerModel.PS4, "button3");
 	});
 
-	public final ControllerBinding controllerKeyBindJump = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindJump, (builder) -> {
+	public final ControllerBinding controllerKeyBindJump = new ControllerBinding(Minecraft.getInstance().options.keyJump, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button0");
 		builder.put(ControllerModel.PS4, "button1");
 	});
 
-	public final ControllerBinding controllerKeyBindAttack = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindAttack, (builder) -> {
+	public final ControllerBinding controllerKeyBindAttack = new ControllerBinding(Minecraft.getInstance().options.keyAttack, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos5");
 		builder.put(ControllerModel.PS4, "button7");
 	});
 
-	public final ControllerBinding controllerKeyBindUseItem = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindUseItem, (builder) -> {
+	public final ControllerBinding controllerKeyBindUseItem = new ControllerBinding(Minecraft.getInstance().options.keyUse, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos4");
 		builder.put(ControllerModel.PS4, "button6");
 	});
 
-	public final ControllerBinding controllerKeyBindSneak = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindSneak, (builder) -> {
+	public final ControllerBinding controllerKeyBindSneak = new ControllerBinding(Minecraft.getInstance().options.keyShift, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button9");
 		builder.put(ControllerModel.PS4, "button11");
 	});
 
-	public final ControllerBinding controllerKeyBindTogglePerspective = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindTogglePerspective, (builder) -> {
+	public final ControllerBinding controllerKeyBindTogglePerspective = new ControllerBinding(Minecraft.getInstance().options.keyTogglePerspective, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button8");
 		builder.put(ControllerModel.PS4, "button10");
 	});
 
-	public final ControllerBinding controllerKeyBindDrop = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindDrop, (builder) -> {
+	public final ControllerBinding controllerKeyBindDrop = new ControllerBinding(Minecraft.getInstance().options.keyDrop, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
 	});
 
-	public final ControllerBinding controllerKeyBindForward = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindForward, (builder) -> {
+	public final ControllerBinding controllerKeyBindForward = new ControllerBinding(Minecraft.getInstance().options.keyUp, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_neg1");
 		builder.put(ControllerModel.PS4, "axis_neg1");
 	});
 
-	public final ControllerBinding controllerKeyBindBack = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindBack, (builder) -> {
+	public final ControllerBinding controllerKeyBindBack = new ControllerBinding(Minecraft.getInstance().options.keyDown, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos1");
 		builder.put(ControllerModel.PS4, "axis_pos1");
 	});
 
-	public final ControllerBinding controllerKeyBindLeft = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindLeft, (builder) -> {
+	public final ControllerBinding controllerKeyBindLeft = new ControllerBinding(Minecraft.getInstance().options.keyLeft, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_neg0");
 		builder.put(ControllerModel.PS4, "axis_neg0");
 	});
 
-	public final ControllerBinding controllerKeyBindRight = new ControllerBinding(Minecraft.getInstance().gameSettings.keyBindRight, (builder) -> {
+	public final ControllerBinding controllerKeyBindRight = new ControllerBinding(Minecraft.getInstance().options.keyRight, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos0");
 		builder.put(ControllerModel.PS4, "axis_pos0");
 	});
@@ -193,7 +193,7 @@ public class ControllerSettings {
 				return;
 			}
 
-			CompoundNBT compoundnbt = new CompoundNBT();
+			CompoundTag compoundnbt = new CompoundTag();
 
 			try (BufferedReader bufferedreader = Files.newReader(this.optionsFile, Charsets.UTF_8)) {
 				bufferedreader.lines().forEach((optionString) -> {
@@ -207,9 +207,9 @@ public class ControllerSettings {
 				});
 			}
 
-			CompoundNBT compoundnbt1 = this.dataFix(compoundnbt);
+			CompoundTag compoundnbt1 = this.dataFix(compoundnbt);
 
-			for(String s : compoundnbt1.keySet()) {
+			for(String s : compoundnbt1.getAllKeys()) {
 				String s1 = compoundnbt1.getString(s);
 
 				try {
@@ -282,7 +282,7 @@ public class ControllerSettings {
 
 	}
 
-	private CompoundNBT dataFix(CompoundNBT nbt) {
+	private CompoundTag dataFix(CompoundTag nbt) {
 		int i = 0;
 
 		try {
@@ -290,7 +290,7 @@ public class ControllerSettings {
 		} catch (RuntimeException runtimeexception) {
 		}
 
-		return NBTUtil.update(this.mc.getDataFixer(), DefaultTypeReferences.OPTIONS, nbt, i);
+		return NbtUtils.update(this.mc.getFixerUpper(), DataFixTypes.OPTIONS, nbt, i);
 	}
 
 	/**

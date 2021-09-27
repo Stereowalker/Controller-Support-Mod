@@ -1,6 +1,11 @@
 package com.stereowalker.controllermod.client.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerSettings;
 import com.stereowalker.controllermod.client.controller.Controller;
@@ -9,19 +14,17 @@ import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsSc
 import com.stereowalker.controllermod.client.gui.screen.ControllerOptionsScreen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.IngameMenuScreen;
-import net.minecraft.client.gui.screen.MainMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WorldLoadProgressScreen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
@@ -37,30 +40,30 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class ControllerEvent {
 	public static final ResourceLocation CURSOR = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/cursor.png");
 	private static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/controller_button.png");
-	//	private static MouseHelper mouse = Minecraft.getInstance().mouseHelper;
+	//	private static MouseHandler mouse = Minecraft.getInstance().mouseHandler;
 	//	private static Screen getCurrentScreen() = Minecraft.getInstance().getCurrentScreen();
 
 	public static Screen getCurrentScreen() {
-		return Minecraft.getInstance().currentScreen;
+		return Minecraft.getInstance().screen;
 	}
 
-	public static MouseHelper getMouse() {
-		return Minecraft.getInstance().mouseHelper;
+	public static MouseHandler getMouse() {
+		return Minecraft.getInstance().mouseHandler;
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void drawButtons(GuiScreenEvent.InitGuiEvent event) {
-		if(event.getGui() instanceof MainMenuScreen) {
+		if(event.getGui() instanceof TitleScreen) {
 			event.addWidget(new ImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 24 + 24 * 2, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-				event.getGui().getMinecraft().displayGuiScreen(new ControllerOptionsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.controllers")));
+				event.getGui().getMinecraft().setScreen(new ControllerOptionsScreen(event.getGui()));
+			}, new TranslatableComponent("menu.button.controllers")));
 		}
 //		MouseSettingsScreen
-		if(event.getGui() instanceof IngameMenuScreen) {
+		if(event.getGui() instanceof PauseScreen) {
 			event.addWidget(new ImageButton(event.getGui().width / 2 + 104, event.getGui().height / 4 + 96 + -16, 20, 20, 0, 0, 20, CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-				event.getGui().getMinecraft().displayGuiScreen(new ControllerOptionsScreen(event.getGui()));
-			}, new TranslationTextComponent("menu.button.controllers")));
+				event.getGui().getMinecraft().setScreen(new ControllerOptionsScreen(event.getGui()));
+			}, new TranslatableComponent("menu.button.controllers")));
 		}
 	}
 
@@ -68,12 +71,13 @@ public class ControllerEvent {
 	@OnlyIn(Dist.CLIENT)
 	public static void drawPointer(DrawScreenEvent event) {
 		if (event.getGui() != null) {
-			if (!(event.getGui() instanceof WorldLoadProgressScreen)) {
-				int x = (int)(ControllerUtil.virtualmouse.getMouseX() * (double)Minecraft.getInstance().getMainWindow().getScaledWidth() / (double)Minecraft.getInstance().getMainWindow().getWidth());
-				int y = (int)(ControllerUtil.virtualmouse.getMouseY() * (double)Minecraft.getInstance().getMainWindow().getScaledHeight() / (double)Minecraft.getInstance().getMainWindow().getHeight());
+			if (!(event.getGui() instanceof LevelLoadingScreen)) {
+				int x = (int)(ControllerUtil.virtualmouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getWidth());
+				int y = (int)(ControllerUtil.virtualmouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getHeight());
 				if(ControllerUtil.isControllerAvailable(ControllerUtil.controller) && ControllerUtil.enableController) {
-					Minecraft.getInstance().getTextureManager().bindTexture(CURSOR);
-					renderCursor(x,y, 5.0D);
+					RenderSystem.setShader(GameRenderer::getPositionTexShader);
+					RenderSystem.setShaderTexture(0, CURSOR);
+					renderCursor(event.getMatrixStack(), x,y, 5.0D);
 				} 
 			}
 		}
@@ -89,11 +93,11 @@ public class ControllerEvent {
 
 			double moveModifier = 10.0D;
 
-			float newPitch = (cameraYAxis >= -1.0F && cameraYAxis < -0.1D) || (cameraYAxis <= 1.0F && cameraYAxis > 0.1D) ? (float) ((cameraYAxis * ControllerUtil.ingameSensitivity * moveModifier) + Minecraft.getInstance().player.getPitch((float) event.getRenderPartialTicks())) : Minecraft.getInstance().player.getPitch((float) event.getRenderPartialTicks());
-			float newYaw = (cameraXAxis >= -1.0F && cameraXAxis < -0.1D) || (cameraXAxis <= 1.0F && cameraXAxis > 0.1D) ? (float) ((cameraXAxis * ControllerUtil.ingameSensitivity * moveModifier) + Minecraft.getInstance().player.getYaw((float) event.getRenderPartialTicks())) : Minecraft.getInstance().player.getYaw((float) event.getRenderPartialTicks());
+			float newPitch = (cameraYAxis >= -1.0F && cameraYAxis < -0.1D) || (cameraYAxis <= 1.0F && cameraYAxis > 0.1D) ? (float) ((cameraYAxis * ControllerUtil.ingameSensitivity * moveModifier) + Minecraft.getInstance().player.getViewXRot((float) event.getRenderPartialTicks())) : Minecraft.getInstance().player.getViewXRot((float) event.getRenderPartialTicks());
+			float newYaw = (cameraXAxis >= -1.0F && cameraXAxis < -0.1D) || (cameraXAxis <= 1.0F && cameraXAxis > 0.1D) ? (float) ((cameraXAxis * ControllerUtil.ingameSensitivity * moveModifier) + Minecraft.getInstance().player.getViewYRot((float) event.getRenderPartialTicks())) : Minecraft.getInstance().player.getViewYRot((float) event.getRenderPartialTicks());
 
-			Minecraft.getInstance().player.rotationPitch = newPitch;
-			Minecraft.getInstance().player.rotationYaw = newYaw;
+			Minecraft.getInstance().player.xRot = newPitch;
+			Minecraft.getInstance().player.yRot = newYaw;
 			//			event.setRoll(cameraXAxis + event.getRoll());
 		}
 	}
@@ -106,7 +110,7 @@ public class ControllerEvent {
 			ControllerSettings settings = ControllerMod.getInstance().controllerSettings;
 			if (getMouse().isMouseGrabbed()) ControllerUtil.virtualmouse.grabMouse();
 			else ControllerUtil.virtualmouse.ungrabMouse();
-			if(!Minecraft.getInstance().isGameFocused()) Minecraft.getInstance().setGameFocused(true);
+			if(!Minecraft.getInstance().isWindowActive()) Minecraft.getInstance().setWindowActive(true);
 			Controller controller = ControllerMod.getInstance().getActiveController();
 			if (controller != null) {
 				float scrollAxis = settings.controllerBindScroll.getAxis();
@@ -115,7 +119,7 @@ public class ControllerEvent {
 				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
 				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
 				//Inventory Keybinds
-				if(getCurrentScreen() instanceof ContainerScreen) {
+				if(getCurrentScreen() instanceof AbstractContainerScreen) {
 					//					if(fromGame) {
 					//						ControllerUtil.unpressAllKeys();
 					//						fromGame = false;
@@ -124,7 +128,7 @@ public class ControllerEvent {
 				}
 
 				//Ingame Menu Keybinds
-				if(getCurrentScreen() instanceof IngameMenuScreen) {
+				if(getCurrentScreen() instanceof PauseScreen) {
 					if(fromGame) {
 						ControllerUtil.unpressAllKeys();
 						fromGame = false;
@@ -133,7 +137,7 @@ public class ControllerEvent {
 				}
 
 				//Any other menu
-				if(getCurrentScreen()!=null && !(getCurrentScreen() instanceof ContainerScreen) && !(getCurrentScreen() instanceof IngameMenuScreen)) {
+				if(getCurrentScreen()!=null && !(getCurrentScreen() instanceof AbstractContainerScreen) && !(getCurrentScreen() instanceof PauseScreen)) {
 					if(getCurrentScreen() instanceof ControllerInputOptionsScreen) {
 						if(!((ControllerInputOptionsScreen)getCurrentScreen()).isAwaitingInput()) {
 							if(fromGame) {
@@ -168,23 +172,23 @@ public class ControllerEvent {
 			if(ControllerUtil.isControllerAvailable(ControllerUtil.controller) && ControllerUtil.enableController) {
 				if (getCurrentScreen() == null) {
 					ControllerSettings settings = ControllerMod.getInstance().controllerSettings;
-					float moveXAxis = Minecraft.getInstance().player.isForcedDown() ? settings.controllerBindMoveHorizontal.getAxis() * 0.3F : settings.controllerBindMoveHorizontal.getAxis();
-					float moveYAxis = Minecraft.getInstance().player.isForcedDown() ? settings.controllerBindMoveVertical.getAxis() * 0.3F : settings.controllerBindMoveVertical.getAxis();
+					float moveXAxis = Minecraft.getInstance().player.isMovingSlowly() ? settings.controllerBindMoveHorizontal.getAxis() * 0.3F : settings.controllerBindMoveHorizontal.getAxis();
+					float moveYAxis = Minecraft.getInstance().player.isMovingSlowly() ? settings.controllerBindMoveVertical.getAxis() * 0.3F : settings.controllerBindMoveVertical.getAxis();
 					if (moveXAxis >= -1.0F && moveXAxis < -ControllerUtil.dead_zone) {
-						event.getMovementInput().moveStrafe = -moveXAxis;
-						event.getMovementInput().leftKeyDown = true;
+						event.getMovementInput().leftImpulse = -moveXAxis;
+						event.getMovementInput().left = true;
 					}
 					if (moveXAxis <= 1.0F && moveXAxis > ControllerUtil.dead_zone) {
-						event.getMovementInput().moveStrafe = -moveXAxis;
-						event.getMovementInput().rightKeyDown = true;
+						event.getMovementInput().leftImpulse = -moveXAxis;
+						event.getMovementInput().right = true;
 					}
 					if (moveYAxis >= -1.0F && moveYAxis < -ControllerUtil.dead_zone) {
-						event.getMovementInput().moveForward = -moveYAxis;
-						event.getMovementInput().forwardKeyDown = true;
+						event.getMovementInput().forwardImpulse = -moveYAxis;
+						event.getMovementInput().up = true;
 					}
 					if (moveYAxis <= 1.0F && moveYAxis > ControllerUtil.dead_zone) {
-						event.getMovementInput().moveForward = -moveYAxis;
-						event.getMovementInput().backKeyDown = true;
+						event.getMovementInput().forwardImpulse = -moveYAxis;
+						event.getMovementInput().down = true;
 					}
 				}
 			}
@@ -192,25 +196,23 @@ public class ControllerEvent {
 	}
 
 	@SuppressWarnings("deprecation")
-	protected static void renderCursor(int x, int y, double size) {
-		RenderSystem.pushMatrix();
-		RenderSystem.enableAlphaTest();
+	protected static void renderCursor(PoseStack poseStack, int x, int y, double size) {
+		poseStack.pushPose();
+//		TODO: RenderSystem.enableAlphaTest();
 		RenderSystem.disableDepthTest();
-//		RenderSystem.depthMask(true);
-//		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-		Minecraft.getInstance().getTextureManager().bindTexture(CURSOR);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-		bufferbuilder.pos(-size+x, size+y, -90.0F).tex(0.0F, 1.0F).endVertex();
-		bufferbuilder.pos(size+x, size+y, -90.0F).tex(1.0F, 1.0F).endVertex();
-		bufferbuilder.pos(size+x, -size+y, -90.0F).tex(1.0F, 0.0F).endVertex();
-		bufferbuilder.pos(-size+x, -size+y, -90.0F).tex(0.0F, 0.0F).endVertex();
-		tessellator.draw();
-//		RenderSystem.depthMask(false);
-//		RenderSystem.enableDepthTest();
-		RenderSystem.disableAlphaTest();
-		RenderSystem.popMatrix();
-		Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, CURSOR);
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.vertex(-size+x, size+y, -90.0F).uv(0.0F, 1.0F).endVertex();
+		bufferbuilder.vertex(size+x, size+y, -90.0F).uv(1.0F, 1.0F).endVertex();
+		bufferbuilder.vertex(size+x, -size+y, -90.0F).uv(1.0F, 0.0F).endVertex();
+		bufferbuilder.vertex(-size+x, -size+y, -90.0F).uv(0.0F, 0.0F).endVertex();
+		tessellator.end();
+//		TODO: RenderSystem.disableAlphaTest();
+		poseStack.popPose();
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 	}
 }

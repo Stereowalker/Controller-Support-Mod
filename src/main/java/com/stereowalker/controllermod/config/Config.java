@@ -19,7 +19,7 @@ public class Config {
 	public static ForgeConfigSpec.BooleanValue hideCoordinates;
 	public static ForgeConfigSpec.BooleanValue hidePaperDoll;
 	//PaperDollOptions
-	public static ForgeConfigSpec.BooleanValue isElytraFlying;
+	public static ForgeConfigSpec.BooleanValue isFallFlying;
 	public static ForgeConfigSpec.BooleanValue isRiding;
 	public static ForgeConfigSpec.BooleanValue isSpinning;
 	public static ForgeConfigSpec.BooleanValue isMoving;
@@ -27,7 +27,7 @@ public class Config {
 	public static ForgeConfigSpec.BooleanValue isAttacking;
 	public static ForgeConfigSpec.BooleanValue isUsing;
 	public static ForgeConfigSpec.BooleanValue isHurt;
-	public static ForgeConfigSpec.BooleanValue isBurning;
+	public static ForgeConfigSpec.BooleanValue isOnFire;
 	public static ForgeConfigSpec.BooleanValue isAlwaysOn;
 	
 	//Ingame Input
@@ -38,7 +38,7 @@ public class Config {
 				.define("developerOptions.debug_mode", false);
 
 		//PaperDoll
-		isElytraFlying = client.define("Paper Doll.Elytra Flying", true);
+		isFallFlying = client.define("Paper Doll.Fall Flying", true);
 		isRiding = client.define("Paper Doll.Riding", true);
 		isSpinning = client.define("Paper Doll.Spinning", true);
 		isMoving = client.define("Paper Doll.Moving", true);
@@ -46,7 +46,7 @@ public class Config {
 		isAttacking = client.define("Paper Doll.Attacking", true);
 		isUsing = client.define("Paper Doll.Using", true);
 		isHurt = client.define("Paper Doll.Hurt", true);
-		isBurning = client.define("Paper Doll.Burning", true);
+		isOnFire = client.define("Paper Doll.On Fire", true);
 		//Controller Settings
 		client.comment("Controller");
 		enableControllers = client

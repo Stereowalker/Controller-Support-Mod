@@ -4,20 +4,21 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerBinding;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
 import com.stereowalker.controllermod.config.Config;
+import com.stereowalker.unionlib.util.RegistryHelper;
 
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,7 +33,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	private Button buttonReset;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerBinding keyToSet, int previousInput) {
-		super(new TranslationTextComponent("options.controller_input.title"));
+		super(new TranslatableComponent("options.controller_input.title"));
 		this.previousScreen = previousScreen;
 		this.keyToSet = keyToSet;
 		this.previousInput = previousInput;
@@ -54,31 +55,22 @@ public class ControllerInputOptionsScreen extends Screen {
 			isModelEnforced = true;
 		}
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
-		this.children.add(this.keyBindingList);
-		this.buttonReset = this.addButton(new Button(this.width / 2 - 155, this.height - 29, 100, 20, new TranslationTextComponent("controls.resetAll"), (p_213125_1_) -> {
+		this.addWidget(this.keyBindingList);
+		this.buttonReset = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 100, 20, new TranslatableComponent("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerBinding keybinding : mod.controllerSettings.controllerBindings) {
 				keybinding.setToDefault(Config.controllerModel.get());
 			}
 
-			KeyBinding.resetKeyBindingArrayAndHash();
+			KeyMapping.resetMapping();
 		}));
-		Button model = this.addButton(new Button(this.width / 2 - 155 + 105, this.height - 29, 100, 20, new TranslationTextComponent("gui.model").appendString(" : "+Config.controllerModel.get()), (p_212984_1_) -> {
-			Config.controllerModel.set(rotateEnumForward(Config.controllerModel.get(), ControllerModel.values()));
-			this.minecraft.displayGuiScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, awaitingTicks));
+		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 105, this.height - 29, 100, 20, new TranslatableComponent("gui.model").append(" : "+Config.controllerModel.get()), (p_212984_1_) -> {
+			Config.controllerModel.set(RegistryHelper.rotateEnumForward(Config.controllerModel.get(), ControllerModel.values()));
+			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, awaitingTicks));
 		}));
 		model.active = !isModelEnforced;
-		this.addButton(new Button(this.width / 2 - 155 + 210, this.height - 29, 100, 20, DialogTexts.GUI_DONE, (p_213124_1_) -> {
-			this.minecraft.displayGuiScreen(this.previousScreen);
+		this.addRenderableWidget(new Button(this.width / 2 - 155 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
+			this.minecraft.setScreen(this.previousScreen);
 		}));
-	}
-	
-	public static <T extends Enum<?>> T rotateEnumForward(T input, T[] values) {
-		if (input.ordinal() == values.length - 1) {
-			return values[0];
-		}
-		else {
-			return values[input.ordinal() + 1];
-		}
 	}
 
 	@Override
@@ -90,7 +82,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void onClose() {
+	public void removed() {
 		mod.controllerSettings.saveOptions();
 	}
 
@@ -127,10 +119,10 @@ public class ControllerInputOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
 		this.keyBindingList.render(matrixStack, mouseX, mouseY, partialTicks);
-		AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
+		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
 		boolean flag = false;
 
 		for(ControllerBinding keybinding : mod.controllerSettings.controllerBindings) {

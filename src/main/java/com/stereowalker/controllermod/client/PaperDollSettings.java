@@ -1,7 +1,7 @@
 package com.stereowalker.controllermod.client;
 
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Pose;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Pose;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,23 +16,23 @@ public class PaperDollSettings {
 	public PaperDollSettings() {
 	}
 	
-	public boolean renderCrawling(ClientPlayerEntity player) {
+	public boolean renderCrawling(LocalPlayer player) {
 		return this.showCrawling && (player.getPose() == Pose.SWIMMING && !player.isSwimming());
 	}
 	
-	public boolean renderSwimming(ClientPlayerEntity player) {
+	public boolean renderSwimming(LocalPlayer player) {
 		return this.showSwimming && player.isSwimming();
 	}
 	
-	public boolean renderSprinting(ClientPlayerEntity player) {
+	public boolean renderSprinting(LocalPlayer player) {
 		return this.showSprinting && (player.isSprinting() && !player.isSwimming());
 	}
 	
-	public boolean renderCrouching(ClientPlayerEntity player) {
+	public boolean renderCrouching(LocalPlayer player) {
 		return this.showCrouching && (player.isCrouching());
 	}
 	
-	public boolean renderFlying(ClientPlayerEntity player) {
-		return this.showFlying && (player.abilities.isFlying);
+	public boolean renderFlying(LocalPlayer player) {
+		return this.showFlying && (player.getAbilities().flying);
 	}
 }

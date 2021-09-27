@@ -6,14 +6,14 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
+import net.minecraft.Util;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.Util;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.IKeyConflictContext;
@@ -24,7 +24,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	
 	private final String descri;
 	private final String category;
-	private final InputMappings.Type type; 
+	private final InputConstants.Type type; 
 	private final int buttonOnKeyboardMouse;
 	private ImmutableMap<ControllerModel,String> buttonOnController;
 	private final ImmutableMap<ControllerModel,String> defaultButtonOnController;
@@ -51,7 +51,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		p_205215_0_.put("key.categories.misc", 8);
 	});
 
-	private ControllerBinding(String category, String description, InputMappings.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, IKeyConflictContext conflictContext, boolean fromKeybindIn) {
+	private ControllerBinding(String category, String description, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, IKeyConflictContext conflictContext, boolean fromKeybindIn) {
 		this.category = category;
 		this.descri = description;
 		ImmutableMap.Builder<ControllerModel,String> builder = ImmutableMap.builder();
@@ -80,7 +80,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		CONTROLLERBIND_ARRAY.put(description, this);
 	}
 
-	public ControllerBinding(String category, String desc, InputMappings.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, IKeyConflictContext conflictContext) {
+	public ControllerBinding(String category, String desc, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, IKeyConflictContext conflictContext) {
 		this(category, desc, type, buttonOnKeyboardMouse, buttonId, inputType, false, false, conflictContext, false);
 	}
 
@@ -88,8 +88,8 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		this(category, desc, null, 0, buttonId, inputType, false, false, conflictContext, false);
 	}
 
-	public ControllerBinding(KeyBinding keybind) {
-		this(keybind.getKeyCategory(), keybind.getKeyDescription(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), (builder) -> {
+	public ControllerBinding(KeyMapping keybind) {
+		this(keybind.getCategory(), keybind.getName(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), (builder) -> {
 			builder.put(ControllerModel.XBOX_360, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.PS4, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.CUSTOM, ControllerUtil.getControllerInputId(0));
@@ -101,8 +101,8 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param keybind
 	 * @param buttonId
 	 */
-	public ControllerBinding(KeyBinding keybind, Consumer<Map<ControllerModel,String>> buttonId) {
-		this(keybind.getKeyCategory(), keybind.getKeyDescription(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, keybind.getKeyConflictContext(), true);
+	public ControllerBinding(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId) {
+		this(keybind.getCategory(), keybind.getName(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, keybind.getKeyConflictContext(), true);
 	}
 
 	/**
@@ -116,9 +116,10 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		this(category, desc, null, 0, buttonId, null, true, isAxisInvertedIn, conflictContext, false);
 	}
 
-	public KeyBinding getAttachedKebinding() {
-		for (KeyBinding key : Minecraft.getInstance().gameSettings.keyBindings) {
-			if (key.getKeyDescription().equals(getDescripti())) {
+	@SuppressWarnings("resource")
+	public KeyMapping getAttachedKebinding() {
+		for (KeyMapping key : Minecraft.getInstance().options.keyMappings) {
+			if (key.getName().equals(getDescripti())) {
 				return key;
 			}
 		}
@@ -166,7 +167,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		return buttonOnKeyboardMouse;
 	}
 
-	public InputMappings.Type getKeyType() {
+	public InputConstants.Type getKeyType() {
 		return type;
 	}
 
@@ -270,12 +271,12 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 
 	@Override
 	public int compareTo(ControllerBinding p_compareTo_1_) {
-		if (this.category.equals(p_compareTo_1_.category)) return I18n.format(this.descri).compareTo(I18n.format(p_compareTo_1_.descri));
+		if (this.category.equals(p_compareTo_1_.category)) return I18n.get(this.descri).compareTo(I18n.get(p_compareTo_1_.descri));
 		Integer tCat = CATEGORY_ORDER.get(this.category);
 		Integer oCat = CATEGORY_ORDER.get(p_compareTo_1_.category);
 		if (tCat == null && oCat != null) return 1;
 		if (tCat != null && oCat == null) return -1;
-		if (tCat == null && oCat == null) return I18n.format(this.category).compareTo(I18n.format(p_compareTo_1_.category));
+		if (tCat == null && oCat == null) return I18n.get(this.category).compareTo(I18n.get(p_compareTo_1_.category));
 		return  tCat.compareTo(oCat);
 	}
 
