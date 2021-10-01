@@ -136,6 +136,9 @@ curseforge {
 		mainArtifact(jar) {
 			displayName = "Controller Support-$project.version"
 		}
+		relations {
+      		requiredDependency 'unionlib'
+    	}
 	}
 	options {
     	debug = false // defaults to false
