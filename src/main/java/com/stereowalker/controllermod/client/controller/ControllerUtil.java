@@ -275,6 +275,7 @@ public class ControllerUtil {
 		int height = Minecraft.getInstance().getWindow().getHeight();
 		float yMod = height / 480.0F;
 		float xMod = width / 854.0F;
+
 		if (virtualmouse.xpos() >= 0.0D && virtualmouse.xpos() <= width && virtualmouse.ypos() >= 0.0D && virtualmouse.ypos() <= height && !isCamera) {
 			if (xLAxis >= -1.0F && xLAxis < -dead_zone)
 				virtualmouse.onMove(handle, virtualmouse.xpos() + xLAxis * menuSensitivity * 25.0D * xMod, virtualmouse.ypos() + 0.0D); 
