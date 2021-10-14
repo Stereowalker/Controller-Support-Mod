@@ -3,7 +3,7 @@ modLoader="javafml"
 loaderVersion="[37,)"
 license="All Rights Reserved"
 issueTrackerURL="https://github.com/Stereowalker/Controller-Support-Mod/issues"
-logoFile="Splitscreen and Controller Mod.png"
+logoFile="pack.png"
 [[mods]]
 modId="controllermod"
 version="${file.jarVersion}"

@@ -24,6 +24,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -43,7 +44,7 @@ public class ControllerMod extends UnionMod
 	@SuppressWarnings("resource")
 	public ControllerMod() 
 	{
-		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon.png"), LoadType.CLIENT);
+		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon2.png"), LoadType.CLIENT);
 		instance = this;
 		controllers = new ArrayList<Controller>();
 		
@@ -71,7 +72,7 @@ public class ControllerMod extends UnionMod
 		int maxControllers = 0;
 		for (int i = 0; i < 16; i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
-				System.out.println("Controller "+(i+1)+" Is Available");
+//				System.out.println("Controller "+(i+1)+" Is Available");
 				maxControllers = i+1;
 			}
 		}
@@ -100,10 +101,9 @@ public class ControllerMod extends UnionMod
 		if (debugMode)LOGGER.debug(message);
 	}
 
-	public void clientRegistries(final FMLClientSetupEvent event){
+	public void clientRegistries(final InterModEnqueueEvent event){
 		ControllerBindings.registerAll();
-
-		controllerSettings.loadOptions();
+		ControllerMod.getInstance().controllerSettings.loadOptions();
 	}
 
 	public ResourceLocation location(String name)
