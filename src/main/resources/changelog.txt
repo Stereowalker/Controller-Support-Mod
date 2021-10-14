@@ -1,3 +1,0 @@
-<- 5.0.0 ->
-- Initial update to 1.17.1
-- Shifted from using forge events to using mixins

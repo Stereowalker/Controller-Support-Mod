@@ -64,26 +64,6 @@ minecraft {
                 }
             }
         }
-		
-		player2 {
-            workingDirectory project.file('run/client')
-            property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
-			
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-			
-			args '--username', 'Dev', '--uuid', 'b4640bf0c41d3c36b901fd2d90b64431'
-
-            mods {
-                modId {
-                    source sourceSets.main
-                }
-            }
-        }
 
         server {
             workingDirectory project.file('run/server')
@@ -108,6 +88,7 @@ dependencies {
 	implementation 'org.spongepowered:mixin:0.8.4'
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("curse.maven:unionlib-367806:"+unionLibID)
+	implementation fg.deobf("curse.maven:xareo-317780:3484793")
 }
 
 jar {
@@ -129,9 +110,9 @@ curseforge {
     project {
     	id = '358633'
 		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('src/main/resources/changelog.txt')
+		changelog = file('changelog.md')
 		releaseType = 'release'
-		addGameVersion("1.17.1")
+		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
 		mainArtifact(jar) {
 			displayName = "Controller Support-$project.version"
