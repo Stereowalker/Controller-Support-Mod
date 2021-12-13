@@ -108,14 +108,14 @@ jar {
 
 curseforge {
     project {
-    	id = '358633'
+    	id = modCurseId
 		apiKey = "$System.env.CURSEFORGEKEY"
 		changelog = file('changelog.md')
 		releaseType = 'release'
 		addGameVersion(modMinecraftVersion)
         addGameVersion("Forge")
 		mainArtifact(jar) {
-			displayName = "Controller Support-$project.version"
+			displayName = modFilename+"-$project.version"
 		}
 		relations {
       		requiredDependency 'unionlib'
