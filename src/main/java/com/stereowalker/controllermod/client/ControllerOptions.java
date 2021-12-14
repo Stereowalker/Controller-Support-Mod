@@ -19,11 +19,11 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import com.mojang.blaze3d.platform.InputConstants.Type;
+import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerBinding;
 import com.stereowalker.controllermod.client.controller.ControllerConflictContext;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
-import com.stereowalker.controllermod.config.Config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -34,14 +34,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
 
 @OnlyIn(Dist.CLIENT)
-public class ControllerSettings {
+public class ControllerOptions {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Splitter KEY_VALUE_SPLITTER = Splitter.on(':').limit(2);
 	protected Minecraft mc;
 
-	public boolean useAxisToMove = true;
+	public boolean enableController = false;
+	public int controllerNumber = 0;
+	public ControllerModel controllerModel = ControllerModel.XBOX_360;
 
-	public PaperDollSettings paperDoll = new PaperDollSettings();
+	public PaperDollOptions paperDoll = new PaperDollOptions();
 
 	public List<Integer> negativeTriggerAxes = new ArrayList<Integer>();
 	public List<Integer> positiveTriggerAxes = new ArrayList<Integer>();
@@ -164,7 +166,7 @@ public class ControllerSettings {
 			new ControllerBinding[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindSneak, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight});
 	private final File optionsFile;
 
-	public ControllerSettings(Minecraft mcIn, File mcDataDir) {
+	public ControllerOptions(Minecraft mcIn, File mcDataDir) {
 		this.mc = mcIn;
 		this.optionsFile = new File(mcDataDir, "controller-options.txt");
 	}
@@ -218,29 +220,19 @@ public class ControllerSettings {
 						this.lastGUID = s1;
 					}
 
-					if ("useAxisToMove".equals(s)) {
-						this.useAxisToMove = "true".equals(s1);
-					}
-
-					if ("paperDoll_showSwimming".equals(s)) {
-						this.paperDoll.showSwimming = "true".equals(s1);
-					}
-
-					if ("paperDoll_showCrawling".equals(s)) {
-						this.paperDoll.showCrawling = "true".equals(s1);
+					if ("enableController".equals(s)) {
+						this.enableController = "true".equals(s1);
 					}
 					
-					if ("paperDoll_showSprinting".equals(s)) {
-						this.paperDoll.showSprinting = "true".equals(s1);
+					if ("controllerNumber".equals(s)) {
+						this.controllerNumber = Integer.parseInt(s1);
 					}
 					
-					if ("paperDoll_showCrouching".equals(s)) {
-						this.paperDoll.showCrouching = "true".equals(s1);
+					if ("controllerModel".equals(s)) {
+						this.controllerModel = "ps4".equals(s1) ? ControllerModel.PS4 : "xbox_360".equals(s1) ? ControllerModel.XBOX_360 : ControllerModel.CUSTOM;
 					}
 					
-					if ("paperDoll_showFlying".equals(s)) {
-						this.paperDoll.showFlying = "true".equals(s1);
-					}
+					this.paperDoll.readOptions(s, s1);
 
 					if ("customControls_positiveTriggerAxes".equals(s)) {
 						String[] pts = s1.split(",");
@@ -300,8 +292,10 @@ public class ControllerSettings {
 		LOGGER.info("Saving Controls");
 		//      if (net.minecraftforge.fml.client.ClientModLoader.isLoading()) return; //Don't save settings before mods add keybindigns and the like to prevent them from being deleted.
 		try (PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.optionsFile), StandardCharsets.UTF_8))) {
-			if (Config.debug_mode.get()) printwriter.println("lastGUID:"+this.lastGUID);
-			printwriter.println("useAxisToMove:"+this.useAxisToMove);
+			if (ControllerMod.CONFIG.debug) printwriter.println("lastGUID:"+this.lastGUID);
+			printwriter.println("enableController:"+this.enableController);
+			printwriter.println("controllerNumber:"+this.controllerNumber);
+			printwriter.println("controllerModel:"+this.controllerModel.getModelName());
 			String pos = "";
 			if (this.positiveTriggerAxes.size() > 0) {
 				pos = this.positiveTriggerAxes.get(0)+"";
@@ -322,11 +316,7 @@ public class ControllerSettings {
 				}
 			}
 			printwriter.println("customControls_negativeTriggerAxes:"+neg);
-			printwriter.println("paperDoll_showCrawling:"+this.paperDoll.showCrawling);
-			printwriter.println("paperDoll_showCrouching:"+this.paperDoll.showCrouching);
-			printwriter.println("paperDoll_showFlying:"+this.paperDoll.showFlying);
-			printwriter.println("paperDoll_showSprinting:"+this.paperDoll.showSprinting);
-			printwriter.println("paperDoll_showSwimming:"+this.paperDoll.showSwimming);
+			this.paperDoll.writeOptions(printwriter);
 			for(ControllerModel model : ControllerModel.values()) {
 				for(ControllerBinding keybinding : this.controllerBindings) {
 					printwriter.println(model.getModelName() + "_binding_" + keybinding.getDescripti() + ":" + keybinding.getButtonOnController(model) + ":" + keybinding.getInputType(model)+ ":" + keybinding.isAxisInverted(model));

@@ -13,7 +13,6 @@ import com.stereowalker.controllermod.client.controller.ControllerBinding;
 import com.stereowalker.controllermod.client.controller.ControllerMap;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
-import com.stereowalker.controllermod.config.Config;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -123,25 +122,25 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			}) {
 				@Override
 				protected MutableComponent createNarrationMessage() {
-					return controllerBinding.isBoundToButton(Config.controllerModel.get()) ? new TranslatableComponent("narrator.controls.unbound", keyDesc) : new TranslatableComponent("narrator.controls.bound", keyDesc, super.createNarrationMessage());
+					return controllerBinding.isBoundToButton(ControllerMod.getInstance().controllerSettings.controllerModel) ? new TranslatableComponent("narrator.controls.unbound", keyDesc) : new TranslatableComponent("narrator.controls.bound", keyDesc, super.createNarrationMessage());
 				}
 			};
 			this.btnReset = new Button(0, 0, 50, 20, new TranslatableComponent("controls.reset"), (p_214387_2_) -> {
-				keybinding.setToDefault(Config.controllerModel.get());
-				ControllerBindingList.this.mod.controllerSettings.setKeyBindingCode(Config.controllerModel.get(), controllerBinding, controllerBinding.getDefault(Config.controllerModel.get()));
+				keybinding.setToDefault(ControllerMod.getInstance().controllerSettings.controllerModel);
+				ControllerBindingList.this.mod.controllerSettings.setKeyBindingCode(ControllerMod.getInstance().controllerSettings.controllerModel, controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().controllerSettings.controllerModel));
 				//            ControllerBinding.resetKeyBindingArrayAndHash();
 			}) {
 				protected MutableComponent createNarrationMessage() {
 					return new TranslatableComponent("narrator.controls.reset", keyDesc);
 				}
 			};
-			this.btnInputType = new Button(0, 10, 70, 20, keybinding.getInputType(Config.controllerModel.get()) != null ? keybinding.getInputType(Config.controllerModel.get()).getDisplayName() : new TextComponent(""), (p_214387_2_) -> {
+			this.btnInputType = new Button(0, 10, 70, 20, keybinding.getInputType(ControllerMod.getInstance().controllerSettings.controllerModel) != null ? keybinding.getInputType(ControllerMod.getInstance().controllerSettings.controllerModel).getDisplayName() : new TextComponent(""), (p_214387_2_) -> {
 				if (keybinding.isAxis()) {
-					ControllerBindingList.this.mod.controllerSettings.setKeyBindingInverted(Config.controllerModel.get(), keybinding, !keybinding.isAxisInverted(Config.controllerModel.get()));
+					ControllerBindingList.this.mod.controllerSettings.setKeyBindingInverted(ControllerMod.getInstance().controllerSettings.controllerModel, keybinding, !keybinding.isAxisInverted(ControllerMod.getInstance().controllerSettings.controllerModel));
 				} else {
-					if (keybinding.getInputType(Config.controllerModel.get()) == InputType.PRESS) ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(Config.controllerModel.get(), keybinding, InputType.TOGGLE);
-					else if (keybinding.getInputType(Config.controllerModel.get()) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(Config.controllerModel.get() ,keybinding, InputType.HOLD);
-					else ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(Config.controllerModel.get(), keybinding, InputType.PRESS);
+					if (keybinding.getInputType(ControllerMod.getInstance().controllerSettings.controllerModel) == InputType.PRESS) ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(ControllerMod.getInstance().controllerSettings.controllerModel, keybinding, InputType.TOGGLE);
+					else if (keybinding.getInputType(ControllerMod.getInstance().controllerSettings.controllerModel) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(ControllerMod.getInstance().controllerSettings.controllerModel ,keybinding, InputType.HOLD);
+					else ControllerBindingList.this.mod.controllerSettings.setKeyBindingInputType(ControllerMod.getInstance().controllerSettings.controllerModel, keybinding, InputType.PRESS);
 				}
 			}) {
 				@Override
@@ -158,18 +157,18 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			this.btnInputType.x = p_230432_4_ + 166;
 			this.btnInputType.y = p_230432_3_;
 			if (keybinding.isAxis()) {
-				this.btnInputType.setMessage(keybinding.isAxisInverted(Config.controllerModel.get()) ? new TranslatableComponent("gui.inverted") : new TranslatableComponent("Not Inverted"));
+				this.btnInputType.setMessage(keybinding.isAxisInverted(ControllerMod.getInstance().controllerSettings.controllerModel) ? new TranslatableComponent("gui.inverted") : new TranslatableComponent("Not Inverted"));
 			} else {
-				this.btnInputType.setMessage(keybinding.getInputType(Config.controllerModel.get()).getDisplayName());
+				this.btnInputType.setMessage(keybinding.getInputType(ControllerMod.getInstance().controllerSettings.controllerModel).getDisplayName());
 			}
 			this.btnInputType.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.btnReset.x = p_230432_4_ + 190 + 50;
 			this.btnReset.y = p_230432_3_;
-			this.btnReset.active = !this.keybinding.isDefault(Config.controllerModel.get());
+			this.btnReset.active = !this.keybinding.isDefault(ControllerMod.getInstance().controllerSettings.controllerModel);
 			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.btnChangeKeyBinding.x = p_230432_4_ + 78;
 			this.btnChangeKeyBinding.y = p_230432_3_;
-			this.btnChangeKeyBinding.setMessage(new TextComponent(ControllerMap.map(keybinding.getButtonOnController(Config.controllerModel.get()), Config.controllerModel.get())));
+			this.btnChangeKeyBinding.setMessage(new TextComponent(ControllerMap.map(keybinding.getButtonOnController(ControllerMod.getInstance().controllerSettings.controllerModel), ControllerMod.getInstance().controllerSettings.controllerModel)));
 			boolean flag1 = false;
 			boolean keyCodeModifierConflict = true; // less severe form of conflict, like SHIFT conflicting with SHIFT+G
 			//         if (!this.keybinding.isInvalid()) {

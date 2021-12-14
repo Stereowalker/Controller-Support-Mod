@@ -76,15 +76,15 @@ public class VirtualMouseHelper extends MouseHandler {
 					int p_198023_3_f = button;
 					if (flag) {
 						Screen.wrapScreenError(() -> {
-							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onGuiMouseClickedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
+							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseClickedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
 							if (!aboolean[0]) aboolean[0] = this.minecraft.screen.mouseClicked(d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onGuiMouseClickedPost(this.minecraft.screen, d0, d1, p_198023_3_f);
+							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseClickedPost(this.minecraft.screen, d0, d1, p_198023_3_f, aboolean[0]);
 						}, "mouseClicked event handler", this.minecraft.screen.getClass().getCanonicalName());
 					} else {
 						Screen.wrapScreenError(() -> {
-							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onGuiMouseReleasedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
+							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseReleasedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
 							if (!aboolean[0]) aboolean[0] = this.minecraft.screen.mouseReleased(d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onGuiMouseReleasedPost(this.minecraft.screen, d0, d1, p_198023_3_f);
+							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseReleasedPost(this.minecraft.screen, d0, d1, p_198023_3_f, aboolean[0]);
 						}, "mouseReleased event handler", this.minecraft.screen.getClass().getCanonicalName());
 					}
 				}
@@ -124,9 +124,9 @@ public class VirtualMouseHelper extends MouseHandler {
 				if (this.minecraft.screen != null) {
 					double d1 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
 					double d2 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
-					if (net.minecraftforge.client.ForgeHooksClient.onGuiMouseScrollPre(this, this.minecraft.screen, d0)) return;
+					if (net.minecraftforge.client.ForgeHooksClient.onScreenMouseScrollPre(this, this.minecraft.screen, d0)) return;
 					if (this.minecraft.screen.mouseScrolled(d1, d2, d0)) return;
-					net.minecraftforge.client.ForgeHooksClient.onGuiMouseScrollPost(this, this.minecraft.screen, d0);
+					net.minecraftforge.client.ForgeHooksClient.onScreenMouseScrollPost(this, this.minecraft.screen, d0);
 				} else if (this.minecraft.player != null) {
 					if (this.accumulatedScroll != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScroll)) {
 						this.accumulatedScroll = 0.0D;
@@ -212,9 +212,9 @@ public class VirtualMouseHelper extends MouseHandler {
 					double d2 = (xpos - this.xpos) * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
 					double d3 = (ypos - this.ypos) * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
 					Screen.wrapScreenError(() -> {
-						if (net.minecraftforge.client.ForgeHooksClient.onGuiMouseDragPre(this.minecraft.screen, d0, d1, this.activeButton, d2, d3)) return;
+						if (net.minecraftforge.client.ForgeHooksClient.onScreenMouseDragPre(this.minecraft.screen, d0, d1, this.activeButton, d2, d3)) return;
 						if (iguieventlistener.mouseDragged(d0, d1, this.activeButton, d2, d3)) return;
-						net.minecraftforge.client.ForgeHooksClient.onGuiMouseDragPost(this.minecraft.screen, d0, d1, this.activeButton, d2, d3);
+						net.minecraftforge.client.ForgeHooksClient.onScreenMouseDragPost(this.minecraft.screen, d0, d1, this.activeButton, d2, d3);
 					}, "mouseDragged event handler", iguieventlistener.getClass().getCanonicalName());
 				}
 			}

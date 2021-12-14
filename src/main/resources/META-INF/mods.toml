@@ -1,6 +1,6 @@
 
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[39,)"
 license="All Rights Reserved"
 issueTrackerURL="https://github.com/Stereowalker/Controller-Support-Mod/issues"
 logoFile="pack.png"
@@ -19,13 +19,19 @@ Grants the ablility to play Minecraft with controllers and gives opportunity to 
 [[dependencies.controllermod]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[37,)" #mandatory
+    versionRange="[39,)" #mandatory
     ordering="NONE"
     side="CLIENT"
 # Here's another dependency
 [[dependencies.controllermod]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18]"
+    versionRange="[1.18.1,1.19)"
     ordering="NONE"
     side="CLIENT"
+[[dependencies.controllermod]]
+    modId="unionlib"
+    mandatory=true
+    versionRange="[6.1,6.2)"
+    ordering="NONE"
+    side="BOTH"

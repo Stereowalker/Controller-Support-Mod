@@ -9,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
-import com.stereowalker.controllermod.config.Config;
 
 public class Controller {
 	private int id;
@@ -112,17 +111,17 @@ public class Controller {
 		List<String> buttons = new ArrayList<String>();
 		if (this != null) {
 			for (int i = 0; i < this.getButtons().capacity(); i++) {
-				if (this.getButton(i) > ControllerUtil.dead_zone && this.getButton(i) <= 1.0F) buttons.add("button"+i);
+				if (this.getButton(i) > ControllerMod.CONFIG.deadzone && this.getButton(i) <= 1.0F) buttons.add("button"+i);
 			}
 			for (int i = 0; i < this.getAxes().capacity(); i++) {
 				List<Integer> triggers0 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
 				if (!triggers0.contains(i)) {
-					if (this.getAxis(i) > ControllerUtil.dead_zone && this.getAxis(i) <= 1.0) buttons.add("axis_pos"+i);
+					if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0) buttons.add("axis_pos"+i);
 				}
 
 				List<Integer> triggers1 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
 				if (!triggers1.contains(i)) {
-					if (-this.getAxis(i) > ControllerUtil.dead_zone && -this.getAxis(i) <= 1.0) buttons.add("axis_neg"+i);
+					if (-this.getAxis(i) > ControllerMod.CONFIG.deadzone && -this.getAxis(i) <= 1.0) buttons.add("axis_neg"+i);
 				}
 			}
 			byte UP = this.getDpadUp();
@@ -141,11 +140,11 @@ public class Controller {
 		List<String> axes = new ArrayList<String>();
 		if (this != null) {
 			for (int i = 0; i < this.getAxes().capacity(); i++) {
-				List<Integer> triggersPos = Config.controllerModel.get() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
-				List<Integer> triggersNeg = Config.controllerModel.get() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
+				List<Integer> triggersPos = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
+				List<Integer> triggersNeg = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
 				if (!triggersPos.contains(i) && !triggersNeg.contains(i))
-					if (this.getAxis(i) > ControllerUtil.dead_zone && this.getAxis(i) <= 1.0F) axes.add("axis"+i);
-					else if (this.getAxis(i) < -ControllerUtil.dead_zone && this.getAxis(i) >= -1.0F) axes.add("axis"+i);
+					if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0F) axes.add("axis"+i);
+					else if (this.getAxis(i) < -ControllerMod.CONFIG.deadzone && this.getAxis(i) >= -1.0F) axes.add("axis"+i);
 			}
 		}
 		return axes;
@@ -187,6 +186,6 @@ public class Controller {
 				return model;
 			}
 		}
-		return Config.controllerModel.get();
+		return ControllerMod.getInstance().controllerSettings.controllerModel;
 	}
 }

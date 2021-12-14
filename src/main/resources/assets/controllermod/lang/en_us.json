@@ -1,5 +1,5 @@
 {
-///////////////////////////////////////////////////////////[KEYBINDS]///////////////////////////////////////////////////////////
+	"_comment0_": "///////////////////////////////////////////////////////////[KEYBINDS]///////////////////////////////////////////////////////////",
 	"key.categories.controller": "\u00A73\u00A7oController",
 	"key.controller.hotbar_left": "Shift Hotbar Left",
 	"key.controller.hotbar_right": "Shift Hotbar Right",
@@ -13,7 +13,7 @@
 	"key.controller.mouse_horizontal": "Mouse Horizontal",
 	"key.controller.mouse_vertical": "Mouse Vertical",
 	"key.controller.scroll": "Scroll",
-///////////////////////////////////////////////////////////[GUI]///////////////////////////////////////////////////////////
+	"_comment1_": "///////////////////////////////////////////////////////////[GUI]///////////////////////////////////////////////////////////",
 	"controllermod.config.title": "Controller Support Config",
 	"controllermod.debug_mode": "Debug Mode",
 	"controller_options.title": "Controller Options",
@@ -23,7 +23,7 @@
 	"controller.connected": "Connected",
 	"controller.disconnected": "Disconnected",
 	"gui.enableController": "Enable Controller",
-	"gui.editControllerInput": "Edit Controller Input",
+	"gui.editControllerInput": "Controller Binds...",
 	"gui.save": "Save",
 	"gui.ingameSensitivity": "Gameplay Sensitivity",
 	"gui.menuSensitivity": "Menu Sensitivity",
@@ -42,12 +42,21 @@
 	"gui.paper_doll.sprinting": "Sprinting",
 	"gui.paper_doll.crouching": "Crouching",
 	"gui.paper_doll.flying": "Flying",
+	"gui.paper_doll.gliding": "Gliding",
+	"gui.paper_doll.riding": "Riding",
+	"gui.paper_doll.spinning": "Spinning",
+	"gui.paper_doll.moving": "Moving",
+	"gui.paper_doll.jumping": "Jumping",
+	"gui.paper_doll.swinging_arm": "Swinging Arm",
+	"gui.paper_doll.using_item": "Using Item",
+	"gui.paper_doll.hurt": "Hurt",
+	"gui.paper_doll.on_fire": "On Fire",
 	
 	"gui.positive_triggers": "Positive Triggers",
 	"gui.negative_triggers": "Negative Triggers",
 	"gui.trigger.unmark": "Unmark As Trigger",
 	"gui.trigger.mark": "Mark As Trigger",
-///////////////////////////////////////////////////////////[MISC]///////////////////////////////////////////////////////////
+	"_comment2_": "///////////////////////////////////////////////////////////[MISC]///////////////////////////////////////////////////////////",
 	"input_type.press": "Press",
 	"input_type.toggle": "Toggle",
 	"input_type.hold": "Hold"
