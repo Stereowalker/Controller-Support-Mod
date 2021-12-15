@@ -28,6 +28,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	private ImmutableMap<ControllerModel,String> buttonOnController;
 	private final ImmutableMap<ControllerModel,String> defaultButtonOnController;
 	private ImmutableMap<ControllerModel,InputType> inputType;
+	private final UseCase useCase;
 	private final boolean fromKeybind;
 	
 	private final boolean isAxis;
@@ -49,7 +50,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		p_205215_0_.put("key.categories.misc", 8);
 	});
 
-	private ControllerBinding(String category, String description, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, boolean fromKeybindIn) {
+	private ControllerBinding(String category, String description, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
 		this.category = category;
 		this.descri = description;
 		ImmutableMap.Builder<ControllerModel,String> builder = ImmutableMap.builder();
@@ -71,26 +72,27 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		this.type = type;
 		this.inputType = inputTypeBuilder.build();
 		this.buttonOnKeyboardMouse = buttonOnKeyboardMouse;
+		this.useCase = useCase;
 		this.fromKeybind = fromKeybindIn;
 		this.isAxis = isAxisIn;
 		this.axisInverted = axisInvertedBuilder.build();
 		CONTROLLERBIND_ARRAY.put(description, this);
 	}
 
-	public ControllerBinding(String category, String desc, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType) {
-		this(category, desc, type, buttonOnKeyboardMouse, buttonId, inputType, false, false, false);
+	public ControllerBinding(String category, String desc, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+		this(category, desc, type, buttonOnKeyboardMouse, buttonId, inputType, false, false, useCase, false);
 	}
 
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType) {
-		this(category, desc, null, 0, buttonId, inputType, false, false, false);
+	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+		this(category, desc, null, 0, buttonId, inputType, false, false, useCase, false);
 	}
 
-	public ControllerBinding(KeyMapping keybind) {
+	public ControllerBinding(KeyMapping keybind, UseCase useCase) {
 		this(keybind.getCategory(), keybind.getName(), keybind.key.getType(), ControllerUtil.getKeybindCode(keybind), (builder) -> {
 			builder.put(ControllerModel.XBOX_360, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.PS4, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.CUSTOM, ControllerUtil.getControllerInputId(0));
-		}, InputType.PRESS, false, false, true);
+		}, InputType.PRESS, false, false, useCase, true);
 	}
 
 	/**
@@ -98,8 +100,8 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param keybind
 	 * @param buttonId
 	 */
-	public ControllerBinding(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId) {
-		this(keybind.getCategory(), keybind.getName(), keybind.key.getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, true);
+	public ControllerBinding(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
+		this(keybind.getCategory(), keybind.getName(), keybind.key.getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, useCase, true);
 	}
 
 	/**
@@ -109,8 +111,8 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param buttonId
 	 * @param conflictContext
 	 */
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn) {
-		this(category, desc, null, 0, buttonId, null, true, isAxisInvertedIn, false);
+	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn, UseCase useCase) {
+		this(category, desc, null, 0, buttonId, null, true, isAxisInvertedIn, useCase, false);
 	}
 
 	@SuppressWarnings("resource")
@@ -292,5 +294,9 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		ImmutableMap.Builder<ControllerModel,Boolean> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		this.axisInverted = builder2.build();
+	}
+
+	public UseCase getUseCase() {
+		return useCase;
 	}
 }

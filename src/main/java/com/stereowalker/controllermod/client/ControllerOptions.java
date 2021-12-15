@@ -23,6 +23,7 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerBinding;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
+import com.stereowalker.controllermod.client.controller.UseCase;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -52,112 +53,112 @@ public class ControllerOptions {
 	public final ControllerBinding controllerBindBack = new ControllerBinding(NEW, "key.controller.back", Type.KEYSYM, GLFW.GLFW_KEY_ESCAPE, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
-	}, InputType.PRESS);
+	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerBinding controllerBindPause = new ControllerBinding(NEW, "key.controller.pause", Type.KEYSYM, GLFW.GLFW_KEY_ESCAPE, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button7");
 		builder.put(ControllerModel.PS4, "button9");
-	}, InputType.PRESS);
+	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindHotbarLeft = new ControllerBinding(NEW, "key.controller.hotbar_left", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button4");
 		builder.put(ControllerModel.PS4, "button4");
-	}, InputType.PRESS);
+	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindHotbarRight = new ControllerBinding(NEW, "key.controller.hotbar_right",  (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button5");
 		builder.put(ControllerModel.PS4, "button5");
-	}, InputType.PRESS);
+	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindCameraHorizontal = new ControllerBinding(NEW, "key.controller.camera_horizontal", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis2");
 		builder.put(ControllerModel.PS4, "axis2");
-	}, false);
+	}, false, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindCameraVertical = new ControllerBinding(NEW, "key.controller.camera_vertical", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis3");
 		builder.put(ControllerModel.PS4, "axis5");
-	}, false);
+	}, false, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindMouseHorizontal = new ControllerBinding(NEW, "key.controller.mouse_horizontal", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis0");
 		builder.put(ControllerModel.PS4, "axis0");
-	}, false);
+	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerBinding controllerBindMouseVertical = new ControllerBinding(NEW, "key.controller.mouse_vertical", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis1");
 		builder.put(ControllerModel.PS4, "axis1");
-	}, false);
+	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerBinding controllerBindMoveHorizontal = new ControllerBinding(NEW, "key.controller.move_horizontal", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis0");
 		builder.put(ControllerModel.PS4, "axis0");
-	}, false);
+	}, false, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindMoveVertical = new ControllerBinding(NEW, "key.controller.move_vertical", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis1");
 		builder.put(ControllerModel.PS4, "axis1");
-	}, false);
+	}, false, UseCase.INGAME);
 
 	public final ControllerBinding controllerBindScroll = new ControllerBinding(NEW, "key.controller.scroll", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis3");
 		builder.put(ControllerModel.PS4, "axis5");
-	}, false);
+	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerBinding controllerKeyBindInventory = new ControllerBinding(Minecraft.getInstance().options.keyInventory, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button3");
 		builder.put(ControllerModel.PS4, "button3");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindJump = new ControllerBinding(Minecraft.getInstance().options.keyJump, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button0");
 		builder.put(ControllerModel.PS4, "button1");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindAttack = new ControllerBinding(Minecraft.getInstance().options.keyAttack, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos5");
 		builder.put(ControllerModel.PS4, "button7");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindUseItem = new ControllerBinding(Minecraft.getInstance().options.keyUse, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos4");
 		builder.put(ControllerModel.PS4, "button6");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindSneak = new ControllerBinding(Minecraft.getInstance().options.keyShift, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button9");
 		builder.put(ControllerModel.PS4, "button11");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindTogglePerspective = new ControllerBinding(Minecraft.getInstance().options.keyTogglePerspective, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button8");
 		builder.put(ControllerModel.PS4, "button10");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindDrop = new ControllerBinding(Minecraft.getInstance().options.keyDrop, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindForward = new ControllerBinding(Minecraft.getInstance().options.keyUp, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_neg1");
 		builder.put(ControllerModel.PS4, "axis_neg1");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindBack = new ControllerBinding(Minecraft.getInstance().options.keyDown, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos1");
 		builder.put(ControllerModel.PS4, "axis_pos1");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindLeft = new ControllerBinding(Minecraft.getInstance().options.keyLeft, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_neg0");
 		builder.put(ControllerModel.PS4, "axis_neg0");
-	});
+	}, UseCase.INGAME);
 
 	public final ControllerBinding controllerKeyBindRight = new ControllerBinding(Minecraft.getInstance().options.keyRight, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis_pos0");
 		builder.put(ControllerModel.PS4, "axis_pos0");
-	});
+	}, UseCase.INGAME);
 
 	public ControllerBinding[] controllerBindings = ArrayUtils.addAll(new ControllerBinding[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight,
 			this.controllerBindCameraHorizontal, this.controllerBindCameraVertical, this.controllerBindMouseHorizontal, this.controllerBindMouseVertical, this.controllerBindMoveHorizontal, this.controllerBindMoveVertical, this.controllerBindScroll},

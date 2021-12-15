@@ -314,7 +314,7 @@ public class ControllerUtil {
 				boolean flag = true;
 				if(ControllerMod.CONFIG.usePreciseMovement && (binding.getDescripti() == settings.keyUp.getName() || binding.getDescripti() == settings.keyRight.getName() || binding.getDescripti() == settings.keyLeft.getName() || binding.getDescripti() == settings.keyDown.getName())) flag = false;
 				if (flag && binding != null) {
-					if (binding.isBoundToButton(controller.getModel()))
+					if (binding.isBoundToButton(controller.getModel()) && (binding.getUseCase() == UseCase.INGAME || binding.getUseCase() == UseCase.ANYWHERE))
 						controller.updateButtonState(binding);
 				}
 			}
@@ -326,7 +326,7 @@ public class ControllerUtil {
 			for (ControllerBinding binding : ControllerMod.getInstance().controllerSettings.controllerBindings) {
 				boolean flag = true;
 				if (flag && binding != null) {
-					if (binding.isBoundToButton(controller.getModel()))
+					if (binding.isBoundToButton(controller.getModel()) && (binding.getUseCase() == UseCase.ANY_SCREEN || binding.getUseCase() == UseCase.ANYWHERE))
 						controller.updateButtonState(binding);
 				}
 			}
@@ -344,7 +344,7 @@ public class ControllerUtil {
 				boolean flag = true;
 				if (/* binding.getDescripti() == settings.keyBindInventory.getName() || */binding.getDescripti() == settings.keyUse.getName()) flag = false;
 				if (flag && binding != null) {
-					if (binding.isBoundToButton(controller.getModel()))
+					if (binding.isBoundToButton(controller.getModel()) && (binding.getUseCase() == UseCase.CONTAINER || binding.getUseCase() == UseCase.ANY_SCREEN || binding.getUseCase() == UseCase.ANYWHERE))
 						controller.updateButtonState(binding);
 				}
 			}
