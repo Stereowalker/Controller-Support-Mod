@@ -8,16 +8,16 @@ import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ControllerOptionsScreen extends Screen {
 	private final Screen previousScreen;
 	private Button nextController;
@@ -71,7 +71,7 @@ public class ControllerOptionsScreen extends Screen {
 			this.minecraft.setScreen(new PaperDollOptionsScreen(previousScreen));
 		}));
 		Button trigger = this.addRenderableWidget(new Button(this.width / 2 + 5, this.height  / 6 + 72, 150, 20, new TranslatableComponent("gui.triggerSetup"), (p_212984_1_) -> {
-			this.getMinecraft().setScreen(new TriggerSetupScreen(this));
+			this.minecraft.setScreen(new TriggerSetupScreen(this));
 		}));
 		if (options.enableController && controllerPresent) {
 			trigger.active = (this.mod.controllerSettings.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) &&  mod.

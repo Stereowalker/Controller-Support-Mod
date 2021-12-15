@@ -1,0 +1,48 @@
+accessWidener v1 named
+accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
+
+accessible field net/minecraft/client/MouseHandler minecraft Lnet/minecraft/client/Minecraft;
+#public net.minecraft.client.MouseHandler f_91504_ # isLeftPressed
+#public net.minecraft.client.MouseHandler f_91505_ # isMiddlePressed
+#public net.minecraft.client.MouseHandler f_91506_ # isRightPressed
+accessible field net/minecraft/client/MouseHandler xpos D
+accessible field net/minecraft/client/MouseHandler ypos D
+accessible field net/minecraft/client/MouseHandler fakeRightMouse I
+#public net.minecraft.client.MouseHandler f_91510_ # activeButton
+#public net.minecraft.client.MouseHandler f_91511_ # ignoreFirstMove
+#public net.minecraft.client.MouseHandler f_91512_ # clickDepth
+#public net.minecraft.client.MouseHandler f_91513_ # mousePressedTime
+#public net.minecraft.client.MouseHandler f_91514_ # smoothTurnX
+#public net.minecraft.client.MouseHandler f_91515_ # smoothTurnY
+#public net.minecraft.client.MouseHandler f_91516_ # accumulatedDX
+#public net.minecraft.client.MouseHandler f_91517_ # accumulatedDY
+accessible field net/minecraft/client/MouseHandler accumulatedScroll D
+accessible field net/minecraft/client/MouseHandler lastMouseEventTime D
+accessible field net/minecraft/client/MouseHandler mouseGrabbed Z
+accessible method net/minecraft/client/MouseHandler onScroll (JDD)V
+accessible method net/minecraft/client/MouseHandler onPress (JIII)V
+accessible method net/minecraft/client/MouseHandler onDrop (JLjava/util/List;)V
+accessible method net/minecraft/client/MouseHandler onMove (JDD)V
+
+
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97706_ # clickedSlot
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97709_ # lastClickSlot
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97710_ # isSplittingStack
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97711_ # draggingItem
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97712_ # snapbackStartX
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97713_ # snapbackStartY
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97715_ # snapbackItem
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97717_ # quickCraftingType
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97718_ # quickCraftingButton
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97719_ # skipNextRelease
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97721_ # lastClickTime
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97722_ # lastClickButton
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97723_ # doubleclick
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97724_ # lastQuickMoved
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97737_ # quickCraftSlots
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97738_ # isQuickCrafting
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen m_97744_(DD)Lnet/minecraft/world/inventory/Slot; # findSlot
+#public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen m_97762_(I)V # checkHotbarMouseClicked
+
+accessible field net/minecraft/world/entity/Entity xRot F
+accessible field net/minecraft/world/entity/Entity yRot F

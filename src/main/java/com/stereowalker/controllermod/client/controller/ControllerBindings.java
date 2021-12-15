@@ -13,7 +13,6 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.settings.KeyConflictContext;
 
 public class ControllerBindings {
 
@@ -21,12 +20,12 @@ public class ControllerBindings {
 	public static final ControllerBinding SELECT_INPUT = new ControllerBinding(NEW, "select", Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button0");
 		builder.put(ControllerModel.PS4, "button1");
-	}, InputType.PRESS, KeyConflictContext.GUI);
+	}, InputType.PRESS);
 	
 	public static final ControllerBinding SHIFT_MOVE_INPUT = new ControllerBinding(NEW, "shift_move", Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button2");
 		builder.put(ControllerModel.PS4, "button0");
-	}, InputType.PRESS, ControllerConflictContext.CONTAINER);
+	}, InputType.PRESS);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);
 	public static final List<KeyMapping> excludedKeybinds = Lists.newArrayList();

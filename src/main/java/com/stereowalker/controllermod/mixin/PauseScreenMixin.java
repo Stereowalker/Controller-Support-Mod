@@ -24,7 +24,7 @@ public abstract class PauseScreenMixin extends Screen {
 	@Inject(method = "init", at = @At("TAIL"))
 	public void init_inject(CallbackInfo ci) {
 		this.addRenderableWidget(new ImageButton(this.width / 2 + 104, this.height / 4 + 96 + -16, 20, 20, 0, 0, 20, ControllerMod.CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-			this.getMinecraft().setScreen(new ControllerOptionsScreen(this));
+			this.minecraft.setScreen(new ControllerOptionsScreen(this));
 		}, new TranslatableComponent("menu.button.controllers")));
 	}
 }

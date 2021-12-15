@@ -1,7 +1,8 @@
 package com.stereowalker.controllermod.mixin;
 
-import javax.annotation.Nullable;
+import java.io.File;
 
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,6 +14,7 @@ import com.mojang.blaze3d.platform.WindowEventHandler;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
+import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 
@@ -21,6 +23,7 @@ import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.main.GameConfig;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 
@@ -30,9 +33,25 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	@Shadow @Nullable public LocalPlayer player;
 	@Shadow @Nullable public Screen screen;
 	@Shadow @Final public MouseHandler mouseHandler;
+	@Shadow @Final public File gameDirectory;
 
 	public MinecraftMixin(String p_18765_) {
 		super(p_18765_);
+	}
+	
+	@Inject(method = "<init>", at = @At(value = "TAIL"))
+	public void init_inject(GameConfig gameConfig, CallbackInfo ci) {
+		ControllerMod.getInstance().controllerSettings = new ControllerOptions((Minecraft)(Object)this, this.gameDirectory);
+		ControllerMod.getInstance().controllerSettings.lastGUID = ControllerMod.getInstance().getActiveController().getGUID();
+		System.out.println("total Connected Controllers "+ControllerMod.getInstance().getTotalConnectedControllers());
+		for (int i = 0; i < ControllerMod.getInstance().getTotalConnectedControllers(); i++) {
+			if (ControllerUtil.isControllerAvailable(i)) {
+				System.out.println("Added Controller "+i);
+				ControllerMod.getInstance().controllers.add(new Controller(i));
+			}
+		}
+		ControllerBindings.registerAll();
+		ControllerMod.getInstance().controllerSettings.loadOptions();
 	}
 
 	boolean fromGame = false;

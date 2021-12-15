@@ -8,6 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.TriggerSetupScreen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -17,10 +19,8 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesList.Entry> {
 	private ControllerMod mod;
 
@@ -48,7 +48,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		return super.getRowWidth() + 72;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class CategoryEntry extends TriggerAxesList.Entry {
 		private final Component labelText;
 		private final int labelWidth;
@@ -79,7 +79,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class TriggerEntry extends TriggerAxesList.Entry {
 		private final Button btnTrigger;
 		private final Component labelText;
@@ -157,7 +157,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<TriggerAxesList.Entry> {
 	}
 }

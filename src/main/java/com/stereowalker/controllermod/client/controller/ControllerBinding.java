@@ -10,15 +10,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.settings.IKeyConflictContext;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ControllerBinding implements Comparable<ControllerBinding> {
 	private static final Map<String, ControllerBinding> CONTROLLERBIND_ARRAY = Maps.newHashMap();
 	
@@ -29,7 +28,6 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	private ImmutableMap<ControllerModel,String> buttonOnController;
 	private final ImmutableMap<ControllerModel,String> defaultButtonOnController;
 	private ImmutableMap<ControllerModel,InputType> inputType;
-	private final IKeyConflictContext conflict;
 	private final boolean fromKeybind;
 	
 	private final boolean isAxis;
@@ -51,7 +49,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		p_205215_0_.put("key.categories.misc", 8);
 	});
 
-	private ControllerBinding(String category, String description, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, IKeyConflictContext conflictContext, boolean fromKeybindIn) {
+	private ControllerBinding(String category, String description, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, boolean fromKeybindIn) {
 		this.category = category;
 		this.descri = description;
 		ImmutableMap.Builder<ControllerModel,String> builder = ImmutableMap.builder();
@@ -73,27 +71,26 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		this.type = type;
 		this.inputType = inputTypeBuilder.build();
 		this.buttonOnKeyboardMouse = buttonOnKeyboardMouse;
-		this.conflict = conflictContext;
 		this.fromKeybind = fromKeybindIn;
 		this.isAxis = isAxisIn;
 		this.axisInverted = axisInvertedBuilder.build();
 		CONTROLLERBIND_ARRAY.put(description, this);
 	}
 
-	public ControllerBinding(String category, String desc, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, IKeyConflictContext conflictContext) {
-		this(category, desc, type, buttonOnKeyboardMouse, buttonId, inputType, false, false, conflictContext, false);
+	public ControllerBinding(String category, String desc, InputConstants.Type type, int buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType) {
+		this(category, desc, type, buttonOnKeyboardMouse, buttonId, inputType, false, false, false);
 	}
 
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, IKeyConflictContext conflictContext) {
-		this(category, desc, null, 0, buttonId, inputType, false, false, conflictContext, false);
+	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType) {
+		this(category, desc, null, 0, buttonId, inputType, false, false, false);
 	}
 
 	public ControllerBinding(KeyMapping keybind) {
-		this(keybind.getCategory(), keybind.getName(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), (builder) -> {
+		this(keybind.getCategory(), keybind.getName(), keybind.key.getType(), ControllerUtil.getKeybindCode(keybind), (builder) -> {
 			builder.put(ControllerModel.XBOX_360, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.PS4, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.CUSTOM, ControllerUtil.getControllerInputId(0));
-		}, InputType.PRESS, false, false, keybind.getKeyConflictContext(), true);
+		}, InputType.PRESS, false, false, true);
 	}
 
 	/**
@@ -102,7 +99,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param buttonId
 	 */
 	public ControllerBinding(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId) {
-		this(keybind.getCategory(), keybind.getName(), keybind.getKey().getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, keybind.getKeyConflictContext(), true);
+		this(keybind.getCategory(), keybind.getName(), keybind.key.getType(), ControllerUtil.getKeybindCode(keybind), buttonId, InputType.PRESS, false, false, true);
 	}
 
 	/**
@@ -112,8 +109,8 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param buttonId
 	 * @param conflictContext
 	 */
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn, IKeyConflictContext conflictContext) {
-		this(category, desc, null, 0, buttonId, null, true, isAxisInvertedIn, conflictContext, false);
+	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn) {
+		this(category, desc, null, 0, buttonId, null, true, isAxisInvertedIn, false);
 	}
 
 	@SuppressWarnings("resource")
@@ -225,10 +222,6 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	public void release() {
 		downTicks = 0;
 		buttonDown = false;
-	}
-
-	public IKeyConflictContext getConflict() {
-		return conflict;
 	}
 
 	public boolean isFromKeybind() {

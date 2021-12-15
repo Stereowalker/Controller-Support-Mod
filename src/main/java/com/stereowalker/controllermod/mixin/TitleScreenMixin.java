@@ -26,7 +26,7 @@ public abstract class TitleScreenMixin extends Screen {
 	public void init_inject(CallbackInfo ci) {
 		ControllerUtil.isListening = true;
 		this.addRenderableWidget(new ImageButton(this.width / 2 + 104, this.height / 4 + 24 + 24 * 2, 20, 20, 0, 0, 20, ControllerMod.CONTROLLER_BUTTON_TEXTURES, 20, 40, (p_213088_1_) -> {
-			this.getMinecraft().setScreen(new ControllerOptionsScreen(this));
+			this.minecraft.setScreen(new ControllerOptionsScreen(this));
 		}, new TranslatableComponent("menu.button.controllers")));
 	}
 }

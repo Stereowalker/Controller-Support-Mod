@@ -14,6 +14,8 @@ import com.stereowalker.controllermod.client.controller.ControllerMap;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -24,10 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ControllerBindingList extends ContainerObjectSelectionList<ControllerBindingList.Entry> {
 	private final ControllerInputOptionsScreen controlsScreen;
 	private int maxListLabelWidth;
@@ -69,7 +69,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		return super.getRowWidth() + 72;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class CategoryEntry extends ControllerBindingList.Entry {
 		private final Component labelText;
 		private final int labelWidth;
@@ -100,11 +100,11 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ControllerBindingList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public class KeyEntry extends ControllerBindingList.Entry {
 		/** The keybinding specified for this KeyEntry */
 		private final ControllerBinding keybinding;

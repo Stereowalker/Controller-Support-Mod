@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "controllermod",
+  "version": "${version}",
+
+  "name": "UnionLib",
+  "description": "Grants the ablility to play Minecraft with controllers and gives opportunity to those who want to play split-screen.",
+  "authors": [
+    "Stereowalker"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/controller-mod"
+  },
+
+  "license": "All Rights Reserved",
+  "icon": "pack.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.stereowalker.controllermod.ControllerMod"
+    ]
+  },
+  "mixins": [
+    "controllermod.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17",
+	"unionlib": [">=6.1.0", "<6.2.0"]
+  },
+  "accessWidener": "controllermod.accesswidener",
+  "suggests": {
+    "another-mod": "*"
+  }
+}

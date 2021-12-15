@@ -13,6 +13,8 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.stereowalker.controllermod.ControllerMod;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -27,10 +29,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class PaperDollOptions {
 	
 	public Map<DollType, Boolean> show = Maps.newHashMap();
@@ -129,7 +129,7 @@ public class PaperDollOptions {
 	}
 
 	@SuppressWarnings("resource")
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void renderPosition(PoseStack matrixStack) {
 		Minecraft.getInstance().getProfiler().push("coordinates223");
 		RenderSystem.disableDepthTest();
@@ -156,7 +156,7 @@ public class PaperDollOptions {
 	}
 
 	@SuppressWarnings("resource")
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void renderNames(PoseStack matrixStack) {
 		Minecraft.getInstance().getProfiler().push("playerName");
 		Component playerName = Minecraft.getInstance().player.getName();
@@ -167,7 +167,7 @@ public class PaperDollOptions {
 	}
 
 	@SuppressWarnings("deprecation")
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity entity) {
 		float f = (float)Math.atan((double)(mouseX / 40.0F));
 		float f1 = (float)Math.atan((double)(mouseY / 40.0F));

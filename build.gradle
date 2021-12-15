@@ -1,110 +1,75 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-		maven { url = 'https://repo.spongepowered.org/maven' }
-		maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-		classpath 'org.parchmentmc:librarian:1.+'
-		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-  id "com.matthewprenger.cursegradle" version "1.4.0"
+	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'maven-publish'
+  	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, modId+".refmap.json"
-}
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 version = modMinecraftVersion + "-" +modVersion +"-"+modLoader
 group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = modFilename
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', '+modLoader+' Version: ' + modLoaderVersion)
 
-repositories {
-    maven {url = "https://repo.spongepowered.org/maven"} // mixin
-	maven {url "https://www.cursemaven.com"} //cursemaven
-	maven {url "https://modmaven.dev/" } //UnionLib
+loom {
+    accessWidenerPath = file("src/main/resources/"+modId+".accesswidener")
 }
 
-minecraft {
-    mappings channel: mappingsChannel, version: mappingsVersion
-    //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    runs {
-        client {
-            workingDirectory project.file('run/client')
-            property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
-			
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-			
-			args '--username', 'CodeHexIO', '--uuid', 'c5751ce1d50e4d47ca120e1ea1c75542'
-
-            mods {
-                modId {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run/server')
-            property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                modId {
-                    source sourceSets.main
-                }
-            }
-        }
+repositories {
+	maven {url = "https://repo.spongepowered.org/maven"} // mixin
+	maven {url "https://www.cursemaven.com"} //cursemaven
+	maven {url "https://modmaven.dev/" } //UnionLib
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
     }
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modLoaderVersion
-	annotationProcessor "org.spongepowered:mixin:"+modMixinVersion+":processor"
-	implementation "org.spongepowered:mixin:"+modMixinVersion+""
-	implementation fileTree(include: ['*.jar'], dir: 'libs')
-	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
-	implementation fg.deobf("curse.maven:xareo-317780:3551770")
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.modMinecraftVersion}"
+	mappings loom.layered() {
+  		officialMojangMappings()
+  		parchment("org.parchmentmc.data:parchment-"+mappingsVersion+"@zip")
+	}
+	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
+	modImplementation "curse.maven:forge_config_api-547434:3551753"
+	//modImplementation "curse.maven:xareo-317780:3551769"
+	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.modLoaderVersion}"
+	implementation 'com.electronwill.night-config:core:3.6.3'
+	implementation 'com.electronwill.night-config:toml:3.6.3'
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
 }
 
 jar {
-    manifest {
-        attributes([
-            "Specification-Title": modFilename,
-            "Specification-Vendor": "Stereowalker",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": modVersion,
-            "Implementation-Vendor" :"Stereowalker",
-            "MixinConfigs": modId+".mixins.json",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
 }
 
 curseforge {
@@ -115,24 +80,27 @@ curseforge {
 		releaseType = 'release'
 		addGameVersion(modMinecraftVersion)
         addGameVersion("${project.modLoader}")
-		mainArtifact(jar) {
-			displayName = modFilename+"-$project.version"
+        relations {
+        	requiredDependency 'unionlib'
+        }
+		mainArtifact(file("${project.buildDir}/libs/"+modFilename+"-${project.version}.jar")) {
+			displayName = modFilename+"-${project.version}"
 		}
-		relations {
-      		requiredDependency 'unionlib'
-    	}
+		afterEvaluate {
+			uploadTask.dependsOn(remapJar)
+		}
 	}
 	options {
     	debug = false // defaults to false
+    	forgeGradleIntegration = false
   	}	
 }
 
 publishing {
+	tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
-        	afterEvaluate {
-                artifact project.jar
-            }
+			artifact project.file("${project.buildDir}/libs/"+modFilename+"-${project.version}.jar")
         
         	groupId = project.group
 			artifactId = project.archivesBaseName
