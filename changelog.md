@@ -1,3 +1,6 @@
+[6.0.2]
+- Added UseCases to prevent the bindings from conflicting
+
 [6.0.1]
 - Fix mod not finding reference map
 
