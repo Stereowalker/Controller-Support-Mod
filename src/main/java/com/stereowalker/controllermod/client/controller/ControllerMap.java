@@ -1,9 +1,9 @@
 package com.stereowalker.controllermod.client.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+
+import com.google.common.collect.Lists;
 
 public class ControllerMap {
 	public static String map(String input, ControllerModel model) {
@@ -78,34 +78,19 @@ public class ControllerMap {
 	}
 	
 	public enum ControllerModel {
-		CUSTOM("custom", "", (triggers) -> {
-		}, (triggers) -> {
-		}),
-		XBOX_360("xbox_360", "78696e70757401000000000000000000", (triggers) -> {
-			triggers.add(4);
-			triggers.add(5);
-		}, (triggers) -> {
-		}),
-		PS4("ps4", "030000004c050000cc09000000000000", (triggers) -> {
-			triggers.add(3);
-			triggers.add(4);
-		}, (triggers) -> {
-		});
+		CUSTOM("custom", "", new Integer[] {}, new Integer[] {}),
+		XBOX_360("xbox_360", "78696e70757401000000000000000000", new Integer[] {4,5}, new Integer[] {}),
+		PS4("ps4", "030000004c050000cc09000000000000", new Integer[] {3,4}, new Integer[] {});
 		
 		List<Integer> controllerNegativeTriggers;
 		List<Integer> controllerPositiveTriggers;
 		String modelName;
 		String GUID;
-		private ControllerModel(String modelNameIn, String GUIDIn, Consumer<List<Integer>> controllerNegativeTriggersIn, Consumer<List<Integer>> controllerPositiveTriggersIn) {
+		private ControllerModel(String modelNameIn, String GUIDIn, Integer[] controllerNegativeTriggersIn, Integer[] controllerPositiveTriggersIn) {
 			modelName = modelNameIn;
 			GUID = GUIDIn;
-			List<Integer> negativeTriggers = new ArrayList<Integer>();
-			controllerNegativeTriggersIn.accept(negativeTriggers);
-			controllerNegativeTriggers = negativeTriggers;
-			
-			List<Integer> positiveTriggers = new ArrayList<Integer>();
-			controllerPositiveTriggersIn.accept(positiveTriggers);
-			controllerPositiveTriggers = positiveTriggers;
+			controllerNegativeTriggers = Lists.newArrayList(controllerNegativeTriggersIn);
+			controllerPositiveTriggers = Lists.newArrayList(controllerPositiveTriggersIn);
 		}
 		
 		public List<Integer> getControllerNegativeTriggers() {
