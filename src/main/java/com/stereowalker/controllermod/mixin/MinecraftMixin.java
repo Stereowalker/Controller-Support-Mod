@@ -1,6 +1,7 @@
 package com.stereowalker.controllermod.mixin;
 
 import java.io.File;
+import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -10,12 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.platform.WindowEventHandler;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 
 import net.minecraft.client.Minecraft;
@@ -34,11 +38,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	@Shadow @Nullable public Screen screen;
 	@Shadow @Final public MouseHandler mouseHandler;
 	@Shadow @Final public File gameDirectory;
+	@Shadow @Final private Window window;
 
 	public MinecraftMixin(String p_18765_) {
 		super(p_18765_);
 	}
-	
+
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
 	public void init_inject(GameConfig gameConfig, CallbackInfo ci) {
 		ControllerMod.getInstance().controllerSettings = new ControllerOptions((Minecraft)(Object)this, this.gameDirectory);
@@ -64,57 +69,76 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 			if(!Minecraft.getInstance().isWindowActive()) Minecraft.getInstance().setWindowActive(true);
 			Controller controller = ControllerMod.getInstance().getActiveController();
 			if (controller != null) {
-				float scrollAxis = settings.controllerBindScroll.getAxis();
-				float cameraXAxis = settings.controllerBindCameraHorizontal.getAxis();
-				float cameraYAxis = settings.controllerBindCameraVertical.getAxis();
-				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
-				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
+				List<UseCase> case1 = null;
 				//Inventory Keybinds
 				if(screen instanceof AbstractContainerScreen) {
 					//					if(fromGame) {
 					//						ControllerUtil.unpressAllKeys();
 					//						fromGame = false;
 					//					}
-					ControllerUtil.handleContainerInput(controller, mouseXAxis, mouseYAxis, scrollAxis);
+					case1 = Lists.newArrayList(UseCase.CONTAINER, UseCase.ANY_SCREEN, UseCase.ANYWHERE);
 				}
 
 				//Ingame Menu Keybinds
-				if(screen instanceof PauseScreen) {
+				else if(screen instanceof PauseScreen) {
 					if(fromGame) {
 						ControllerUtil.unpressAllKeys();
 						fromGame = false;
 					}
-					ControllerUtil.handleScreenInput(controller, mouseXAxis, mouseYAxis, scrollAxis, true);
+					case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
 				}
 
 				//Any other menu
-				if(screen !=null && !(screen instanceof AbstractContainerScreen) && !(screen instanceof PauseScreen)) {
+				else if(screen !=null && !(screen instanceof AbstractContainerScreen) && !(screen instanceof PauseScreen)) {
 					if(screen instanceof ControllerInputOptionsScreen) {
 						if(!((ControllerInputOptionsScreen)screen).isAwaitingInput()) {
 							if(fromGame) {
 								ControllerUtil.unpressAllKeys();
 								fromGame = false;
 							}
-							ControllerUtil.handleScreenInput(controller, mouseXAxis, mouseYAxis, scrollAxis, false);
+							case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
 						}
 					} else {
 						if(fromGame) {
 							ControllerUtil.unpressAllKeys();
 							fromGame = false;
 						}
-						ControllerUtil.handleScreenInput(controller, mouseXAxis, mouseYAxis, scrollAxis, false);
+						case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
 					}
 				}
 
 				//Ingame Keybinds
-				if(screen == null) {
+				else if(screen == null) {
 					fromGame = true;
-					ControllerUtil.handleIngameInput(controller, cameraXAxis, cameraYAxis);
+					case1 = Lists.newArrayList(UseCase.INGAME, UseCase.ANYWHERE);
+				}
+				if (case1 != null) {
+					ControllerUtil.handleControllerMappings(controller, case1);
+				}
+
+
+				float scrollAxis = settings.controllerBindScroll.getAxis();
+				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
+				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
+
+				if (case1.contains(UseCase.CONTAINER)) {
+					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, false);
+					if (scrollAxis >= -1.0F && scrollAxis < -0.1F)
+						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
+					if (scrollAxis <= 1.0F && scrollAxis > 0.1F)
+						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D);
+				}
+				else if (case1.contains(UseCase.ANY_SCREEN)) {
+					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, true);
+					if (scrollAxis >= -1.0F && scrollAxis < -0.1D)
+						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
+					if (scrollAxis <= 1.0F && scrollAxis > 0.1D)
+						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
 				}
 			}
 		}
 	}
-	
+
 	@Inject(method = "handleKeybinds", at = @At("TAIL"))
 	public void handleKeybinds_inject(CallbackInfo ci) {
 		if(this.screen==null) {

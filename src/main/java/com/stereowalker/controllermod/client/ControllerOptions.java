@@ -46,16 +46,16 @@ public class ControllerOptions {
 
 	public List<Integer> negativeTriggerAxes = new ArrayList<Integer>();
 	public List<Integer> positiveTriggerAxes = new ArrayList<Integer>();
-	
+
 	public String lastGUID = " "; 
 
 	public static final String NEW = "key.categories.controller";
-	public final ControllerBinding controllerBindBack = new ControllerBinding(NEW, "key.controller.back", Type.KEYSYM, GLFW.GLFW_KEY_ESCAPE, (builder) -> {
+	public final ControllerBinding controllerBindBack = new ControllerBinding(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
-	public final ControllerBinding controllerBindPause = new ControllerBinding(NEW, "key.controller.pause", Type.KEYSYM, GLFW.GLFW_KEY_ESCAPE, (builder) -> {
+	public final ControllerBinding controllerBindPause = new ControllerBinding(NEW, "key.controller.pause", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button7");
 		builder.put(ControllerModel.PS4, "button9");
 	}, InputType.PRESS, UseCase.INGAME);
@@ -214,7 +214,7 @@ public class ControllerOptions {
 				String s1 = compoundnbt1.getString(s);
 
 				try {
-					
+
 					if ("lastGUID".equals(s)) {
 						this.lastGUID = s1;
 					}
@@ -222,15 +222,15 @@ public class ControllerOptions {
 					if ("enableController".equals(s)) {
 						this.enableController = "true".equals(s1);
 					}
-					
+
 					if ("controllerNumber".equals(s)) {
 						this.controllerNumber = Integer.parseInt(s1);
 					}
-					
+
 					if ("controllerModel".equals(s)) {
 						this.controllerModel = "ps4".equals(s1) ? ControllerModel.PS4 : "xbox_360".equals(s1) ? ControllerModel.XBOX_360 : ControllerModel.CUSTOM;
 					}
-					
+
 					this.paperDoll.readOptions(s, s1);
 
 					if ("customControls_positiveTriggerAxes".equals(s)) {
@@ -266,7 +266,7 @@ public class ControllerOptions {
 				}
 			}
 
-			//         ControllerBinding.resetKeyBindingArrayAndHash();
+			ControllerBinding.resetMapping();
 		} catch (Exception exception1) {
 			LOGGER.error("Failed to load options", (Throwable)exception1);
 		}

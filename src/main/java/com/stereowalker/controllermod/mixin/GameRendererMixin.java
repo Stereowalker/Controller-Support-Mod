@@ -34,7 +34,6 @@ public abstract class GameRendererMixin implements ResourceManagerReloadListener
 
 			minecraft.player.xRot = newPitch;
 			minecraft.player.yRot = newYaw;
-			//			event.setRoll(cameraXAxis + event.getRoll());
 		}
 	}
 }

@@ -110,32 +110,37 @@ public class Controller {
 	public List<String> getButtonsDown() {
 		List<String> buttons = new ArrayList<String>();
 		if (this != null) {
-			for (int i = 0; i < this.getButtons().capacity(); i++) {
-				if (this.getButton(i) > ControllerMod.CONFIG.deadzone && this.getButton(i) <= 1.0F) buttons.add("button"+i);
-			}
-			for (int i = 0; i < this.getAxes().capacity(); i++) {
-				List<Integer> triggers0 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
-				if (!triggers0.contains(i)) {
-					if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0) buttons.add("axis_pos"+i);
+			if (this.getButtons() != null) {
+				for (int i = 0; i < this.getButtons().capacity(); i++) {
+					if (this.getButton(i) > ControllerMod.CONFIG.deadzone && this.getButton(i) <= 1.0F) buttons.add("button"+i);
 				}
+				for (int i = 0; i < this.getAxes().capacity(); i++) {
+					List<Integer> triggers0 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
+					if (!triggers0.contains(i)) {
+						if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0) buttons.add("axis_pos"+i);
+					}
 
-				List<Integer> triggers1 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
-				if (!triggers1.contains(i)) {
-					if (-this.getAxis(i) > ControllerMod.CONFIG.deadzone && -this.getAxis(i) <= 1.0) buttons.add("axis_neg"+i);
+					List<Integer> triggers1 = getModel() == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
+					if (!triggers1.contains(i)) {
+						if (-this.getAxis(i) > ControllerMod.CONFIG.deadzone && -this.getAxis(i) <= 1.0) buttons.add("axis_neg"+i);
+					}
 				}
+				byte UP = this.getDpadUp();
+				byte DOWN = this.getDpadDown();
+				byte LEFT = this.getDpadLeft();
+				byte RIGHT = this.getDpadRight();
+				if (UP > 0.1F) buttons.add("UP"); 
+				if (DOWN > 0.1F) buttons.add("DOWN"); 
+				if (LEFT > 0.1F) buttons.add("LEFT"); 
+				if (RIGHT > 0.1F) buttons.add("RIGHT"); 
 			}
-			byte UP = this.getDpadUp();
-			byte DOWN = this.getDpadDown();
-			byte LEFT = this.getDpadLeft();
-			byte RIGHT = this.getDpadRight();
-			if (UP > 0.1F) buttons.add("UP"); 
-			if (DOWN > 0.1F) buttons.add("DOWN"); 
-			if (LEFT > 0.1F) buttons.add("LEFT"); 
-			if (RIGHT > 0.1F) buttons.add("RIGHT"); 
+			else {
+				System.out.println("There are no buttons on this controller");
+			}
 		}
 		return buttons;
 	}
-	
+
 	public List<String> getAxesMoved() {
 		List<String> axes = new ArrayList<String>();
 		if (this != null) {
@@ -163,20 +168,6 @@ public class Controller {
 			return getAxesMoved().contains(axis);
 		} else {
 			return false;
-		}
-	}
-
-	public void updateButtonState(ControllerBinding controllerBinding) {
-		if (controllerBinding.isAxis()) {
-			controllerBinding.axis = ControllerUtil.updateAxisState(controllerBinding.getButtonOnController(getModel()), this) * (controllerBinding.isAxisInverted(getModel()) ? -1 : 1);
-		} else {
-			if (isButtonDown(controllerBinding.getButtonOnController(getModel()))) {
-				controllerBinding.tick();
-				ControllerUtil.updateButtonState(controllerBinding.getButtonOnController(getModel()), this, controllerBinding.getKeyType(), controllerBinding.getButtonOnKeyboardOrMouse(), controllerBinding.getInputType(getModel()));
-			} else {
-				controllerBinding.release();
-				ControllerUtil.updateButtonState(controllerBinding.getButtonOnController(getModel()), this, controllerBinding.getKeyType(), controllerBinding.getButtonOnKeyboardOrMouse(), controllerBinding.getInputType(getModel()));
-			}
 		}
 	}
 

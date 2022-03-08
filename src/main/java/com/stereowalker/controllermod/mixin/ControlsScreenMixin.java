@@ -26,7 +26,7 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
 	public ControlsScreenMixin(Screen pLastScreen, Options pOptions, Component pTitle) {
 		super(pLastScreen, pOptions, pTitle);
 	}
-	
+
 	@Inject(method = "init", at = @At(value = "INVOKE", shift = Shift.AFTER, ordinal = 4, target = "Lnet/minecraft/client/gui/screens/controls/ControlsScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void init_inject(CallbackInfo ci, int i, int j, int k){
 		this.addRenderableWidget(new Button(j, k, 150, 20, new TranslatableComponent("gui.editControllerInput"), (p_212984_1_) -> {

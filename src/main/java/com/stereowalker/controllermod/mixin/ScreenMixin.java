@@ -15,7 +15,6 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
@@ -24,7 +23,7 @@ import net.minecraft.client.renderer.GameRenderer;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin extends AbstractContainerEventHandler implements Widget {
-	
+
 	@Inject(method = "render", at = @At("TAIL"))
 	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
 		if (!((Object)this instanceof LevelLoadingScreen)) {
@@ -50,7 +49,6 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 		bufferbuilder.vertex(-size+x, -size+y, -90.0F).uv(0.0F, 0.0F).endVertex();
 		tessellator.end();
 		poseStack.popPose();
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+		RenderSystem.enableDepthTest();
 	}
 }
