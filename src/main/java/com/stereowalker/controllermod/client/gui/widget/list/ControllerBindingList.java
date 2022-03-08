@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerBinding;
+import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerMap;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
@@ -37,11 +37,11 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		super(mcIn, controls.width + 45, controls.height, 43, controls.height - 32, 20);
 		this.controlsScreen = controls;
 		this.mod = modIn;
-		ControllerBinding[] akeybinding = ArrayUtils.clone(modIn.controllerSettings.controllerBindings);
+		ControllerMapping[] akeybinding = ArrayUtils.clone(modIn.controllerSettings.controllerBindings);
 		Arrays.sort(akeybinding);
 		String s = null;
 
-		for(ControllerBinding keybinding : akeybinding) {
+		for(ControllerMapping keybinding : akeybinding) {
 			String s1 = keybinding.getCategory();
 			if (!s1.equals(s)) {
 				s = s1;
@@ -107,14 +107,14 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 	@OnlyIn(Dist.CLIENT)
 	public class KeyEntry extends ControllerBindingList.Entry {
 		/** The keybinding specified for this KeyEntry */
-		private final ControllerBinding keybinding;
+		private final ControllerMapping keybinding;
 		/** The localized key description for this KeyEntry */
 		private final Component keyDesc;
 		private final Button btnChangeKeyBinding;
 		private final Button btnInputType;
 		private final Button btnReset;
 
-		private KeyEntry(final ControllerBinding controllerBinding, final Component keyDesc) {
+		private KeyEntry(final ControllerMapping controllerBinding, final Component keyDesc) {
 			this.keybinding = controllerBinding;
 			this.keyDesc = keyDesc;
 			this.btnChangeKeyBinding = new Button(0, 0, 75 + 10 /*Forge: add space*/, 20, keyDesc, (p_214386_2_) -> {

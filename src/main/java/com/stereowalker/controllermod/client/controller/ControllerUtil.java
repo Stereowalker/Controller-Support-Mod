@@ -150,7 +150,7 @@ public class ControllerUtil {
 	 * @param inputType
 	 * @return
 	 */
-	public static boolean updateButtonState(ControllerBinding controllerBinding, String buttonId, Controller controller, InputConstants.Key buttonOnComputer, InputType inputType) {
+	public static boolean updateButtonState(ControllerMapping controllerBinding, String buttonId, Controller controller, InputConstants.Key buttonOnComputer, InputType inputType) {
 		if (buttonId != null && buttonId != " " && buttonId != "???") {
 			float controllerButton =2.0F; 
 			for (int i = 0; i < controller.getButtons().capacity(); i++) {
@@ -311,15 +311,15 @@ public class ControllerUtil {
 		prevY = virtualmouse.ypos();
 	}
 
-	private static List<ControllerBinding> previouslyUsed = Lists.newArrayList();
+	private static List<ControllerMapping> previouslyUsed = Lists.newArrayList();
 
 	public static void handleControllerMappings(Controller controller, List<UseCase> useCase) {
 		if (isListening) {
 			if (useCase.contains(UseCase.INGAME)) keyboard.setSendRepeatsToGui(false);
 			int i = 0, j = 0;
-			List<ControllerBinding> currentlyUsing = ControllerBinding.retrieveActiveMappings(controller, useCase);
+			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
 			//This shoudl release buttons we are no longer holding
-			for (ControllerBinding binding : previouslyUsed) {
+			for (ControllerMapping binding : previouslyUsed) {
 				if (!currentlyUsing.contains(binding) && binding != null) {
 					j++;
 					if (!binding.isAxis()) {
@@ -337,7 +337,7 @@ public class ControllerUtil {
 				}
 			}
 			previouslyUsed.clear();
-			for (ControllerBinding binding : currentlyUsing) {
+			for (ControllerMapping binding : currentlyUsing) {
 				i++;
 				if (binding.isAxis()) {
 					if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase())))

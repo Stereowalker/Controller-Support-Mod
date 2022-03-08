@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerBinding;
+import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
@@ -25,13 +25,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ControllerInputOptionsScreen extends Screen {
 	private final Screen previousScreen;
 	/** The ID of the button that has been pressed. */
-	public ControllerBinding keyToSet;
+	public ControllerMapping keyToSet;
 	private int previousInput;
 	private ControllerBindingList keyBindingList;
 	private ControllerMod mod;
 	private Button buttonReset;
 
-	public ControllerInputOptionsScreen(Screen previousScreen, ControllerBinding keyToSet, int previousInput) {
+	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int previousInput) {
 		super(new TranslatableComponent("options.controller_input.title"));
 		this.previousScreen = previousScreen;
 		this.keyToSet = keyToSet;
@@ -56,7 +56,7 @@ public class ControllerInputOptionsScreen extends Screen {
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.keyBindingList);
 		this.buttonReset = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 100, 20, new TranslatableComponent("controls.resetAll"), (p_213125_1_) -> {
-			for(ControllerBinding keybinding : mod.controllerSettings.controllerBindings) {
+			for(ControllerMapping keybinding : mod.controllerSettings.controllerBindings) {
 				keybinding.setToDefault(this.mod.controllerSettings.controllerModel);
 			}
 
@@ -124,7 +124,7 @@ public class ControllerInputOptionsScreen extends Screen {
 		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
 		boolean flag = false;
 
-		for(ControllerBinding keybinding : mod.controllerSettings.controllerBindings) {
+		for(ControllerMapping keybinding : mod.controllerSettings.controllerBindings) {
 			if (!keybinding.isDefault(this.mod.controllerSettings.controllerModel)) {
 				flag = true;
 				break;

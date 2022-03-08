@@ -20,15 +20,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 
 @Environment(EnvType.CLIENT)
-public class ControllerBinding implements Comparable<ControllerBinding> {
+public class ControllerMapping implements Comparable<ControllerMapping> {
 	
-	private static final Map<ControllerMap.Button, ControllerBinding> ANY_SCREEN_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerBinding> ANYWHERE_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerBinding> CONTAINER_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerBinding> INGAME_MAP = Maps.newHashMap();
-	private static final Map<String, ControllerBinding> CONTROLLERBIND_ARRAY = Maps.newHashMap();
+	private static final Map<ControllerMap.Button, ControllerMapping> ANY_SCREEN_MAP = Maps.newHashMap();
+	private static final Map<ControllerMap.Button, ControllerMapping> ANYWHERE_MAP = Maps.newHashMap();
+	private static final Map<ControllerMap.Button, ControllerMapping> CONTAINER_MAP = Maps.newHashMap();
+	private static final Map<ControllerMap.Button, ControllerMapping> INGAME_MAP = Maps.newHashMap();
+	private static final Map<String, ControllerMapping> CONTROLLERBIND_ARRAY = Maps.newHashMap();
 	
-	public static Map<ControllerMap.Button, ControllerBinding> getMap(UseCase case1) {
+	public static Map<ControllerMap.Button, ControllerMapping> getMap(UseCase case1) {
 		switch(case1) {
 		case ANYWHERE:
 			return ANYWHERE_MAP;
@@ -72,7 +72,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		p_205215_0_.put("key.categories.misc", 8);
 	});
 
-	private ControllerBinding(String category, String description, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
+	private ControllerMapping(String category, String description, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
 		this.category = category;
 		this.descri = description;
 		ImmutableMap.Builder<ControllerModel,String> builder = ImmutableMap.builder();
@@ -101,15 +101,15 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		this.buttonOnController.forEach((key, val) -> getMap(this.useCase).put(key.getOrCreate(val), this));
 	}
 
-	public ControllerBinding(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+	public ControllerMapping(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
 		this(category, desc, buttonOnKeyboardMouse, buttonId, inputType, false, false, useCase, false);
 	}
 
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
 		this(category, desc, null, buttonId, inputType, false, false, useCase, false);
 	}
 
-	public ControllerBinding(KeyMapping keybind, UseCase useCase) {
+	public ControllerMapping(KeyMapping keybind, UseCase useCase) {
 		this(keybind.getCategory(), keybind.getName(), keybind.key, (builder) -> {
 			builder.put(ControllerModel.XBOX_360, ControllerUtil.getControllerInputId(0));
 			builder.put(ControllerModel.PS4, ControllerUtil.getControllerInputId(0));
@@ -122,7 +122,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param keybind
 	 * @param buttonId
 	 */
-	public ControllerBinding(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
+	public ControllerMapping(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
 		this(keybind.getCategory(), keybind.getName(), keybind.key, buttonId, InputType.PRESS, false, false, useCase, true);
 	}
 
@@ -133,7 +133,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	 * @param buttonId
 	 * @param conflictContext
 	 */
-	public ControllerBinding(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn, UseCase useCase) {
+	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn, UseCase useCase) {
 		this(category, desc, null, buttonId, null, true, isAxisInvertedIn, useCase, false);
 	}
 
@@ -283,7 +283,7 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 	}
 
 	@Override
-	public int compareTo(ControllerBinding p_compareTo_1_) {
+	public int compareTo(ControllerMapping p_compareTo_1_) {
 		if (this.category.equals(p_compareTo_1_.category)) return I18n.get(this.descri).compareTo(I18n.get(p_compareTo_1_.descri));
 		Integer tCat = CATEGORY_ORDER.get(this.category);
 		Integer oCat = CATEGORY_ORDER.get(p_compareTo_1_.category);
@@ -323,13 +323,13 @@ public class ControllerBinding implements Comparable<ControllerBinding> {
 		ANYWHERE_MAP.clear();
 		CONTAINER_MAP.clear();
 		INGAME_MAP.clear();
-		for (ControllerBinding controllerMapping : CONTROLLERBIND_ARRAY.values()) {
+		for (ControllerMapping controllerMapping : CONTROLLERBIND_ARRAY.values()) {
 			controllerMapping.buttonOnController.forEach((key, val) -> getMap(controllerMapping.useCase).put(key.getOrCreate(val), controllerMapping));
 		}
 	}
 
-	public static List<ControllerBinding> retrieveActiveMappings(Controller controller, List<UseCase> cases) {
-		List<ControllerBinding> down = Lists.newArrayList();
+	public static List<ControllerMapping> retrieveActiveMappings(Controller controller, List<UseCase> cases) {
+		List<ControllerMapping> down = Lists.newArrayList();
 		List<String> interactions = Lists.newArrayList();
 		interactions.addAll(controller.getButtonsDown());
 		interactions.addAll(controller.getAxesMoved());
