@@ -74,7 +74,10 @@ public class ControllerOptionsScreen extends Screen {
 			this.getMinecraft().setScreen(new TriggerSetupScreen(this));
 		}));
 		if (options.enableController && controllerPresent) {
-			trigger.active = (this.mod.controllerSettings.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) &&  mod.
+			trigger.active = (this.mod.controllerSettings.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
+					getActiveController().
+					getAxes() != null && 
+					mod.
 					getActiveController().
 					getAxes().
 					capacity() > 0;
