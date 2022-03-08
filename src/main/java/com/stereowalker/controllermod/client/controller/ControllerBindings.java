@@ -17,12 +17,12 @@ import net.minecraft.client.Minecraft;
 public class ControllerBindings {
 
 	public static final String NEW = "new";
-	public static final ControllerBinding SELECT_INPUT = new ControllerBinding(NEW, "select", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT), (builder) -> {
+	public static final ControllerMapping SELECT_INPUT = new ControllerMapping(NEW, "select", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button0");
 		builder.put(ControllerModel.PS4, "button1");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
-	public static final ControllerBinding SHIFT_MOVE_INPUT = new ControllerBinding(NEW, "shift_move", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
+	public static final ControllerMapping SHIFT_MOVE_INPUT = new ControllerMapping(NEW, "shift_move", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button2");
 		builder.put(ControllerModel.PS4, "button0");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
@@ -48,7 +48,7 @@ public class ControllerBindings {
 		registerControllerBinding(SHIFT_MOVE_INPUT);
 //		BINDINGS.add(CLOSE_INVENTORY_INPUT);
 		for (KeyMapping key : Minecraft.getInstance().options.keyMappings) {
-			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerBinding(key, UseCase.ANYWHERE));
+			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerMapping(key, UseCase.ANYWHERE));
 		}
 	}
 
@@ -57,7 +57,7 @@ public class ControllerBindings {
      * Call this during {@link net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent}.
      * This method is safe to call during parallel mod loading.
      */
-    public static synchronized void registerControllerBinding(ControllerBinding key)
+    public static synchronized void registerControllerBinding(ControllerMapping key)
     {
         ControllerMod.getInstance().controllerSettings.controllerBindings = ArrayUtils.add(ControllerMod.getInstance().controllerSettings.controllerBindings, key);
     }
