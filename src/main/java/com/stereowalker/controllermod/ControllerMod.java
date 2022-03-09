@@ -7,69 +7,68 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.stereowalker.controllermod.client.ControllerOptions;
-import com.stereowalker.controllermod.client.PaperDollOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
-import com.stereowalker.controllermod.client.controller.ControllerHelper;
+import com.stereowalker.controllermod.client.controller.ControllerBindings;
+import com.stereowalker.controllermod.client.controller.ControllerHandler;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.OverlayRegistry;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod(value = ControllerMod.MOD_ID)
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ControllerMod extends MinecraftMod
 {
 	public static ControllerMod instance;
+	private ControllerHandler controllerHandler;
 	public static final String MOD_ID = "controllermod";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	public final ControllerHelper controllerHelper;
 	public static final Config CONFIG = new Config();
 	public List<Controller> controllers;
-	public ControllerOptions controllerSettings;
+	public ControllerOptions controllerOptions;
 	public static final Controller EMPTY_CONTROLLER = new Controller(-1, "Empty", "Empty", 0);
 	public static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/controller_button.png");
 
-	@SuppressWarnings("resource")
 	public ControllerMod() 
 	{
 		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon2.png"), LoadType.CLIENT);
 		instance = this;
-		controllerHelper = new ControllerHelper(Minecraft.getInstance());
-		ConfigBuilder.registerConfig(CONFIG);
+		ConfigBuilder.registerConfig(MOD_ID, CONFIG);
 		controllers = new ArrayList<Controller>();
-		controllerSettings = new ControllerOptions(Minecraft.getInstance(), Minecraft.getInstance().gameDirectory);
 	}
 
 	@Override
 	public void onModStartupInClient() {
-
-		MinecraftForge.EVENT_BUS.register(this);
-		controllerHelper.registerCallbacks(Minecraft.getInstance().getWindow().getWindow());
-		System.out.println("total Connected Controllers "+getTotalConnectedControllers());
-		for (int i = 0; i < getTotalConnectedControllers(); i++) {
+	}
+	
+	@Override
+	public void initClientAfterMinecraft(Minecraft mc) {
+		System.out.println("Setting up all connected controlllers");
+		this.controllerHandler = new ControllerHandler(mc);
+		this.controllerHandler.setup(mc.getWindow().getWindow());
+		
+		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
+		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
+		System.out.println("Total Connected Controllers "+this.getTotalConnectedControllers());
+		for (int i = 0; i < this.getTotalConnectedControllers(); i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
-				System.out.println("Added Controller "+i);
-				controllers.add(new Controller(i));
+				Controller cont = new Controller(i);
+				System.out.println("Added ("+cont.getName()+") as Controller "+(i+1));
+				this.controllers.add(new Controller(i));
 			}
 		}
-		controllerSettings.lastGUID = getActiveController().getGUID();
 		ControllerBindings.registerAll();
-		ControllerMod.getInstance().controllerSettings.loadOptions();
-		
-		OverlayRegistry.registerOverlayTop("Paper Doll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-	        gui.setupOverlayRenderState(true, false);
-	        PaperDollOptions.renderPlayerDoll(gui, mStack);
-	    });
+		this.controllerOptions.loadOptions();
+	}
+	
+	public ControllerHandler getControllerHandler() {
+		return controllerHandler;
 	}
 	
 	@Override
@@ -98,7 +97,7 @@ public class ControllerMod extends MinecraftMod
 	}
 
 	public Controller getActiveController() {
-		return getController(controllerSettings.controllerNumber) == null ? EMPTY_CONTROLLER : getController(controllerSettings.controllerNumber);
+		return getController(controllerOptions.controllerNumber) == null ? EMPTY_CONTROLLER : getController(controllerOptions.controllerNumber);
 	}
 
 

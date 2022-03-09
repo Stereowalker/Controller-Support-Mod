@@ -59,7 +59,7 @@ public class ControllerBindings {
      */
     public static synchronized void registerControllerBinding(ControllerMapping key)
     {
-        ControllerMod.getInstance().controllerSettings.controllerBindings = ArrayUtils.add(ControllerMod.getInstance().controllerSettings.controllerBindings, key);
+        ControllerMod.getInstance().controllerOptions.controllerBindings = ArrayUtils.add(ControllerMod.getInstance().controllerOptions.controllerBindings, key);
     }
     
     public static synchronized void excludeKeybind(KeyMapping binding) {

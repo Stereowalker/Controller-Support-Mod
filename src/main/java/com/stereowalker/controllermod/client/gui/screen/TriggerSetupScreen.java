@@ -35,7 +35,7 @@ public class TriggerSetupScreen extends Screen {
 
 	@Override
 	public void removed() {
-		mod.controllerSettings.saveOptions();
+		mod.controllerOptions.saveOptions();
 	}
 
 	@Override

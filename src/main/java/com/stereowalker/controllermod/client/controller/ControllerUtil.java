@@ -7,7 +7,6 @@ import java.util.Map;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWJoystickCallbackI;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.VirtualMouseHelper;
@@ -126,8 +125,8 @@ public class ControllerUtil {
 			float controlleraxis = 0.0F; 
 			if (controller.getAxes() != null) {
 				for (int i = 0; i < controller.getAxes().capacity(); i++) {
-					List<Integer> triggersPos = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
-					List<Integer> triggersNeg = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+					List<Integer> triggersPos = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
+					List<Integer> triggersNeg = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
 					if (!triggersPos.contains(i) && !triggersNeg.contains(i))
 						if (buttonId.equals("axis"+i)) controlleraxis = controller.getAxes().get(i);
 				}
@@ -160,10 +159,10 @@ public class ControllerUtil {
 				}
 			}
 			for (int i = 0; i < controller.getAxes().capacity(); i++) {
-				List<Integer> triggers0 = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
+				List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
 				if (!triggers0.contains(i))
 					if (buttonId.equals("axis_pos"+i)) controllerButton = controller.getAxes().get(i);
-				List<Integer> triggers1 = ControllerMod.getInstance().controllerSettings.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerSettings.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+				List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
 				if (!triggers1.contains(i))
 					if (buttonId.equals("axis_neg"+i)) controllerButton = -controller.getAxes().get(i);
 			}
@@ -309,60 +308,6 @@ public class ControllerUtil {
 			mouse().onMove(handle(), virtualmouse.xpos(), virtualmouse.ypos()); 
 		prevX = virtualmouse.xpos();
 		prevY = virtualmouse.ypos();
-	}
-
-	private static List<ControllerMapping> previouslyUsed = Lists.newArrayList();
-
-	public static void handleControllerMappings(Controller controller, List<UseCase> useCase) {
-		if (isListening) {
-			if (useCase.contains(UseCase.INGAME)) keyboard.setSendRepeatsToGui(false);
-			int i = 0, j = 0;
-			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
-			//This shoudl release buttons we are no longer holding
-			for (ControllerMapping binding : previouslyUsed) {
-				if (!currentlyUsing.contains(binding) && binding != null) {
-					j++;
-					if (!binding.isAxis()) {
-						if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase()))) {
-//							if (controller.isButtonDown(binding.getButtonOnController(controller.getModel()))) {
-//								binding.tick();
-//							} else {
-								binding.release();
-//							}
-							ControllerUtil.updateButtonState(binding, binding.getButtonOnController(controller.getModel()), controller, binding.getButtonOnKeyboardOrMouse(), binding.getInputType(controller.getModel()));
-						}
-					} else {
-						binding.axis = 0;
-					}
-				}
-			}
-			previouslyUsed.clear();
-			for (ControllerMapping binding : currentlyUsing) {
-				i++;
-				if (binding.isAxis()) {
-					if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase())))
-						binding.axis = ControllerUtil.updateAxisState(binding.getButtonOnController(controller.getModel()), controller) * (binding.isAxisInverted(controller.getModel()) ? -1 : 1);
-					else
-						binding.axis = 0;
-				} else {
-					boolean flag = true;
-					if (useCase.contains(UseCase.INGAME) && ControllerMod.CONFIG.usePreciseMovement && (binding.getDescripti() == settings.keyUp.getName() || binding.getDescripti() == settings.keyRight.getName() || binding.getDescripti() == settings.keyLeft.getName() || binding.getDescripti() == settings.keyDown.getName())) flag = false;
-					if (useCase.contains(UseCase.CONTAINER) && /* binding.getDescripti() == settings.keyBindInventory.getName() || */binding.getDescripti() == settings.keyUse.getName()) flag = false;
-					if (flag && binding != null) {
-						if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase()))) {
-//							if (controller.isButtonDown(binding.getButtonOnController(controller.getModel()))) {
-								binding.tick();
-//							} else {
-//								binding.release();
-//							}
-							ControllerUtil.updateButtonState(binding, binding.getButtonOnController(controller.getModel()), controller, binding.getButtonOnKeyboardOrMouse(), binding.getInputType(controller.getModel()));
-						}
-					}
-				}
-				previouslyUsed.add(binding);
-			}
-			if (i != 0 || j != 0) ControllerMod.debug("Pressed "+i+" bindings and released "+j);
-		}
 	}
 
 	public static void setGamepadCallbacks(GLFWJoystickCallbackI p_216503_2_) {

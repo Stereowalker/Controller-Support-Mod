@@ -26,11 +26,11 @@ public abstract class AbstractContainerScreenMixin <T extends AbstractContainerM
 	
 	@Redirect(method = {"mouseReleased", "mouseClicked"}, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;isKeyDown(JI)Z"))
 	public boolean shiftClick(long l, int i) {
-		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerSettings.controllerModel);
+		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
 	}
 	
 	@Redirect(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;hasShiftDown()Z"))
 	public boolean shiftClick() {
-		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerSettings.controllerModel);
+		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
 	}
 }
