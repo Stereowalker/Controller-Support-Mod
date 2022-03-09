@@ -8,7 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
-import com.stereowalker.controllermod.client.controller.ControllerHelper;
+import com.stereowalker.controllermod.client.controller.ControllerBindings;
+import com.stereowalker.controllermod.client.controller.ControllerHandler;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
@@ -25,12 +26,12 @@ import net.minecraft.resources.ResourceLocation;
 public class ControllerMod extends MinecraftMod
 {
 	public static ControllerMod instance;
+	private ControllerHandler controllerHandler;
 	public static final String MOD_ID = "controllermod";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	public final ControllerHelper controllerHelper;
 	public static final Config CONFIG = new Config();
 	public List<Controller> controllers;
-	public ControllerOptions controllerSettings;
+	public ControllerOptions controllerOptions;
 	public static final Controller EMPTY_CONTROLLER = new Controller(-1, "Empty", "Empty", 0);
 	public static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/controller_button.png");
 
@@ -38,13 +39,36 @@ public class ControllerMod extends MinecraftMod
 	{
 		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon2.png"), LoadType.CLIENT);
 		instance = this;
-		controllerHelper = new ControllerHelper(Minecraft.getInstance());
 		ConfigBuilder.registerConfig(MOD_ID, CONFIG);
 		controllers = new ArrayList<Controller>();
 	}
 
 	@Override
 	public void onModStartupInClient() {
+	}
+	
+	@Override
+	public void initClientAfterMinecraft(Minecraft mc) {
+		System.out.println("Setting up all connected controlllers");
+		this.controllerHandler = new ControllerHandler(mc);
+		this.controllerHandler.setup(mc.getWindow().getWindow());
+		
+		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
+		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
+		System.out.println("Total Connected Controllers "+this.getTotalConnectedControllers());
+		for (int i = 0; i < this.getTotalConnectedControllers(); i++) {
+			if (ControllerUtil.isControllerAvailable(i)) {
+				Controller cont = new Controller(i);
+				System.out.println("Added ("+cont.getName()+") as Controller "+(i+1));
+				this.controllers.add(new Controller(i));
+			}
+		}
+		ControllerBindings.registerAll();
+		this.controllerOptions.loadOptions();
+	}
+	
+	public ControllerHandler getControllerHandler() {
+		return controllerHandler;
 	}
 	
 	@Override
@@ -73,7 +97,7 @@ public class ControllerMod extends MinecraftMod
 	}
 
 	public Controller getActiveController() {
-		return getController(controllerSettings.controllerNumber) == null ? EMPTY_CONTROLLER : getController(controllerSettings.controllerNumber);
+		return getController(controllerOptions.controllerNumber) == null ? EMPTY_CONTROLLER : getController(controllerOptions.controllerNumber);
 	}
 
 

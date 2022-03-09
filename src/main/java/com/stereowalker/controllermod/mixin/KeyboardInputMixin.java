@@ -17,8 +17,8 @@ public abstract class KeyboardInputMixin extends Input {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void tick_inject(boolean p_108582_, CallbackInfo ci) {
-		if (ControllerMod.CONFIG.usePreciseMovement && ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerSettings.controllerNumber) && ControllerMod.getInstance().controllerSettings.enableController) {
-			ControllerOptions settings = ControllerMod.getInstance().controllerSettings;
+		if (ControllerMod.CONFIG.usePreciseMovement && ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
+			ControllerOptions settings = ControllerMod.getInstance().controllerOptions;
 			float moveXAxis = p_108582_ ? settings.controllerBindMoveHorizontal.getAxis() * 0.3F : settings.controllerBindMoveHorizontal.getAxis();
 			float moveYAxis = p_108582_ ? settings.controllerBindMoveVertical.getAxis() * 0.3F : settings.controllerBindMoveVertical.getAxis();
 			if (moveXAxis >= -1.0F && moveXAxis < -ControllerMod.CONFIG.deadzone) {

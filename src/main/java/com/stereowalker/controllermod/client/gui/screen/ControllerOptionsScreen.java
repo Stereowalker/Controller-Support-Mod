@@ -33,17 +33,17 @@ public class ControllerOptionsScreen extends Screen {
 
 	@Override
 	public void init() {
-		ControllerOptions options = this.mod.controllerSettings;
+		ControllerOptions options = this.mod.controllerOptions;
 		options.lastGUID = ControllerMod.getInstance().getActiveController().getGUID();
 		options.saveOptions();
 		for (ControllerModel model : ControllerModel.modelList()) {
 			if (model.getGUID().equals(
 					ControllerMod.getInstance().getActiveController().getGUID())) {
-				this.mod.controllerSettings.controllerModel = model;
+				this.mod.controllerOptions.controllerModel = model;
 			}
 		}
 		boolean hasName = GLFW.glfwGetJoystickName(options.controllerNumber) != null;
-		boolean controllerPresent = ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerSettings.controllerNumber);
+		boolean controllerPresent = ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber);
 		prevController = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6, 20, 20, new TextComponent("<<"), (p_212984_1_) -> {
 			if(options.controllerNumber>0)options.controllerNumber = options.controllerNumber-1;
 			if (!ControllerUtil.isControllerAvailable(options.controllerNumber)) options.enableController = false;
@@ -56,7 +56,7 @@ public class ControllerOptionsScreen extends Screen {
 			name = new TranslatableComponent("<").append((options.controllerNumber+1)+"> ");
 		}
 		if (!controllerPresent) {
-			this.mod.controllerSettings.controllerModel = ControllerModel.CUSTOM;
+			this.mod.controllerOptions.controllerModel = ControllerModel.CUSTOM;
 		}
 		controller = this.addRenderableWidget(new Button(this.width / 2 - 125, this.height  / 6, 250, 20, name, (p_212984_1_) -> {
 			options.enableController = !options.enableController;
@@ -74,7 +74,7 @@ public class ControllerOptionsScreen extends Screen {
 			this.minecraft.setScreen(new TriggerSetupScreen(this));
 		}));
 		if (options.enableController && controllerPresent) {
-			trigger.active = (this.mod.controllerSettings.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
+			trigger.active = (this.mod.controllerOptions.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
 					getActiveController().
 					getAxes() != null && 
 					mod.
@@ -95,7 +95,7 @@ public class ControllerOptionsScreen extends Screen {
 
 	@Override
 	public void removed() {
-		ControllerMod.getInstance().controllerSettings.saveOptions();
+		ControllerMod.getInstance().controllerOptions.saveOptions();
 	}
 
 	@Override

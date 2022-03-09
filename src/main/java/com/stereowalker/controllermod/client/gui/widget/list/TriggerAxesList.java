@@ -92,17 +92,17 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 			this.axis = axis;
 			this.btnTrigger = new Button(0, 0, 100, 20, new TranslatableComponent("gui.trigger.mark"), (p_214387_2_) -> {
 				if (isPostitve)
-					if (mod.controllerSettings.positiveTriggerAxes.contains(axis))
-						mod.controllerSettings.positiveTriggerAxes.remove(Integer.valueOf(axis));
+					if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
+						mod.controllerOptions.positiveTriggerAxes.remove(Integer.valueOf(axis));
 					else
-						mod.controllerSettings.positiveTriggerAxes.add(Integer.valueOf(axis));
+						mod.controllerOptions.positiveTriggerAxes.add(Integer.valueOf(axis));
 				else
-					if (mod.controllerSettings.negativeTriggerAxes.contains(axis))
-						mod.controllerSettings.negativeTriggerAxes.remove(Integer.valueOf(axis));
+					if (mod.controllerOptions.negativeTriggerAxes.contains(axis))
+						mod.controllerOptions.negativeTriggerAxes.remove(Integer.valueOf(axis));
 					else
-						mod.controllerSettings.negativeTriggerAxes.add(Integer.valueOf(axis));
+						mod.controllerOptions.negativeTriggerAxes.add(Integer.valueOf(axis));
 
-				mod.controllerSettings.saveOptions();
+				mod.controllerOptions.saveOptions();
 			}) {
 				@Override
 				protected MutableComponent createNarrationMessage() {
@@ -120,12 +120,12 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 			this.btnTrigger.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			
 			if (isPostitve)
-				if (mod.controllerSettings.positiveTriggerAxes.contains(axis))
+				if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
 					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.unmark").withStyle(ChatFormatting.RED));
 				else
 					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
 			else
-				if (mod.controllerSettings.negativeTriggerAxes.contains(axis))
+				if (mod.controllerOptions.negativeTriggerAxes.contains(axis))
 					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.unmark").withStyle(ChatFormatting.RED));
 				else
 					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.mark").withStyle(ChatFormatting.GREEN));

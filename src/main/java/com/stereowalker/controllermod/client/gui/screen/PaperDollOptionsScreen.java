@@ -24,7 +24,7 @@ public class PaperDollOptionsScreen extends Screen {
 	public PaperDollOptionsScreen(Screen p_i51123_1_) {
 		super(new TranslatableComponent("options.paper_doll.title"));
 		this.previousScreen = p_i51123_1_;
-		this.settings = ControllerMod.getInstance().controllerSettings;
+		this.settings = ControllerMod.getInstance().controllerOptions;
 	}
 
 	@Override

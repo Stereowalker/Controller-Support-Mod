@@ -72,7 +72,7 @@ public class PaperDollOptions {
 	@SuppressWarnings("resource")
 	public static void renderPlayerDoll(Gui gui, PoseStack poseStack) {
 		LocalPlayer player = Minecraft.getInstance().player;
-		PaperDollOptions paperDoll = ControllerMod.getInstance().controllerSettings.paperDoll;
+		PaperDollOptions paperDoll = ControllerMod.getInstance().controllerOptions.paperDoll;
 		float diff = lastHeadYaw - player.yHeadRot;
 		if (lastHeadYaw != Minecraft.getInstance().player.yHeadRot) {
 			lastHeadYaw = lastHeadYaw - diff;
