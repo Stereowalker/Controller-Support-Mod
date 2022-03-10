@@ -52,7 +52,5 @@ public class OnScreenKeyboard {
 			changeKeyCooldown = 2;
 		else if (changeKeyCooldown > 0 && !left && !right)
 			changeKeyCooldown--;
-		
-		System.out.println(changeKeyCooldown);
 	}
 }
