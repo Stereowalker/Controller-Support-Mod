@@ -1,6 +1,7 @@
 package com.stereowalker.controllermod.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,8 +14,10 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
@@ -23,6 +26,7 @@ import net.minecraft.client.renderer.GameRenderer;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin extends AbstractContainerEventHandler implements Widget {
+    @Shadow protected Font font;
 
 	@Inject(method = "render", at = @At("TAIL"))
 	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
@@ -30,7 +34,11 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 			int x = (int)(ControllerUtil.virtualmouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getWidth());
 			int y = (int)(ControllerUtil.virtualmouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getHeight());
 			if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
-				renderCursor(pPoseStack, x,y, 5.0D);
+				if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
+					ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(pPoseStack, font, x, y);
+				} else {
+					renderCursor(pPoseStack, x,y, 5.0D);
+				}
 			} 
 		}
 	}

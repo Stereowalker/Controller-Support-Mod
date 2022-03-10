@@ -9,6 +9,7 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
 import com.stereowalker.unionlib.util.RegistryHelper;
 
@@ -93,7 +94,7 @@ public class ControllerInputOptionsScreen extends Screen {
 				List<String> buttons;
 				if (keyToSet.isAxis()) buttons = ControllerMod.getInstance().getActiveController().getAxesMoved();
 				else buttons = ControllerMod.getInstance().getActiveController().getButtonsDown();
-				ControllerUtil.isListening = false;
+				ControllerUtil.listeningMode = ListeningMode.CHANGE_MAPPINGS;
 				awaitingTicks++;
 				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0) {
 					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, buttons.get(0));
@@ -106,7 +107,7 @@ public class ControllerInputOptionsScreen extends Screen {
 			}
 			else {
 				awaitingTicks = 0;
-				ControllerUtil.isListening = true;
+				ControllerUtil.listeningMode = ListeningMode.LISTEN_TO_MAPPINGS;
 			}
 		} else {
 			keyToSet = null;

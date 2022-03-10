@@ -17,7 +17,9 @@ import com.mojang.blaze3d.platform.WindowEventHandler;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
+import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 
@@ -40,6 +42,11 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
 	public MinecraftMixin(String p_18765_) {
 		super(p_18765_);
+	}
+	
+	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;releaseAll()V"))
+	public void setScreen_inject(CallbackInfo ci) {
+		ControllerMapping.releaseAll();
 	}
 
 	boolean fromGame = false;
@@ -96,10 +103,18 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 					case1 = Lists.newArrayList(UseCase.INGAME, UseCase.ANYWHERE);
 				}
 				if (case1 != null) {
-					ControllerMod.getInstance().getControllerHandler().handleMappings(controller, case1);
+					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, case1);
 				}
 
-
+				if (ControllerMod.getInstance().onScreenKeyboard.switchCooldown > 0) {
+					ControllerMod.getInstance().onScreenKeyboard.switchCooldown--;
+				}
+				if (ControllerMod.getInstance().controllerOptions.controllerBindKeyboard.isDown(ControllerMod.getInstance().controllerOptions.controllerModel)) {
+					if (ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS && ControllerMod.getInstance().onScreenKeyboard.switchCooldown == 0) {
+						ControllerMod.getInstance().onScreenKeyboard.switchKeyboard();
+					}
+				}
+				
 				float scrollAxis = settings.controllerBindScroll.getAxis();
 				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
 				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
@@ -112,7 +127,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D);
 				}
 				else if (case1.contains(UseCase.ANY_SCREEN)) {
-					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, true);
+					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS);
 					if (scrollAxis >= -1.0F && scrollAxis < -0.1D)
 						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
 					if (scrollAxis <= 1.0F && scrollAxis > 0.1D)
