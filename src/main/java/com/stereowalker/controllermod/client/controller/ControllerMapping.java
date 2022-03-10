@@ -26,7 +26,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	private static final Map<ControllerMap.Button, ControllerMapping> ANYWHERE_MAP = Maps.newHashMap();
 	private static final Map<ControllerMap.Button, ControllerMapping> CONTAINER_MAP = Maps.newHashMap();
 	private static final Map<ControllerMap.Button, ControllerMapping> INGAME_MAP = Maps.newHashMap();
-	private static final Map<String, ControllerMapping> CONTROLLERBIND_ARRAY = Maps.newHashMap();
+	private static final Map<String, ControllerMapping> ALL = Maps.newHashMap();
 	
 	public static Map<ControllerMap.Button, ControllerMapping> getMap(UseCase case1) {
 		switch(case1) {
@@ -97,7 +97,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		this.fromKeybind = fromKeybindIn;
 		this.isAxis = isAxisIn;
 		this.axisInverted = axisInvertedBuilder.build();
-		CONTROLLERBIND_ARRAY.put(description, this);
+		ALL.put(description, this);
 		this.buttonOnController.forEach((key, val) -> getMap(this.useCase).put(key.getOrCreate(val), this));
 	}
 
@@ -318,12 +318,18 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		return useCase;
 	}
 
+    public static void releaseAll() {
+        for (ControllerMapping controllerMapping : ALL.values()) {
+        	controllerMapping.release();
+        }
+    }
+
 	public static void resetMapping() {
 		ANY_SCREEN_MAP.clear();
 		ANYWHERE_MAP.clear();
 		CONTAINER_MAP.clear();
 		INGAME_MAP.clear();
-		for (ControllerMapping controllerMapping : CONTROLLERBIND_ARRAY.values()) {
+		for (ControllerMapping controllerMapping : ALL.values()) {
 			controllerMapping.buttonOnController.forEach((key, val) -> getMap(controllerMapping.useCase).put(key.getOrCreate(val), controllerMapping));
 		}
 	}
@@ -334,7 +340,6 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		interactions.addAll(controller.getButtonsDown());
 		interactions.addAll(controller.getAxesMoved());
 		for (String s : interactions) {
-//			System.out.println(controller.getModel().getOrCreate(s));
 			if (cases.contains(UseCase.ANYWHERE))
 				down.add(ANYWHERE_MAP.get(controller.getModel().getOrCreate(s)));
 			if (cases.contains(UseCase.ANY_SCREEN))
@@ -344,7 +349,6 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 			if (cases.contains(UseCase.INGAME))
 				down.add(INGAME_MAP.get(controller.getModel().getOrCreate(s)));
 		}
-//		if (!down.isEmpty()) System.out.println(down.toString());
 		down.removeIf((bind) -> bind == null);
 		return down;
 	}

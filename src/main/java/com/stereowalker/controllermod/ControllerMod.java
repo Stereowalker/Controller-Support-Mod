@@ -6,10 +6,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.ControllerOptions;
+import com.stereowalker.controllermod.client.OnScreenKeyboard;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
-import com.stereowalker.controllermod.client.controller.ControllerHandler;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
@@ -27,6 +28,7 @@ public class ControllerMod extends MinecraftMod
 {
 	public static ControllerMod instance;
 	private ControllerHandler controllerHandler;
+	public OnScreenKeyboard onScreenKeyboard;
 	public static final String MOD_ID = "controllermod";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final Config CONFIG = new Config();
@@ -50,9 +52,9 @@ public class ControllerMod extends MinecraftMod
 	@Override
 	public void initClientAfterMinecraft(Minecraft mc) {
 		System.out.println("Setting up all connected controlllers");
-		this.controllerHandler = new ControllerHandler(mc);
+		this.controllerHandler = new ControllerHandler(this, mc);
 		this.controllerHandler.setup(mc.getWindow().getWindow());
-		
+		this.onScreenKeyboard = new OnScreenKeyboard();
 		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
 		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
 		System.out.println("Total Connected Controllers "+this.getTotalConnectedControllers());

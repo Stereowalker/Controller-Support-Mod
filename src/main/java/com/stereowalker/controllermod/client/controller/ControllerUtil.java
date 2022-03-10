@@ -39,7 +39,7 @@ public class ControllerUtil {
 
 	static Options settings = (Minecraft.getInstance()).options;
 
-	public static boolean isListening = false;
+	public static ListeningMode listeningMode = ListeningMode.DEAF;
 
 	public static boolean isControllerAvailable(int controller) {
 		return /*GLFW.glfwJoystickIsGamepad(controller) &&*/ GLFW.glfwJoystickPresent(controller);
@@ -151,55 +151,55 @@ public class ControllerUtil {
 	 */
 	public static boolean updateButtonState(ControllerMapping controllerBinding, String buttonId, Controller controller, InputConstants.Key buttonOnComputer, InputType inputType) {
 		if (buttonId != null && buttonId != " " && buttonId != "???") {
-			float controllerButton =2.0F; 
-			for (int i = 0; i < controller.getButtons().capacity(); i++) {
-				if (buttonId.equals("button"+i)) {
-					controllerButton = controller.getButtons().get(i);
-
-				}
-			}
-			for (int i = 0; i < controller.getAxes().capacity(); i++) {
-				List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
-				if (!triggers0.contains(i))
-					if (buttonId.equals("axis_pos"+i)) controllerButton = controller.getAxes().get(i);
-				List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
-				if (!triggers1.contains(i))
-					if (buttonId.equals("axis_neg"+i)) controllerButton = -controller.getAxes().get(i);
-			}
-			byte UP = controller.getDpadUp();
-			byte DOWN = controller.getDpadDown();
-			byte LEFT = controller.getDpadLeft();
-			byte RIGHT = controller.getDpadRight();
-			if (buttonId == "UP") controllerButton = UP;
-			if (buttonId == "DOWN") controllerButton = DOWN;
-			if (buttonId == "LEFT") controllerButton = LEFT;
-			if (buttonId == "RIGHT") controllerButton = RIGHT;
-
-			boolean flag = controllerButton > ControllerMod.CONFIG.deadzone && controllerButton <= 1.0D;
-
 			if (buttonOnComputer == null) {
 				return false;
 			}
 
 			if (controllerBinding.isFromKeybind()) {
-				return pushDown(flag, controllerButton, buttonId, controller, inputType, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
+				return pushDown(buttonId, controller, inputType, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.KEYSYM) {
-				return pushDown(flag, controllerButton, buttonId, controller, inputType, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+				return pushDown(buttonId, controller, inputType, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.SCANCODE) {
-				return pushDown(flag, controllerButton, buttonId, controller, inputType, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+				return pushDown(buttonId, controller, inputType, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.MOUSE) {
-				return pushDown(flag, controllerButton, buttonId, controller, inputType, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
+				return pushDown(buttonId, controller, inputType, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
 			} 
 		}
 		return false;
 	}
 
 	@FunctionalInterface
-	interface Executor {
+	public interface Executor {
 		void execute();
 	}
+	
+	private static float getButtonPushDistance(String buttonId, Controller controller) {
+			for (int i = 0; i < controller.getButtons().capacity(); i++)
+				if (buttonId.equals("button"+i)) {
+					return controller.getButtons().get(i);
+				}
+			for (int i = 0; i < controller.getAxes().capacity(); i++) {
+				List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
+				if (!triggers0.contains(i))
+					if (buttonId.equals("axis_pos"+i)) return controller.getAxes().get(i);
+				List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+				if (!triggers1.contains(i))
+					if (buttonId.equals("axis_neg"+i)) return -controller.getAxes().get(i);
+			}
+		byte UP = controller.getDpadUp();
+		byte DOWN = controller.getDpadDown();
+		byte LEFT = controller.getDpadLeft();
+		byte RIGHT = controller.getDpadRight();
+		if (buttonId == "UP") return UP;
+		if (buttonId == "DOWN") return DOWN;
+		if (buttonId == "LEFT") return LEFT;
+		if (buttonId == "RIGHT") return RIGHT;
+		return 2.0F;
+	}
 
-	public static boolean pushDown(boolean flag, float controllerButton, String buttonId, Controller controller, InputType inputType, Executor pressAction, Executor releaseAction) {
+	public static boolean pushDown(String buttonId, Controller controller, InputType inputType, Executor pressAction, Executor releaseAction) {
+		float controllerButton = getButtonPushDistance(buttonId, controller);
+		boolean flag = controllerButton > ControllerMod.CONFIG.deadzone && controllerButton <= 1.0D;
 		if (keyMap.isEmpty()) putKeysInMap(keyMap);
 		if (keyToggleMap.isEmpty()) putKeysInMap(keyToggleMap);
 		if (inputType == InputType.PRESS) {
@@ -312,6 +312,10 @@ public class ControllerUtil {
 
 	public static void setGamepadCallbacks(GLFWJoystickCallbackI p_216503_2_) {
 		GLFW.glfwSetJoystickCallback(p_216503_2_);
+	}
+
+	public enum ListeningMode {
+		DEAF, KEYBOARD, LISTEN_TO_MAPPINGS, CHANGE_MAPPINGS
 	}
 
 	public enum InputType {

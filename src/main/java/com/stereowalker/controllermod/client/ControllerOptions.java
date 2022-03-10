@@ -70,6 +70,10 @@ public class ControllerOptions {
 		builder.put(ControllerModel.PS4, "button5");
 	}, InputType.PRESS, UseCase.INGAME);
 
+	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(NEW, "key.controller.keyboard",  (builder) -> {
+		builder.put(ControllerModel.PS4, "button13");
+	}, InputType.PRESS, UseCase.ANY_SCREEN);
+
 	public final ControllerMapping controllerBindCameraHorizontal = new ControllerMapping(NEW, "key.controller.camera_horizontal", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis2");
 		builder.put(ControllerModel.PS4, "axis2");

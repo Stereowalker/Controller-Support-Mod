@@ -23,6 +23,7 @@ accessible method net/minecraft/client/MouseHandler onScroll (JDD)V
 accessible method net/minecraft/client/MouseHandler onPress (JIII)V
 accessible method net/minecraft/client/MouseHandler onDrop (JLjava/util/List;)V
 accessible method net/minecraft/client/MouseHandler onMove (JDD)V
+accessible method net/minecraft/client/KeyboardHandler charTyped (JII)V
 
 
 #public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen f_97706_ # clickedSlot
