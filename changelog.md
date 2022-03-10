@@ -1,3 +1,7 @@
+[6.1.0]
+- Overhauled the way the controller handles input. It should cause a lot less lag from now on
+- Added an on screen keyboard
+
 [6.0.2]
 - Added UseCases to prevent the bindings from conflicting
 
