@@ -250,7 +250,7 @@ public class ControllerUtil {
 		byte DOWN;
 		byte LEFT;
 		byte RIGHT;
-		if (controller.getHats() == null && !useHats) {
+		if (controller.getHats() == null || !useHats) {
 			UP = 0;
 			DOWN = 0;
 			LEFT = 0;
