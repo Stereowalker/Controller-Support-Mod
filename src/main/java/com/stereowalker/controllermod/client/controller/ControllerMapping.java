@@ -12,14 +12,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
 	
 	private static final Map<ControllerMap.Button, ControllerMapping> ANY_SCREEN_MAP = Maps.newHashMap();

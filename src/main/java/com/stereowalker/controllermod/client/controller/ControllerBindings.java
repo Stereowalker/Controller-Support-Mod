@@ -13,6 +13,7 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.settings.KeyConflictContext;
 
 public class ControllerBindings {
 
@@ -48,7 +49,7 @@ public class ControllerBindings {
 		registerControllerBinding(SHIFT_MOVE_INPUT);
 //		BINDINGS.add(CLOSE_INVENTORY_INPUT);
 		for (KeyMapping key : Minecraft.getInstance().options.keyMappings) {
-			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerMapping(key, UseCase.ANYWHERE));
+			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerMapping(key, key.getKeyConflictContext() == KeyConflictContext.IN_GAME ? UseCase.INGAME : key.getKeyConflictContext() == KeyConflictContext.GUI ? UseCase.ANY_SCREEN : UseCase.ANYWHERE));
 		}
 	}
 

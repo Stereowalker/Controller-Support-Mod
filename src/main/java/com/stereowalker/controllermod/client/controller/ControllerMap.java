@@ -8,8 +8,8 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ControllerMap {
 	public static String map(String input, ControllerModel model) {
@@ -84,7 +84,7 @@ public class ControllerMap {
 	}
 	
 
-	@Environment(value=EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
     public static final class Button {
 		public ControllerModel model;
 		public String value;

@@ -12,8 +12,6 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.VirtualMouseHelper;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -21,8 +19,10 @@ import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ControllerUtil {
 	public static VirtualMouseHelper virtualmouse = new VirtualMouseHelper(Minecraft.getInstance());
 

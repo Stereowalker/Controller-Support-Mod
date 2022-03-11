@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
+import com.stereowalker.controllermod.client.PaperDollOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
@@ -17,13 +18,17 @@ import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
 
-@Environment(EnvType.CLIENT)
+@Mod(value = ControllerMod.MOD_ID)
+@OnlyIn(Dist.CLIENT)
 public class ControllerMod extends MinecraftMod
 {
 	public static ControllerMod instance;
@@ -40,15 +45,20 @@ public class ControllerMod extends MinecraftMod
 	public ControllerMod() 
 	{
 		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon2.png"), LoadType.CLIENT);
+		MinecraftForge.EVENT_BUS.register(this);
 		instance = this;
-		ConfigBuilder.registerConfig(MOD_ID, CONFIG);
+		ConfigBuilder.registerConfig(CONFIG);
 		controllers = new ArrayList<Controller>();
 	}
 
 	@Override
 	public void onModStartupInClient() {
+		OverlayRegistry.registerOverlayTop("Paper Doll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+			gui.setupOverlayRenderState(true, false);
+			PaperDollOptions.renderPlayerDoll(gui, mStack);
+		});
 	}
-	
+
 	@Override
 	public void initClientAfterMinecraft(Minecraft mc) {
 		System.out.println("Setting up all connected controlllers");
@@ -68,11 +78,11 @@ public class ControllerMod extends MinecraftMod
 		ControllerBindings.registerAll();
 		this.controllerOptions.loadOptions();
 	}
-	
+
 	public ControllerHandler getControllerHandler() {
 		return controllerHandler;
 	}
-	
+
 	@Override
 	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
 		return new ConfigScreen(previousScreen, CONFIG);
@@ -115,7 +125,7 @@ public class ControllerMod extends MinecraftMod
 	{
 		return new ResourceLocation(MOD_ID, name);
 	}
-	
+
 	public static class Locations {
 		public static final ResourceLocation CURSOR = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/cursor.png");
 	}
