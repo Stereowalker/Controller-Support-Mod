@@ -52,7 +52,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	boolean fromGame = false;
 	@Inject(method = "tick", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V"))
 	public void tick_inject(CallbackInfo ci) {
-		if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
+		if(ControllerMod.getInstance().hasInitializedClient && ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
 			ControllerOptions settings = ControllerMod.getInstance().controllerOptions;
 			if (mouseHandler.isMouseGrabbed()) ControllerUtil.virtualmouse.grabMouse();
 			else ControllerUtil.virtualmouse.ungrabMouse();
