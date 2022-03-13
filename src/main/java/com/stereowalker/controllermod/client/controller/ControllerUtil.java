@@ -156,13 +156,13 @@ public class ControllerUtil {
 			}
 
 			if (controllerBinding.isFromKeybind()) {
-				return pushDown(buttonId, controller, inputType, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
+				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.KEYSYM) {
-				return pushDown(buttonId, controller, inputType, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.SCANCODE) {
-				return pushDown(buttonId, controller, inputType, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
 			} else if (buttonOnComputer.getType() == InputConstants.Type.MOUSE) {
-				return pushDown(buttonId, controller, inputType, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
+				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
 			} 
 		}
 		return false;
@@ -197,35 +197,35 @@ public class ControllerUtil {
 		return 2.0F;
 	}
 
-	public static boolean pushDown(String buttonId, Controller controller, InputType inputType, Executor pressAction, Executor releaseAction) {
+	public static boolean pushDown(String buttonId, Controller controller, InputType inputType, float threshold, Executor pressAction, Executor releaseAction) {
 		float controllerButton = getButtonPushDistance(buttonId, controller);
-		boolean flag = controllerButton > ControllerMod.CONFIG.deadzone && controllerButton <= 1.0D;
+		boolean isDown = controllerButton > threshold && controllerButton <= 1.0D;
 		if (keyMap.isEmpty()) putKeysInMap(keyMap);
 		if (keyToggleMap.isEmpty()) putKeysInMap(keyToggleMap);
 		if (inputType == InputType.PRESS) {
-			if (flag && ((Integer)keyMap.get(buttonId)).intValue() == 0) {
+			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0) {
 				keyMap.put(buttonId, 1);
 				pressAction.execute();
 				return true;
 			} 
-			if (controllerButton <= ControllerMod.CONFIG.deadzone && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
+			if (controllerButton <= threshold && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
 				keyMap.put(buttonId, 0);
 				releaseAction.execute();
 				return false;
 			} 
 		}
 		if (inputType == InputType.TOGGLE) {
-			if (flag && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 0) {
+			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 0) {
 				keyMap.put(buttonId, 1);
 				keyToggleMap.put(buttonId, 1);
 				pressAction.execute();
 				return true;
 			} 
-			if (controllerButton <= ControllerMod.CONFIG.deadzone && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
+			if (controllerButton <= threshold && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
 				keyMap.put(buttonId, 0); 
 				return false;
 			}
-			if (flag && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 1) {
+			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 1) {
 				keyMap.put(buttonId, 1);
 				keyToggleMap.put(buttonId, 0);
 				releaseAction.execute();
@@ -233,16 +233,16 @@ public class ControllerUtil {
 			} 
 		}
 		if (inputType == InputType.HOLD) {
-			if (flag) {
+			if (isDown) {
 				pressAction.execute();
 				return true;
 			}
-			if (controllerButton <= ControllerMod.CONFIG.deadzone) {
+			if (controllerButton <= threshold) {
 				releaseAction.execute();
 				return false;
 			}
 		}
-		return flag;
+		return isDown;
 	}
 
 	public static void updateMousePosition(float xLAxis, float yLAxis, Controller controller, boolean isCamera, boolean useHats) {

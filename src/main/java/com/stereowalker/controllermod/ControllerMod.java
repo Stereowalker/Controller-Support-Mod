@@ -54,7 +54,7 @@ public class ControllerMod extends MinecraftMod
 		System.out.println("Setting up all connected controlllers");
 		this.controllerHandler = new ControllerHandler(this, mc);
 		this.controllerHandler.setup(mc.getWindow().getWindow());
-		this.onScreenKeyboard = new OnScreenKeyboard();
+		this.onScreenKeyboard = new OnScreenKeyboard(mc);
 		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
 		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
 		System.out.println("Total Connected Controllers "+this.getTotalConnectedControllers());

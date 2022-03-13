@@ -50,6 +50,7 @@ public class ControllerOptions {
 	public String lastGUID = " "; 
 
 	public static final String NEW = "key.categories.controller";
+	public static final String ON_SCREEN_KEYBOARD = "key.categories.on_screen_keyboard";
 	public final ControllerMapping controllerBindBack = new ControllerMapping(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
@@ -70,9 +71,59 @@ public class ControllerOptions {
 		builder.put(ControllerModel.PS4, "button5");
 	}, InputType.PRESS, UseCase.INGAME);
 
-	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(NEW, "key.controller.keyboard",  (builder) -> {
+	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
 		builder.put(ControllerModel.PS4, "button13");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
+	
+	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button2");
+		builder.put(ControllerModel.PS4, "button0");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardSelect = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_select",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button0");
+		builder.put(ControllerModel.PS4, "button1");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardCaps = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_caps",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button3");
+		builder.put(ControllerModel.PS4, "button3");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardSpace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_space",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button1");
+		builder.put(ControllerModel.PS4, "button2");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardUp = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_up",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_neg1");
+		builder.put(ControllerModel.PS4, "axis_neg1");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardDown = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_down",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos1");
+		builder.put(ControllerModel.PS4, "axis_pos1");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_left",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_neg0");
+		builder.put(ControllerModel.PS4, "axis_neg0");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_right",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos0");
+		builder.put(ControllerModel.PS4, "axis_pos0");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardArrowLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_left",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button4");
+		builder.put(ControllerModel.PS4, "button4");
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
+	public final ControllerMapping controllerBindKeyboardArrowRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_right",  (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button5");
+		builder.put(ControllerModel.PS4, "button5");
+	}, InputType.PRESS, UseCase.KEYBOARD);
 
 	public final ControllerMapping controllerBindCameraHorizontal = new ControllerMapping(NEW, "key.controller.camera_horizontal", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "axis2");
@@ -166,7 +217,11 @@ public class ControllerOptions {
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight,
 			this.controllerBindCameraHorizontal, this.controllerBindCameraVertical, this.controllerBindMouseHorizontal, this.controllerBindMouseVertical, this.controllerBindMoveHorizontal, this.controllerBindMoveVertical, this.controllerBindScroll},
-			new ControllerMapping[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindSneak, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight});
+			new ControllerMapping[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindSneak, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, 
+					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight,
+					this.controllerBindKeyboard, this.controllerBindKeyboardArrowLeft, this.controllerBindKeyboardArrowRight, this.controllerBindKeyboardBackspace,
+					this.controllerBindKeyboardCaps, this.controllerBindKeyboardUp, this.controllerBindKeyboardDown, this.controllerBindKeyboardLeft, this.controllerBindKeyboardRight, 
+					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace});
 	private final File optionsFile;
 
 	public ControllerOptions(Minecraft mcIn, File mcDataDir) {

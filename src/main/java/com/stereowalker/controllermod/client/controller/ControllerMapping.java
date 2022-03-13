@@ -22,26 +22,9 @@ import net.minecraft.client.resources.language.I18n;
 @Environment(EnvType.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
 	
-	private static final Map<ControllerMap.Button, ControllerMapping> ANY_SCREEN_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerMapping> ANYWHERE_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerMapping> CONTAINER_MAP = Maps.newHashMap();
-	private static final Map<ControllerMap.Button, ControllerMapping> INGAME_MAP = Maps.newHashMap();
+	private static final Map<UseCase, Map<ControllerMap.Button, ControllerMapping>> MAP = Maps.newHashMap();
 	private static final Map<String, ControllerMapping> ALL = Maps.newHashMap();
 	
-	public static Map<ControllerMap.Button, ControllerMapping> getMap(UseCase case1) {
-		switch(case1) {
-		case ANYWHERE:
-			return ANYWHERE_MAP;
-		case ANY_SCREEN:
-			return ANY_SCREEN_MAP;
-		case CONTAINER:
-			return CONTAINER_MAP;
-		case INGAME:
-			return INGAME_MAP;
-		}
-		return null;
-	}
-
 	private final String descri;
 	private final String category;
 	//	private final InputConstants.Type type;
@@ -63,13 +46,14 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 
 	private static final Map<String, Integer> CATEGORY_ORDER = Util.make(Maps.newHashMap(), (p_205215_0_) -> {
 		p_205215_0_.put("key.categories.controller", 1);
-		p_205215_0_.put("key.categories.movement", 2);
-		p_205215_0_.put("key.categories.gameplay", 3);
-		p_205215_0_.put("key.categories.inventory", 4);
-		p_205215_0_.put("key.categories.creative", 5);
-		p_205215_0_.put("key.categories.multiplayer", 6);
-		p_205215_0_.put("key.categories.ui", 7);
-		p_205215_0_.put("key.categories.misc", 8);
+		p_205215_0_.put("key.categories.on_screen_keyboard", 2);
+		p_205215_0_.put("key.categories.movement", 3);
+		p_205215_0_.put("key.categories.gameplay", 4);
+		p_205215_0_.put("key.categories.inventory", 5);
+		p_205215_0_.put("key.categories.creative", 6);
+		p_205215_0_.put("key.categories.multiplayer", 7);
+		p_205215_0_.put("key.categories.ui", 8);
+		p_205215_0_.put("key.categories.misc", 9);
 	});
 
 	private ControllerMapping(String category, String description, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
@@ -98,7 +82,9 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		this.isAxis = isAxisIn;
 		this.axisInverted = axisInvertedBuilder.build();
 		ALL.put(description, this);
-		this.buttonOnController.forEach((key, val) -> getMap(this.useCase).put(key.getOrCreate(val), this));
+		if (!MAP.containsKey(useCase))
+			MAP.put(useCase, Maps.newHashMap());
+		this.buttonOnController.forEach((key, val) -> MAP.get(useCase).put(key.getOrCreate(val), this));
 	}
 
 	public ControllerMapping(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
@@ -325,12 +311,9 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
     }
 
 	public static void resetMapping() {
-		ANY_SCREEN_MAP.clear();
-		ANYWHERE_MAP.clear();
-		CONTAINER_MAP.clear();
-		INGAME_MAP.clear();
+		MAP.forEach((use, submap) -> submap.clear());
 		for (ControllerMapping controllerMapping : ALL.values()) {
-			controllerMapping.buttonOnController.forEach((key, val) -> getMap(controllerMapping.useCase).put(key.getOrCreate(val), controllerMapping));
+			controllerMapping.buttonOnController.forEach((key, val) -> MAP.get(controllerMapping.useCase).put(key.getOrCreate(val), controllerMapping));
 		}
 	}
 
@@ -339,16 +322,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		List<String> interactions = Lists.newArrayList();
 		interactions.addAll(controller.getButtonsDown());
 		interactions.addAll(controller.getAxesMoved());
-		for (String s : interactions) {
-			if (cases.contains(UseCase.ANYWHERE))
-				down.add(ANYWHERE_MAP.get(controller.getModel().getOrCreate(s)));
-			if (cases.contains(UseCase.ANY_SCREEN))
-				down.add(ANY_SCREEN_MAP.get(controller.getModel().getOrCreate(s)));
-			if (cases.contains(UseCase.CONTAINER))
-				down.add(CONTAINER_MAP.get(controller.getModel().getOrCreate(s)));
-			if (cases.contains(UseCase.INGAME))
-				down.add(INGAME_MAP.get(controller.getModel().getOrCreate(s)));
-		}
+		interactions.forEach(interaction -> cases.forEach(use -> down.add(MAP.get(use).get(controller.getModel().getOrCreate(interaction)))));
 		down.removeIf((bind) -> bind == null);
 		return down;
 	}
