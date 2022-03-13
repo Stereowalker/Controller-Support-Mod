@@ -103,6 +103,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 					case1 = Lists.newArrayList(UseCase.INGAME, UseCase.ANYWHERE);
 				}
 				if (case1 != null) {
+					if (!case1.contains(UseCase.INGAME) && ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
+						case1 = Lists.newArrayList(UseCase.KEYBOARD);
+					}
 					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, case1);
 				}
 

@@ -7,7 +7,6 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.Controller;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
@@ -16,7 +15,9 @@ import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.client.gui.toasts.ControllerStatusToast;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
 
 public class ControllerHandler {
 	private final Minecraft minecraft;
@@ -55,6 +56,8 @@ public class ControllerHandler {
 
 	private List<ControllerMapping> previouslyUsed = Lists.newArrayList();
 
+	
+	boolean left = false, right = false, up = false, down = false;
 	public void processControllerInput(Controller controller, List<UseCase> useCase) {
 		if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD && !useCase.contains(UseCase.INGAME)) {
 			if (controller.isButtonDown(this.controllerMod.controllerOptions.controllerBindKeyboard.getButtonOnController(controller.getModel())) && this.controllerMod.onScreenKeyboard.switchCooldown == 0) {
@@ -62,21 +65,40 @@ public class ControllerHandler {
 			}
 			else {
 				OnScreenKeyboard keyboard = this.controllerMod.onScreenKeyboard;
+				ControllerOptions options = this.controllerMod.controllerOptions;
+				int mods = keyboard.isCapsLocked ? GLFW.GLFW_MOD_CAPS_LOCK : 0;
 				long handle = minecraft.getWindow().getWindow();
-				if (ControllerBindings.SELECT_INPUT.isBoundToButton(controller.getModel())) {
-
-					if (controller.getHats() != null)
-						keyboard.changeKey(controller.getDpadLeft() == 1, controller.getDpadRight() == 1);
-
-					int mods = keyboard.isCapsLocked ? GLFW.GLFW_MOD_CAPS_LOCK : 0;
-					ControllerUtil.pushDown(ControllerBindings.SELECT_INPUT.getButtonOnController(controller.getModel()), controller, InputType.PRESS, () -> minecraft.keyboardHandler.charTyped(handle, keyboard.getUnicodeKey(), mods), () -> {});
-				}
-				if (this.controllerMod.controllerOptions.controllerBindBack.isBoundToButton(controller.getModel())) {
+				if (options.controllerBindKeyboardLeft.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardLeft.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> left = true, () -> left = false);
+				if (options.controllerBindKeyboardRight.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardRight.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> right = true, () -> right = false);
+				if (options.controllerBindKeyboardUp.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardUp.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> up = true, () -> up = false);
+				if (options.controllerBindKeyboardDown.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardDown.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> down = true, () -> down = false);
+				
+				keyboard.changeKey(up, down, left, right);
+				
+				if (options.controllerBindKeyboardSelect.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardSelect.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> {minecraft.keyboardHandler.charTyped(handle, keyboard.getUnicodeKey(), mods); minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));}, () -> {});
+				if (options.controllerBindKeyboardBackspace.isBoundToButton(controller.getModel())) {
 					int key = GLFW.GLFW_KEY_BACKSPACE;
-					ControllerUtil.pushDown(this.controllerMod.controllerOptions.controllerBindBack.getButtonOnController(controller.getModel()), controller, InputType.PRESS, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
+					ControllerUtil.pushDown(options.controllerBindKeyboardBackspace.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
 				}
-				if (this.controllerMod.controllerOptions.controllerKeyBindInventory.isBoundToButton(controller.getModel()))
-					ControllerUtil.pushDown(this.controllerMod.controllerOptions.controllerKeyBindInventory.getButtonOnController(controller.getModel()), controller, InputType.PRESS, () -> keyboard.isCapsLocked = !keyboard.isCapsLocked, () -> {});
+				if (options.controllerBindKeyboardArrowLeft.isBoundToButton(controller.getModel())) {
+					int key = GLFW.GLFW_KEY_LEFT;
+					ControllerUtil.pushDown(options.controllerBindKeyboardArrowLeft.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
+				}
+				if (options.controllerBindKeyboardArrowRight.isBoundToButton(controller.getModel())) {
+					int key = GLFW.GLFW_KEY_RIGHT;
+					ControllerUtil.pushDown(options.controllerBindKeyboardArrowRight.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
+				}
+				if (options.controllerBindKeyboardSpace.isBoundToButton(controller.getModel())) {
+					int key = GLFW.GLFW_KEY_SPACE;
+					ControllerUtil.pushDown(options.controllerBindKeyboardSpace.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.charTyped(handle, key, mods), () -> {});
+				}
+				if (options.controllerBindKeyboardCaps.isBoundToButton(controller.getModel()))
+					ControllerUtil.pushDown(options.controllerBindKeyboardCaps.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> keyboard.isCapsLocked = !keyboard.isCapsLocked, () -> {});
 			}
 		}
 		else if (ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS) {
