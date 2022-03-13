@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.GameRenderer;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin extends AbstractContainerEventHandler implements Widget {
-    @Shadow protected Font font;
+	@Shadow protected Font font;
 
 	@Inject(method = "render", at = @At("TAIL"))
 	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
@@ -37,15 +37,21 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 				if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
 					ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(pPoseStack, font, x, y);
 				} else {
-					renderCursor(pPoseStack, x,y, 5.0D);
+					renderPonter(x, y, 8.0D);
 				}
 			} 
 		}
 	}
 
-	private static void renderCursor(PoseStack poseStack, int x, int y, double size) {
-		poseStack.pushPose();
+	private static void renderPonter(int x, int y, double size) {
+		RenderSystem.enableBlend();
+		RenderSystem.enableDepthTest();
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.defaultBlendFunc();
+
 		RenderSystem.disableDepthTest();
+		RenderSystem.depthMask(false);
+		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, ControllerMod.Locations.CURSOR);
 		Tesselator tessellator = Tesselator.getInstance();
@@ -56,7 +62,8 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 		bufferbuilder.vertex(size+x, -size+y, -90.0F).uv(1.0F, 0.0F).endVertex();
 		bufferbuilder.vertex(-size+x, -size+y, -90.0F).uv(0.0F, 0.0F).endVertex();
 		tessellator.end();
-		poseStack.popPose();
+		RenderSystem.depthMask(true);
 		RenderSystem.enableDepthTest();
+		RenderSystem.defaultBlendFunc();
 	}
 }
