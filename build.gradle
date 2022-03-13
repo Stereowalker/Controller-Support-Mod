@@ -57,7 +57,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 			
-			args '--username', 'CodeHexIO', '--uuid', 'c5751ce1d50e4d47ca120e1ea1c75542'
+			args '--username', 'CodeHexIO', '--uuid', "$System.env.MINECRAFTUUIDSTEREOWALKER"
 
             mods {
                 modId {
