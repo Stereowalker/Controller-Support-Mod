@@ -33,7 +33,7 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 		if (!((Object)this instanceof LevelLoadingScreen)) {
 			int x = (int)(ControllerUtil.virtualmouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getWidth());
 			int y = (int)(ControllerUtil.virtualmouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getHeight());
-			if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
+			if(ControllerMod.getInstance().controllerOptions != null && ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
 				if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
 					ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(pPoseStack, font, x, y);
 				} else {
