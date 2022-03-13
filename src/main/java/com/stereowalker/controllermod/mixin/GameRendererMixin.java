@@ -22,7 +22,7 @@ public abstract class GameRendererMixin implements ResourceManagerReloadListener
 	@Shadow @Final private Minecraft minecraft;
 	@Inject(method = "renderLevel", at = @At(value = "INVOKE", shift = Shift.AFTER, target = "Lnet/minecraft/client/Camera;setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V"))
 	public void renderLevel_inject(float pPartialTicks, long pFinishTimeNano, PoseStack pMatrixStack, CallbackInfo ci) {
-		if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController && minecraft.screen == null) {
+		if(ControllerMod.getInstance().controllerOptions != null && ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController && minecraft.screen == null) {
 			ControllerOptions settings = ControllerMod.getInstance().controllerOptions;
 			float cameraXAxis = settings.controllerBindCameraHorizontal.getAxis();
 			float cameraYAxis = settings.controllerBindCameraVertical.getAxis();
