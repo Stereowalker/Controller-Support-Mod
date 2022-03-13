@@ -322,7 +322,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		List<String> interactions = Lists.newArrayList();
 		interactions.addAll(controller.getButtonsDown());
 		interactions.addAll(controller.getAxesMoved());
-		interactions.forEach(interaction -> cases.forEach(use -> down.add(MAP.get(use).get(controller.getModel().getOrCreate(interaction)))));
+		interactions.forEach(interaction -> cases.forEach(use -> {if (MAP.get(use) != null)down.add(MAP.get(use).get(controller.getModel().getOrCreate(interaction)));}));
 		down.removeIf((bind) -> bind == null);
 		return down;
 	}
