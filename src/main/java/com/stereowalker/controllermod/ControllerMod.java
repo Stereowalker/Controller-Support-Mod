@@ -116,7 +116,7 @@ public class ControllerMod extends MinecraftMod
 	}
 
 	public static void debug(String message) {
-		if (CONFIG.debug)LOGGER.debug(message);
+		if (CONFIG.debug)LOGGER.info(message);
 	}
 
 	public ResourceLocation location(String name)

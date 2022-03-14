@@ -15,7 +15,6 @@ import com.stereowalker.unionlib.util.RegistryHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -61,7 +60,7 @@ public class ControllerInputOptionsScreen extends Screen {
 				keybinding.setToDefault(this.mod.controllerOptions.controllerModel);
 			}
 
-			KeyMapping.resetMapping();
+			ControllerMapping.resetMapping();
 		}));
 		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 105, this.height - 29, 100, 20, new TranslatableComponent("gui.model").append(" : "+this.mod.controllerOptions.controllerModel), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = RegistryHelper.rotateEnumForward(this.mod.controllerOptions.controllerModel, ControllerModel.values());
@@ -77,6 +76,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE && keyToSet != null) {
 			ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, " ");
+			ControllerMapping.resetMapping();
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
@@ -99,10 +99,12 @@ public class ControllerInputOptionsScreen extends Screen {
 				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0) {
 					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, buttons.get(0));
 					keyToSet = null;
+					ControllerMapping.resetMapping();
 				}
 				if (awaitingTicks >= 100) {
 					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, ControllerUtil.getControllerInputId(previousInput));
 					keyToSet = null;
+					ControllerMapping.resetMapping();
 				}
 			}
 			else {
