@@ -115,11 +115,11 @@ public class PaperDollOptions {
 			}
 
 			if (ControllerMod.CONFIG.show_coordinates && !Minecraft.getInstance().player.isReducedDebugInfo()) {
-				renderPosition(poseStack);
+				renderPosition(gui, poseStack);
 			}
 
 			if ((!Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getSingleplayerServer().isPublished()) && ControllerMod.CONFIG.ingame_player_names) {
-				renderNames(poseStack);
+				renderNames(gui, poseStack);
 			}
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
@@ -130,8 +130,8 @@ public class PaperDollOptions {
 
 	@SuppressWarnings("resource")
 	@Environment(EnvType.CLIENT)
-	public static void renderPosition(PoseStack matrixStack) {
-		Minecraft.getInstance().getProfiler().push("coordinates223");
+	public static void renderPosition(Gui gui, PoseStack matrixStack) {
+		Minecraft.getInstance().getProfiler().push("display-position");
 		RenderSystem.disableDepthTest();
 
 		BlockPos coordinates = Minecraft.getInstance().player.blockPosition();
@@ -144,11 +144,12 @@ public class PaperDollOptions {
 		matrixStack.pushPose();
 
 		//ARGB
-		Gui.fill(matrixStack, 0, y - 2, 3 + k + 1, y + j, 0x11010101);
+		System.out.println(ControllerMod.getSafeArea());
+		Gui.fill(matrixStack, ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
 		RenderSystem.enableDepthTest();
 
-		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, 3.0F, y+1, 0x555555);
-		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, 2.0F, y, 0xffffff);
+		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, ControllerMod.getSafeArea() + 3.0F, y+1, 0x555555);
+		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, ControllerMod.getSafeArea() + 2.0F, y, 0xffffff);
 		matrixStack.popPose();
 
 		RenderSystem.disableBlend();
@@ -157,10 +158,10 @@ public class PaperDollOptions {
 
 	@SuppressWarnings("resource")
 	@Environment(EnvType.CLIENT)
-	public static void renderNames(PoseStack matrixStack) {
+	public static void renderNames(Gui gui, PoseStack matrixStack) {
 		Minecraft.getInstance().getProfiler().push("playerName");
 		Component playerName = Minecraft.getInstance().player.getName();
-		Minecraft.getInstance().font.draw(matrixStack, playerName, Minecraft.getInstance().getWindow().getGuiScaledWidth()-Minecraft.getInstance().font.width(playerName)-10, 10, ChatFormatting.WHITE.getColor());
+		Minecraft.getInstance().font.draw(matrixStack, playerName, gui.screenWidth - Minecraft.getInstance().font.width(playerName), ControllerMod.getSafeArea(), ChatFormatting.WHITE.getColor());
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 		Minecraft.getInstance().getProfiler().pop();

@@ -6,13 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
@@ -28,12 +21,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class ControllerMod extends MinecraftMod
 {
+	//
+	public static int getSafeArea() {return Mth.ceil((1.0f - (CONFIG.safe_area/100.0f)) * 10.0f);}
+	//
 	public static ControllerMod instance;
 	private ControllerHandler controllerHandler;
 	public OnScreenKeyboard onScreenKeyboard;

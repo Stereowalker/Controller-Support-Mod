@@ -39,6 +39,12 @@ public class Config implements ConfigObject {
 	@UnionConfig.Comment(comment = {"Shows your current coordinates on the screen if you are allowed to see them","I hope you weren't planning to use this feature to bypass the reduced debug info rule"})
 	public boolean show_coordinates = false;
 	
+	@UnionConfig.Entry(group = "Gameplay", name = "Safe Area")
+	@UnionConfig.Comment(comment = {"Allows you to determine the safe area of your screen","This only works ingame. Any elements in any other menus will not be moved"})
+	@UnionConfig.Range(max = 100.0, min = 0.0)
+	@UnionConfig.Slider
+	public float safe_area = 100.0f;
+	
 	@UnionConfig.Entry(group = "Gameplay", name = "Show Paper Doll")
 	@UnionConfig.Comment(comment = {"Shows the mini you at the top left corner of the screen","Adorable right?"})
 	public boolean show_paper_doll = true;

@@ -3,6 +3,9 @@ accessible field net/minecraft/client/gui/screens/Screen itemRenderer Lnet/minec
 accessible method net/minecraft/client/gui/GuiComponent fillGradient (Lcom/mojang/math/Matrix4f;Lcom/mojang/blaze3d/vertex/BufferBuilder;IIIIIII)V
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 
+accessible field net/minecraft/client/gui/Gui screenWidth I
+accessible field net/minecraft/client/gui/Gui screenHeight I
+
 accessible field net/minecraft/client/MouseHandler minecraft Lnet/minecraft/client/Minecraft;
 #public net.minecraft.client.MouseHandler f_91504_ # isLeftPressed
 #public net.minecraft.client.MouseHandler f_91505_ # isMiddlePressed
