@@ -10,14 +10,15 @@ import com.google.common.collect.Lists;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 
 public class ControllerMap {
 	public static String map(String input, ControllerModel model) {
+		if (input.equals("empty") || input.equals(" ")) return " ";
 		switch (model) {
 		case XBOX_360:
-			if (input.equals("empty")) return " ";
-			else if (input.equals("button0")) return "A";
-			else if (input.equals("button1")) return "B";
+			if (input.equals("button1")) return "B";
 			else if (input.equals("button2")) return "X";
 			else if (input.equals("button3")) return "Y";
 			else if (input.equals("button4")) return "LB";
@@ -44,27 +45,8 @@ public class ControllerMap {
 			else if (input.equals("axis1")) return "LS UP/DOWN";
 			else if (input.equals("axis2")) return "RS RIGHT/LEFT";
 			else if (input.equals("axis3")) return "RS UP/DOWN";
-			else return input;
 		case PS4:
-			if (input.equals("empty")) return " ";
-			else if (input.equals("button0")) return "SQUARE";
-			else if (input.equals("button1")) return "CROSS";
-			else if (input.equals("button2")) return "CIRCLE";
-			else if (input.equals("button3")) return "TRIANGLE";
-			else if (input.equals("button4")) return "L1";
-			else if (input.equals("button5")) return "R1";
-			else if (input.equals("button6")) return "L2";
-			else if (input.equals("button7")) return "R2";
-			else if (input.equals("button8")) return "SHARE";
-			else if (input.equals("button9")) return "OPTIONS";
-			else if (input.equals("button10")) return "L3";
-			else if (input.equals("button11")) return "R3";
-			else if (input.equals("button12")) return "PS BUTTON";
-			else if (input.equals("button13")) return "TOUCHPAD";
-			else if (input.equals("button14")) return "UP";
-			else if (input.equals("button15")) return "RIGHT";
-			else if (input.equals("button16")) return "DOWN";
-			else if (input.equals("button17")) return "LEFT";
+			if (input.equals("button12")) return "PS BUTTON";
 			else if (input.equals("axis_pos0")) return "LS RIGHT";
 			else if (input.equals("axis_neg0")) return "LS LEFT";
 			else if (input.equals("axis_pos1")) return "LS DOWN";
@@ -77,10 +59,10 @@ public class ControllerMap {
 			else if (input.equals("axis1")) return "LS UP/DOWN";
 			else if (input.equals("axis2")) return "RS RIGHT/LEFT";
 			else if (input.equals("axis5")) return "RS UP/DOWN";
-			else return input;
 		default:
-			return input;
+			break;
 		}
+		return I18n.get(model.getOrCreate(input).getName());
 	}
 	
 
@@ -89,15 +71,21 @@ public class ControllerMap {
 		public ControllerModel model;
 		public String value;
 		public String name;
+		public ResourceLocation icon;
 		
-		Button(String name, ControllerModel model, String value){
+		Button(String name, ControllerModel model, ResourceLocation icon, String value){
 			this.model = model;
 			this.value = value;
+			this.icon = icon;
 			this.name = name.isEmpty() ? this.model.modelName+"."+value : name;
 		}
 		
 		public ControllerModel getModel(){
 			return this.model;
+		}
+		
+		public ResourceLocation getIcon() {
+			return icon;
 		}
 		
 		public String getValue(){
@@ -139,8 +127,13 @@ public class ControllerMap {
 		String modelName;
 		String GUID;
 
+        private static void addButton(ControllerModel model, String name, String icon, String buttonId) {
+        	Button button = new Button(name, model, new ResourceLocation("controllermod:textures/gui/"+icon+""), buttonId);
+        	model.map.put(buttonId, button);
+        }
+        
         private static void addButton(ControllerModel model, String name, String buttonId) {
-        	Button button = new Button(name, model, buttonId);
+        	Button button = new Button(name, model, null, buttonId);
         	model.map.put(buttonId, button);
         }
         
@@ -158,70 +151,70 @@ public class ControllerMap {
 //                    ++j;
 //                }
                 String string = this.modelName + ".unknown." + j;
-                return new Button(string, this, i);
+                return new Button(string, this, null, i);
             });
         }
         
         static {
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.0", "button0");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.1", "button1");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.2", "button2");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.3", "button3");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.4", "button4");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.5", "button5");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.6", "button6");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.7", "button7");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.8", "button8");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.9", "button9");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.10", "button10");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.11", "button11");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.12", "button12");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360.13", "button13");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.0", "axis_pos0");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.1", "axis_pos1");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.2", "axis_pos2");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.3", "axis_pos3");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.4", "axis_pos4");
-        	ControllerModel.addButton(XBOX_360, "posi_axis.xbox_360.5", "axis_pos5");
-        	ControllerModel.addButton(XBOX_360, "nega_axis.xbox_360.0", "axis_neg0");
-        	ControllerModel.addButton(XBOX_360, "nega_axis.xbox_360.1", "axis_neg1");
-        	ControllerModel.addButton(XBOX_360, "nega_axis.xbox_360.2", "axis_neg2");
-        	ControllerModel.addButton(XBOX_360, "nega_axis.xbox_360.3", "axis_neg3");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.face_button_down", "controllers/xbox_face_button_down.png", "button0");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.face_button_right", "controllers/xbox_face_button_right.png", "button1");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.face_button_left", "controllers/xbox_face_button_left.png", "button2");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.face_button_up", "controllers/xbox_face_button_up.png", "button3");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.bumper_left", "controllers/xbox_bumper_left.png", "button4");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.bumper_right", "controllers/xbox_bumper_right.png", "button5");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.select_button", "controllers/xbox_select_button.png", "button6");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.start_button", "controllers/xbox_start_button.png", "button7");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.stick_left", "controllers/xbox_stick_left.png", "button8");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.stick_right", "controllers/xbox_stick_right.png", "button9");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.dpad_up", "controllers/xbox_dpad_up.png", "button10");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.dpad_right", "controllers/xbox_dpad_right.png", "button11");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.dpad_down", "controllers/xbox_dpad_down.png", "button12");
+        	ControllerModel.addButton(XBOX_360, "button.xbox_360.dpad_left", "controllers/xbox_dpad_left.png", "button13");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.0", "axis_pos0");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.1", "axis_pos1");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.2", "axis_pos2");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.3", "axis_pos3");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.left_trigger", "controllers/xbox_left_trigger.png", "axis_pos4");
+        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.right_trigger", "controllers/xbox_right_trigger.png", "axis_pos5");
+        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.0", "axis_neg0");
+        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.1", "axis_neg1");
+        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.2", "axis_neg2");
+        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.3", "axis_neg3");
         	ControllerModel.addButton(XBOX_360, "axis.xbox_360.0", "axis0");
         	ControllerModel.addButton(XBOX_360, "axis.xbox_360.1", "axis1");
         	ControllerModel.addButton(XBOX_360, "axis.xbox_360.2", "axis2");
         	ControllerModel.addButton(XBOX_360, "axis.xbox_360.3", "axis3");
-        	
-        	ControllerModel.addButton(PS4, "button.dualshock_4.0", "button0");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.1", "button1");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.2", "button2");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.3", "button3");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.4", "button4");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.5", "button5");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.6", "button6");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.7", "button7");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.8", "button8");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.9", "button9");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.10", "button10");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.11", "button11");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.12", "button12");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.13", "button13");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.14", "button14");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.15", "button15");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.16", "button16");
-        	ControllerModel.addButton(PS4, "button.dualshock_4.17", "button17");
-        	ControllerModel.addButton(PS4, "posi_axis.dualshock_4.0", "axis_pos0");
-        	ControllerModel.addButton(PS4, "posi_axis.dualshock_4.1", "axis_pos1");
-        	ControllerModel.addButton(PS4, "posi_axis.dualshock_4.2", "axis_pos2");
-        	ControllerModel.addButton(PS4, "posi_axis.dualshock_4.5", "axis_pos5");
-        	ControllerModel.addButton(PS4, "nega_axis.dualshock_4.0", "axis_neg0");
-        	ControllerModel.addButton(PS4, "nega_axis.dualshock_4.1", "axis_neg1");
-        	ControllerModel.addButton(PS4, "nega_axis.dualshock_4.2", "axis_neg2");
-        	ControllerModel.addButton(PS4, "nega_axis.dualshock_4.5", "axis_neg5");
-        	ControllerModel.addButton(PS4, "axis.dualshock_4.0", "axis0");
-        	ControllerModel.addButton(PS4, "axis.dualshock_4.1", "axis1");
-        	ControllerModel.addButton(PS4, "axis.dualshock_4.2", "axis2");
-        	ControllerModel.addButton(PS4, "axis.dualshock_4.5", "axis5");
+
+        	ControllerModel.addButton(PS4, "button.ps4.face_button_left", "controllers/ps4_face_button_left.png", "button0");
+        	ControllerModel.addButton(PS4, "button.ps4.face_button_down", "controllers/ps4_face_button_down.png", "button1");
+        	ControllerModel.addButton(PS4, "button.ps4.face_button_right", "controllers/ps4_face_button_right.png", "button2");
+        	ControllerModel.addButton(PS4, "button.ps4.face_button_up", "controllers/ps4_face_button_up.png", "button3");
+        	ControllerModel.addButton(PS4, "button.ps4.bumper_left", "controllers/ps4_bumper_left.png", "button4");
+        	ControllerModel.addButton(PS4, "button.ps4.bumper_right", "controllers/ps4_bumper_right.png", "button5");
+        	ControllerModel.addButton(PS4, "button.ps4.left_trigger", "controllers/ps4_left_trigger.png", "button6");
+        	ControllerModel.addButton(PS4, "button.ps4.right_trigger", "controllers/ps4_right_trigger.png", "button7");
+        	ControllerModel.addButton(PS4, "button.ps4.select_button", "controllers/ps4_select_button.png", "button8");
+        	ControllerModel.addButton(PS4, "button.ps4.start_button", "controllers/ps4_start_button.png", "button9");
+        	ControllerModel.addButton(PS4, "button.ps4.stick_left", "controllers/ps4_stick_left.png", "button10");
+        	ControllerModel.addButton(PS4, "button.ps4.stick_right", "controllers/ps4_stick_right.png", "button11");
+        	ControllerModel.addButton(PS4, "button.ps4.12", "button12");
+        	ControllerModel.addButton(PS4, "button.ps4.touchpad", "controllers/ps4_touchpad.png", "button13");
+        	ControllerModel.addButton(PS4, "button.ps4.dpad_up", "controllers/ps4_dpad_up.png", "button14");
+        	ControllerModel.addButton(PS4, "button.ps4.dpad_right", "controllers/ps4_dpad_right.png", "button15");
+        	ControllerModel.addButton(PS4, "button.ps4.dpad_down", "controllers/ps4_dpad_down.png", "button16");
+        	ControllerModel.addButton(PS4, "button.ps4.dpad_left", "controllers/ps4_dpad_left.png", "button17");
+        	ControllerModel.addButton(PS4, "posit_axis.ps4.0", "axis_pos0");
+        	ControllerModel.addButton(PS4, "posit_axis.ps4.1", "axis_pos1");
+        	ControllerModel.addButton(PS4, "posit_axis.ps4.2", "axis_pos2");
+        	ControllerModel.addButton(PS4, "posit_axis.ps4.5", "axis_pos5");
+        	ControllerModel.addButton(PS4, "negat_axis.ps4.0", "axis_neg0");
+        	ControllerModel.addButton(PS4, "negat_axis.ps4.1", "axis_neg1");
+        	ControllerModel.addButton(PS4, "negat_axis.ps4.2", "axis_neg2");
+        	ControllerModel.addButton(PS4, "negat_axis.ps4.5", "axis_neg5");
+        	ControllerModel.addButton(PS4, "axis.ps4.0", "axis0");
+        	ControllerModel.addButton(PS4, "axis.ps4.1", "axis1");
+        	ControllerModel.addButton(PS4, "axis.ps4.2", "axis2");
+        	ControllerModel.addButton(PS4, "axis.ps4.5", "axis5");
         }
 		
 		public List<Integer> getControllerNegativeTriggers() {
