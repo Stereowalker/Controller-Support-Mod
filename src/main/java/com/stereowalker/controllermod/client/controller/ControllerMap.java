@@ -15,11 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ControllerMap {
 	public static String map(String input, ControllerModel model) {
+		String lAr = "\u2190";
+		String uAr = "\u2191";
+		String rAr = "\u2192";
+		String dAr = "\u2193";
 		if (input.equals("empty") || input.equals(" ")) return " ";
 		switch (model) {
 		case XBOX_360:
-			if (input.equals("button1")) return "B";
-			else if (input.equals("button2")) return "X";
+			if (input.equals("button2")) return "X";
 			else if (input.equals("button3")) return "Y";
 			else if (input.equals("button4")) return "LB";
 			else if (input.equals("button5")) return "RB";
@@ -31,34 +34,34 @@ public class ControllerMap {
 			else if (input.equals("button11")) return "RIGHT";
 			else if (input.equals("button12")) return "DOWN";
 			else if (input.equals("button13")) return "LEFT";
-			else if (input.equals("axis_pos0")) return "LS RIGHT";
-			else if (input.equals("axis_neg0")) return "LS LEFT";
-			else if (input.equals("axis_pos1")) return "LS DOWN";
-			else if (input.equals("axis_neg1")) return "LS UP";
-			else if (input.equals("axis_pos2")) return "RS RIGHT";
-			else if (input.equals("axis_neg2")) return "RS LEFT";
-			else if (input.equals("axis_pos3")) return "RS DOWN";
-			else if (input.equals("axis_neg3")) return "RS UP";
+			else if (input.equals("axis_pos0")) return "LS "+rAr;
+			else if (input.equals("axis_neg0")) return "LS "+lAr;
+			else if (input.equals("axis_pos1")) return "LS "+dAr;
+			else if (input.equals("axis_neg1")) return "LS "+uAr;
+			else if (input.equals("axis_pos2")) return "RS "+rAr;
+			else if (input.equals("axis_neg2")) return "RS "+lAr;
+			else if (input.equals("axis_pos3")) return "RS "+dAr;
+			else if (input.equals("axis_neg3")) return "RS "+uAr;
 			else if (input.equals("axis_pos4")) return "LT";
 			else if (input.equals("axis_pos5")) return "RT";
-			else if (input.equals("axis0")) return "LS RIGHT/LEFT";
-			else if (input.equals("axis1")) return "LS UP/DOWN";
-			else if (input.equals("axis2")) return "RS RIGHT/LEFT";
-			else if (input.equals("axis3")) return "RS UP/DOWN";
+			else if (input.equals("axis0")) return "LS "+lAr+rAr;
+			else if (input.equals("axis1")) return "LS "+uAr+dAr;
+			else if (input.equals("axis2")) return "RS "+lAr+rAr;
+			else if (input.equals("axis3")) return "RS "+uAr+dAr;
 		case PS4:
 			if (input.equals("button12")) return "PS BUTTON";
-			else if (input.equals("axis_pos0")) return "LS RIGHT";
-			else if (input.equals("axis_neg0")) return "LS LEFT";
-			else if (input.equals("axis_pos1")) return "LS DOWN";
-			else if (input.equals("axis_neg1")) return "LS UP";
-			else if (input.equals("axis_pos2")) return "RS RIGHT";
-			else if (input.equals("axis_neg2")) return "RS LEFT";
-			else if (input.equals("axis_pos5")) return "RS DOWN";
-			else if (input.equals("axis_neg5")) return "RS UP";
-			else if (input.equals("axis0")) return "LS RIGHT/LEFT";
-			else if (input.equals("axis1")) return "LS UP/DOWN";
-			else if (input.equals("axis2")) return "RS RIGHT/LEFT";
-			else if (input.equals("axis5")) return "RS UP/DOWN";
+			else if (input.equals("axis_pos0")) return "LS "+rAr;
+			else if (input.equals("axis_neg0")) return "LS "+lAr;
+			else if (input.equals("axis_pos1")) return "LS "+dAr;
+			else if (input.equals("axis_neg1")) return "LS "+uAr;
+			else if (input.equals("axis_pos2")) return "RS "+rAr;
+			else if (input.equals("axis_neg2")) return "RS "+lAr;
+			else if (input.equals("axis_pos5")) return "RS "+dAr;
+			else if (input.equals("axis_neg5")) return "RS "+uAr;
+			else if (input.equals("axis0")) return "LS "+lAr+rAr;
+			else if (input.equals("axis1")) return "LS "+uAr+dAr;
+			else if (input.equals("axis2")) return "RS "+lAr+rAr;
+			else if (input.equals("axis5")) return "RS "+uAr+dAr;
 		default:
 			break;
 		}
