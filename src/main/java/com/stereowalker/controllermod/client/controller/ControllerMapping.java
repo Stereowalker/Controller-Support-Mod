@@ -21,10 +21,10 @@ import net.minecraft.client.resources.language.I18n;
 
 @Environment(EnvType.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
-	
+
 	private static final Map<UseCase, Map<ControllerMap.Button, ControllerMapping>> MAP = Maps.newHashMap();
 	private static final Map<String, ControllerMapping> ALL = Maps.newHashMap();
-	
+
 	private final String descri;
 	private final String category;
 	//	private final InputConstants.Type type;
@@ -156,6 +156,16 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		ImmutableMap.Builder<ControllerModel,InputType> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		inputType = builder2.build();
+	}
+
+	/**
+	 * Returns true if the supplied ControllerMapping conflicts with this
+	 */
+	public boolean same(ControllerMapping pBinding, ControllerModel model) {
+		if (this.useCase != pBinding.useCase) {
+			return false;
+		}
+		else return this.buttonOnController.get(model).equals(pBinding.buttonOnController.get(model));
 	}
 
 	public boolean isBoundToButton(ControllerModel model) {
@@ -304,11 +314,11 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		return useCase;
 	}
 
-    public static void releaseAll() {
-        for (ControllerMapping controllerMapping : ALL.values()) {
-        	controllerMapping.release();
-        }
-    }
+	public static void releaseAll() {
+		for (ControllerMapping controllerMapping : ALL.values()) {
+			controllerMapping.release();
+		}
+	}
 
 	public static void resetMapping() {
 		MAP.forEach((use, submap) -> submap.clear());
@@ -326,7 +336,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		down.removeIf((bind) -> bind == null);
 		return down;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getDescripti();
