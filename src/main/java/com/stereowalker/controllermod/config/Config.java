@@ -45,6 +45,10 @@ public class Config implements ConfigObject {
 	@UnionConfig.Slider
 	public float safe_area = 100.0f;
 	
+	@UnionConfig.Entry(group = "Gameplay", name = "Show Button Hints")
+	@UnionConfig.Comment(comment = {"SHows button hints at the bottom right and left of your screen"})
+	public boolean show_button_hints = false;
+	
 	@UnionConfig.Entry(group = "Gameplay", name = "Show Paper Doll")
 	@UnionConfig.Comment(comment = {"Shows the mini you at the top left corner of the screen","Adorable right?"})
 	public boolean show_paper_doll = true;
