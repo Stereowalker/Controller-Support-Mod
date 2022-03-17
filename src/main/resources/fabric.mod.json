@@ -30,7 +30,7 @@
     "fabric": "*",
     "minecraft": "1.18.x",
     "java": ">=17",
-	"unionlib": [">=6.1.6", "<6.2.0"]
+	"unionlib": [">=6.2.0", "<6.3.0"]
   },
   "accessWidener": "controllermod.accesswidener",
   "suggests": {
