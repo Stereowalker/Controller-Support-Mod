@@ -12,6 +12,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.stereowalker.controllermod.ControllerMod;
+import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.client.controller.ControllerMapping;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,10 +25,12 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 
@@ -121,6 +125,9 @@ public class PaperDollOptions {
 			if ((!Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getSingleplayerServer().isPublished()) && ControllerMod.CONFIG.ingame_player_names) {
 				renderNames(gui, poseStack);
 			}
+			if (ControllerMod.CONFIG.show_button_hints) {
+				renderButtonHints(gui, poseStack);
+			}
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 			RenderSystem.enableBlend();
@@ -128,6 +135,23 @@ public class PaperDollOptions {
 		}
 	}
 
+	@SuppressWarnings("resource")
+	@Environment(EnvType.CLIENT)
+	public static void renderButtonHints(Gui gui, PoseStack matrixStack) {
+		ControllerMapping map = ControllerMod.getInstance().controllerOptions.controllerKeyBindInventory;
+		ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
+		if (map.isBoundToButton(model)) {
+			int x1 = ControllerMod.getSafeArea() - 2;
+			int y1 = gui.screenHeight - 12;
+			ResourceLocation icon = model.getOrCreate(map.getButtonOnController(model)).getIcon();
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderTexture(0, icon);
+			Gui.blit(matrixStack, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
+
+			Minecraft.getInstance().font.drawShadow(matrixStack, I18n.get(map.getDescripti()), x1 + 20, y1 - 3, 0xffffff);
+		}
+	}
+	
 	@SuppressWarnings("resource")
 	@Environment(EnvType.CLIENT)
 	public static void renderPosition(Gui gui, PoseStack matrixStack) {
@@ -144,7 +168,6 @@ public class PaperDollOptions {
 		matrixStack.pushPose();
 
 		//ARGB
-		System.out.println(ControllerMod.getSafeArea());
 		Gui.fill(matrixStack, ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
 		RenderSystem.enableDepthTest();
 
