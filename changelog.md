@@ -1,3 +1,6 @@
+[6.1.3]
+- Ported to 1.18.2
+
 [6.1.2]
 - Fix Minecraft crashing when editing controller bindings
 - Added a Safe Area option for the Ingame Gui
