@@ -122,14 +122,14 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
 				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
 
-				if (case1.contains(UseCase.CONTAINER)) {
+				if (case1 != null && case1.contains(UseCase.CONTAINER)) {
 					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, false);
 					if (scrollAxis >= -1.0F && scrollAxis < -0.1F)
 						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
 					if (scrollAxis <= 1.0F && scrollAxis > 0.1F)
 						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D);
 				}
-				else if (case1.contains(UseCase.ANY_SCREEN)) {
+				else if (case1 != null && case1.contains(UseCase.ANY_SCREEN)) {
 					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS);
 					if (scrollAxis >= -1.0F && scrollAxis < -0.1D)
 						mouseHandler.onScroll(window.getWindow(), 0.0D, -scrollAxis * ControllerMod.CONFIG.menu_sensitivity * 100.0D / 20.0D); 
