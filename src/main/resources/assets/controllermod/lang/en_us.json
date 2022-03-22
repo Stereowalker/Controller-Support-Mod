@@ -19,6 +19,7 @@
 	"button.ps4.dpad_left": "LEFT",
 	"button.xbox_360.face_button_down": "A",
 	"button.xbox_360.face_button_right": "B",
+	"button.xbox_360.face_button_left": "X",
 	"_comment1_": "///////////////////////////////////////////////////////////[KEYBINDS]///////////////////////////////////////////////////////////",
 	"key.categories.controller": "\u00A73\u00A7oController",
 	"key.controller.hotbar_left": "Shift Hotbar Left",

@@ -51,7 +51,7 @@ public class GuiMixin extends GuiComponent {
 		Gui.fill(poseStack, minX, minY, maxX + (ControllerMod.getSafeArea()*2), maxY + (ControllerMod.getSafeArea()*2), color);
 	}
 	
-	@Redirect(method = "lambda$renderEffects$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
+	@Redirect(method = {"lambda$renderEffects$0","m_93045_"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
 	public void render_all_blit(PoseStack poseStack, int x, int y, int blitOffset, int width, int height, TextureAtlasSprite sprite) {
 		Gui.blit(poseStack, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), blitOffset, width, height, sprite);
 	}

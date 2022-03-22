@@ -1,3 +1,10 @@
+[6.1.2]
+- Fix Minecraft crashing when editing controller bindings
+- Added a Safe Area option for the Ingame Gui
+- Used images rather than text to indicate buttons in the controller mappings
+- Used symbols rather than text to show directions
+- Added button hints (disabled by default)
+
 [6.1.1] 
 - Improved the look and feel of the On-Screen Keyboard
 - Changed the size and texture of the pointer to match the one on Bedrock
