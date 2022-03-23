@@ -133,7 +133,7 @@ public class VirtualMouseHelper extends MouseHandler {
 					}
 
 					this.accumulatedScroll += d0;
-					float f1 = (float)((int)this.accumulatedScroll);
+					int f1 = (int)this.accumulatedScroll;
 					if (f1 == 0.0F) {
 						return;
 					}
@@ -142,7 +142,7 @@ public class VirtualMouseHelper extends MouseHandler {
 					//               if (net.minecraftforge.client.ForgeHooksClient.onMouseScrolled(this, d0)) return;
 					if (this.minecraft.player.isSpectator()) {
 						if (this.minecraft.gui.getSpectatorGui().isMenuActive()) {
-							this.minecraft.gui.getSpectatorGui().onMouseScrolled((double)(-f1));
+							this.minecraft.gui.getSpectatorGui().onMouseScrolled(-f1);
 						} else {
 							float f = Mth.clamp(this.minecraft.player.getAbilities().getFlyingSpeed() + f1 * 0.005F, 0.0F, 0.2F);
 							this.minecraft.player.getAbilities().setFlyingSpeed(f);
