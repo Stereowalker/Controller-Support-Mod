@@ -3,7 +3,7 @@
   "id": "controllermod",
   "version": "${version}",
 
-  "name": "UnionLib",
+  "name": "Controller Support",
   "description": "Grants the ablility to play Minecraft with controllers and gives opportunity to those who want to play split-screen.",
   "authors": [
     "Stereowalker"
@@ -28,7 +28,7 @@
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": "1.18.2",
+    "minecraft": "1.18.1",
     "java": ">=17",
 	"unionlib": [">=6.2.0", "<6.3.0"]
   },
