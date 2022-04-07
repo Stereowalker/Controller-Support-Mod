@@ -1,3 +1,6 @@
+[6.1.4]
+- Back-ported to 1.18.1
+
 [6.1.3]
 - Ported to 1.18.2
 
