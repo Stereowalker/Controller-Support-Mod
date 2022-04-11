@@ -33,7 +33,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.modMinecraftVersion}"
 	mappings loom.layered() {
   		officialMojangMappings()
-  		parchment("org.parchmentmc.data:parchment-"+mappingsVersion+"@zip")
+  		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
 	modImplementation "curse.maven:forge_config_api-547434:3551753"
