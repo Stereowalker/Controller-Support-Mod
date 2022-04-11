@@ -113,6 +113,11 @@ public class ControllerUtil {
 		map.put("LEFT", Integer.valueOf(0));
 		map.put("RIGHT", Integer.valueOf(0));
 	}
+	
+	public static void emptyAllKeys() {
+		putKeysInMap(keyMap);
+		putKeysInMap(keyToggleMap);
+	}
 
 	/**
 	 * Returns the current state of the axis queried on the controller
