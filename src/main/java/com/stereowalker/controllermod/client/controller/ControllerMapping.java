@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
@@ -321,6 +322,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	public static void releaseAll() {
 		for (ControllerMapping controllerMapping : ALL.values()) {
 			controllerMapping.release();
+		}
+	}
+
+	public static void handleUnbindAll() {
+		for (ControllerMapping controllerMapping : ALL.values()) {
+			ControllerMod.getInstance().getControllerHandler().addToPrevoiuslyUsed(controllerMapping);
 		}
 	}
 

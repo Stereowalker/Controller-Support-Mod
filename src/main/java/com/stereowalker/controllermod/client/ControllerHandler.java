@@ -55,6 +55,15 @@ public class ControllerHandler {
 	}
 
 	private List<ControllerMapping> previouslyUsed = Lists.newArrayList();
+	private boolean forceRelease = false;
+	public void addToPrevoiuslyUsed(ControllerMapping ma) {
+		previouslyUsed.add(ma);
+		forceRelease = true;
+	}
+	
+	public boolean forceRelease() {
+		return forceRelease;
+	}
 
 	
 	boolean left = false, right = false, up = false, down = false;
@@ -107,7 +116,7 @@ public class ControllerHandler {
 			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
 			//This shoudl release buttons we are no longer holding
 			for (ControllerMapping binding : previouslyUsed) {
-				if (!currentlyUsing.contains(binding) && binding != null) {
+				if ((!currentlyUsing.contains(binding) || forceRelease) && binding != null) {
 					j++;
 					if (!binding.isAxis()) {
 						if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase()))) {
@@ -124,6 +133,7 @@ public class ControllerHandler {
 				}
 			}
 			previouslyUsed.clear();
+			forceRelease = false;
 			for (ControllerMapping binding : currentlyUsing) {
 				i++;
 				if (binding.isAxis()) {

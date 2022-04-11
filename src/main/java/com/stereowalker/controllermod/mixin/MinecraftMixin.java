@@ -45,8 +45,13 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	}
 	
 	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;releaseAll()V"))
-	public void setScreen_inject(CallbackInfo ci) {
+	public void setScreen1_inject(CallbackInfo ci) {
 		ControllerMapping.releaseAll();
+	}
+	
+	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferUploader;reset()V"))
+	public void setScreen2_inject(CallbackInfo ci) {
+		ControllerMapping.handleUnbindAll();
 	}
 
 	boolean fromGame = false;
@@ -102,11 +107,16 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 					fromGame = true;
 					case1 = Lists.newArrayList(UseCase.INGAME, UseCase.ANYWHERE);
 				}
-				if (case1 != null) {
-					if (!case1.contains(UseCase.INGAME) && ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
-						case1 = Lists.newArrayList(UseCase.KEYBOARD);
+				
+				if (ControllerMod.getInstance().getControllerHandler().forceRelease()){
+					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE, UseCase.CONTAINER, UseCase.INGAME));
+				} else {
+					if (case1 != null) {
+						if (!case1.contains(UseCase.INGAME) && ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
+							case1 = Lists.newArrayList(UseCase.KEYBOARD);
+						}
+						ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, case1);
 					}
-					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, case1);
 				}
 
 				if (ControllerMod.getInstance().onScreenKeyboard.switchCooldown > 0) {
