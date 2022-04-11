@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,11 +25,11 @@ public abstract class AbstractContainerScreenMixin <T extends AbstractContainerM
 	
 	@Redirect(method = {"mouseReleased", "mouseClicked"}, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;isKeyDown(JI)Z"))
 	public boolean shiftClick(long l, int i) {
-		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
+		return Screen.hasShiftDown() || ControllerMod.getInstance().controllerOptions.controllerBindQuickMove.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
 	}
 	
 	@Redirect(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;hasShiftDown()Z"))
 	public boolean shiftClick() {
-		return Screen.hasShiftDown() || ControllerBindings.SHIFT_MOVE_INPUT.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
+		return Screen.hasShiftDown() || ControllerMod.getInstance().controllerOptions.controllerBindQuickMove.isDown(ControllerMod.getInstance().controllerOptions.controllerModel);
 	}
 }

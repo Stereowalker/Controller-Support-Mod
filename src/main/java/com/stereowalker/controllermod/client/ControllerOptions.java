@@ -61,6 +61,16 @@ public class ControllerOptions {
 		builder.put(ControllerModel.XBOX_360, "button7");
 		builder.put(ControllerModel.PS4, "button9");
 	}, InputType.PRESS, UseCase.INGAME);
+	
+	public final ControllerMapping controllerBindSplit = new ControllerMapping(INVENTORY, "key.controller.split", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button3");
+		builder.put(ControllerModel.PS4, "button3");
+	}, InputType.PRESS, UseCase.ANY_SCREEN);
+	
+	public final ControllerMapping controllerBindQuickMove = new ControllerMapping(INVENTORY, "key.controller.quickMove", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button2");
+		builder.put(ControllerModel.PS4, "button0");
+	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(INVENTORY, "key.controller.hotbar_left", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button4");
@@ -226,7 +236,7 @@ public class ControllerOptions {
 		builder.put(ControllerModel.PS4, "button14");
 	}, UseCase.INGAME);
 
-	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight,
+	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight, this.controllerBindSplit, this.controllerBindQuickMove,
 			this.controllerBindCameraHorizontal, this.controllerBindCameraVertical, this.controllerBindMouseHorizontal, this.controllerBindMouseVertical, this.controllerBindMoveHorizontal, this.controllerBindMoveVertical, this.controllerBindScroll},
 			new ControllerMapping[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindChat, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, 
 					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight, this.controllerKeyBindSprint, this.controllerKeyBindSneak, //Movement
