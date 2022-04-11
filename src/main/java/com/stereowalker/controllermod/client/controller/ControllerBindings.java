@@ -23,11 +23,6 @@ public class ControllerBindings {
 		builder.put(ControllerModel.PS4, "button1");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
-	public static final ControllerMapping SHIFT_MOVE_INPUT = new ControllerMapping(NEW, "shift_move", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button2");
-		builder.put(ControllerModel.PS4, "button0");
-	}, InputType.PRESS, UseCase.ANY_SCREEN);
-	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);
 	public static final List<KeyMapping> excludedKeybinds = Lists.newArrayList();
 
@@ -48,8 +43,6 @@ public class ControllerBindings {
 		excludeKeybind(Minecraft.getInstance().options.keyChat);
 		
 		registerControllerBinding(SELECT_INPUT);
-		registerControllerBinding(SHIFT_MOVE_INPUT);
-//		BINDINGS.add(CLOSE_INVENTORY_INPUT);
 		for (KeyMapping key : Minecraft.getInstance().options.keyMappings) {
 			if (!excludedKeybinds.contains(key)) registerControllerBinding(new ControllerMapping(key, key.getKeyConflictContext() == KeyConflictContext.IN_GAME ? UseCase.INGAME : key.getKeyConflictContext() == KeyConflictContext.GUI ? UseCase.ANY_SCREEN : UseCase.ANYWHERE));
 		}
