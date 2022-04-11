@@ -108,8 +108,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @param keybind
 	 * @param buttonId
 	 */
+	public ControllerMapping(KeyMapping keybind, String newDesc, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
+		this(keybind.getCategory(), newDesc, keybind.key, buttonId, InputType.PRESS, false, false, useCase, true);
+	}
+	
 	public ControllerMapping(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
-		this(keybind.getCategory(), keybind.getName(), keybind.key, buttonId, InputType.PRESS, false, false, useCase, true);
+		this(keybind, keybind.getName(), buttonId, useCase);
 	}
 
 	/**
