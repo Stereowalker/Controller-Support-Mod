@@ -51,6 +51,7 @@ public class ControllerOptions {
 
 	public static final String NEW = "key.categories.controller";
 	public static final String ON_SCREEN_KEYBOARD = "key.categories.on_screen_keyboard";
+	public static final String INVENTORY = "key.categories.inventory";
 	public final ControllerMapping controllerBindBack = new ControllerMapping(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button1");
 		builder.put(ControllerModel.PS4, "button2");
@@ -61,12 +62,12 @@ public class ControllerOptions {
 		builder.put(ControllerModel.PS4, "button9");
 	}, InputType.PRESS, UseCase.INGAME);
 
-	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(NEW, "key.controller.hotbar_left", (builder) -> {
+	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(INVENTORY, "key.controller.hotbar_left", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button4");
 		builder.put(ControllerModel.PS4, "button4");
 	}, InputType.PRESS, UseCase.INGAME);
 
-	public final ControllerMapping controllerBindHotbarRight = new ControllerMapping(NEW, "key.controller.hotbar_right",  (builder) -> {
+	public final ControllerMapping controllerBindHotbarRight = new ControllerMapping(INVENTORY, "key.controller.hotbar_right",  (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button5");
 		builder.put(ControllerModel.PS4, "button5");
 	}, InputType.PRESS, UseCase.INGAME);
@@ -160,65 +161,75 @@ public class ControllerOptions {
 		builder.put(ControllerModel.PS4, "axis5");
 	}, false, UseCase.ANY_SCREEN);
 
-	public final ControllerMapping controllerKeyBindInventory = new ControllerMapping(Minecraft.getInstance().options.keyInventory, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button3");
-		builder.put(ControllerModel.PS4, "button3");
-	}, UseCase.INGAME);
+	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, "key.override.forward", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_neg1");
+		builder.put(ControllerModel.PS4, "axis_neg1");
+	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
-	public final ControllerMapping controllerKeyBindJump = new ControllerMapping(Minecraft.getInstance().options.keyJump, (builder) -> {
+	public final ControllerMapping controllerKeyBindBack = new ControllerMapping(Minecraft.getInstance().options.keyDown, "key.override.back", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos1");
+		builder.put(ControllerModel.PS4, "axis_pos1");
+	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
+
+	public final ControllerMapping controllerKeyBindLeft = new ControllerMapping(Minecraft.getInstance().options.keyLeft, "key.override.left", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_neg0");
+		builder.put(ControllerModel.PS4, "axis_neg0");
+	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
+
+	public final ControllerMapping controllerKeyBindRight = new ControllerMapping(Minecraft.getInstance().options.keyRight, "key.override.right", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos0");
+		builder.put(ControllerModel.PS4, "axis_pos0");
+	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
+
+	public final ControllerMapping controllerKeyBindJump = new ControllerMapping(Minecraft.getInstance().options.keyJump, "key.override.jump", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button0");
 		builder.put(ControllerModel.PS4, "button1");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindAttack = new ControllerMapping(Minecraft.getInstance().options.keyAttack, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos5");
-		builder.put(ControllerModel.PS4, "button7");
+	public final ControllerMapping controllerKeyBindSneak = new ControllerMapping(Minecraft.getInstance().options.keyShift, "key.override.sneak", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button1");
+		builder.put(ControllerModel.PS4, "button2");
 	}, UseCase.INGAME);
-
-	public final ControllerMapping controllerKeyBindUseItem = new ControllerMapping(Minecraft.getInstance().options.keyUse, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos4");
-		builder.put(ControllerModel.PS4, "button6");
-	}, UseCase.INGAME);
-
-	public final ControllerMapping controllerKeyBindSneak = new ControllerMapping(Minecraft.getInstance().options.keyShift, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button9");
-		builder.put(ControllerModel.PS4, "button11");
-	}, UseCase.INGAME);
-
-	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, (builder) -> {
+	
+	public final ControllerMapping controllerKeyBindSprint = new ControllerMapping(Minecraft.getInstance().options.keySprint, "key.override.sprint", (builder) -> {
 		builder.put(ControllerModel.XBOX_360, "button8");
 		builder.put(ControllerModel.PS4, "button10");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindDrop = new ControllerMapping(Minecraft.getInstance().options.keyDrop, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button1");
-		builder.put(ControllerModel.PS4, "button2");
+	public final ControllerMapping controllerKeyBindInventory = new ControllerMapping(Minecraft.getInstance().options.keyInventory, "key.override.inventory", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button3");
+		builder.put(ControllerModel.PS4, "button3");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg1");
-		builder.put(ControllerModel.PS4, "axis_neg1");
+	public final ControllerMapping controllerKeyBindDrop = new ControllerMapping(Minecraft.getInstance().options.keyDrop, "key.override.drop", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button12");
+		builder.put(ControllerModel.PS4, "button16");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindBack = new ControllerMapping(Minecraft.getInstance().options.keyDown, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos1");
-		builder.put(ControllerModel.PS4, "axis_pos1");
+	public final ControllerMapping controllerKeyBindUseItem = new ControllerMapping(Minecraft.getInstance().options.keyUse, "key.override.use", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos4");
+		builder.put(ControllerModel.PS4, "button6");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindLeft = new ControllerMapping(Minecraft.getInstance().options.keyLeft, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg0");
-		builder.put(ControllerModel.PS4, "axis_neg0");
+	public final ControllerMapping controllerKeyBindAttack = new ControllerMapping(Minecraft.getInstance().options.keyAttack, "key.override.attack", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "axis_pos5");
+		builder.put(ControllerModel.PS4, "button7");
 	}, UseCase.INGAME);
 
-	public final ControllerMapping controllerKeyBindRight = new ControllerMapping(Minecraft.getInstance().options.keyRight, (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos0");
-		builder.put(ControllerModel.PS4, "axis_pos0");
+	public final ControllerMapping controllerKeyBindChat = new ControllerMapping(Minecraft.getInstance().options.keyChat, "key.override.chat", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button11");
+		builder.put(ControllerModel.PS4, "button15");
+	}, UseCase.INGAME);
+
+	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, "key.override.togglePerspective", (builder) -> {
+		builder.put(ControllerModel.XBOX_360, "button10");
+		builder.put(ControllerModel.PS4, "button14");
 	}, UseCase.INGAME);
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight,
 			this.controllerBindCameraHorizontal, this.controllerBindCameraVertical, this.controllerBindMouseHorizontal, this.controllerBindMouseVertical, this.controllerBindMoveHorizontal, this.controllerBindMoveVertical, this.controllerBindScroll},
-			new ControllerMapping[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindSneak, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, 
-					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight,
+			new ControllerMapping[] {this.controllerKeyBindInventory, this.controllerKeyBindJump, this.controllerKeyBindAttack, this.controllerKeyBindUseItem, this.controllerKeyBindChat, this.controllerKeyBindTogglePerspective, this.controllerKeyBindDrop, 
+					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight, this.controllerKeyBindSprint, this.controllerKeyBindSneak, //Movement
 					this.controllerBindKeyboard, this.controllerBindKeyboardArrowLeft, this.controllerBindKeyboardArrowRight, this.controllerBindKeyboardBackspace,
 					this.controllerBindKeyboardCaps, this.controllerBindKeyboardUp, this.controllerBindKeyboardDown, this.controllerBindKeyboardLeft, this.controllerBindKeyboardRight, 
 					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace});

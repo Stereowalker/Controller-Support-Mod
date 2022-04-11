@@ -22,8 +22,7 @@ public class ControllerMap {
 		if (input.equals("empty") || input.equals(" ")) return " ";
 		switch (model) {
 		case XBOX_360:
-			if (input.equals("button3")) return "Y";
-			else if (input.equals("button4")) return "LB";
+			if (input.equals("button4")) return "LB";
 			else if (input.equals("button5")) return "RB";
 			else if (input.equals("button6")) return "BACK";
 			else if (input.equals("button7")) return "START";

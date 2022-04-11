@@ -44,6 +44,8 @@ public class ControllerBindings {
 		excludeKeybind(Minecraft.getInstance().options.keyRight);
 		excludeKeybind(Minecraft.getInstance().options.keyUp);
 		excludeKeybind(Minecraft.getInstance().options.keyDown);
+		excludeKeybind(Minecraft.getInstance().options.keySprint);
+		excludeKeybind(Minecraft.getInstance().options.keyChat);
 		
 		registerControllerBinding(SELECT_INPUT);
 		registerControllerBinding(SHIFT_MOVE_INPUT);
