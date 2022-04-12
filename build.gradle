@@ -89,7 +89,7 @@ dependencies {
 	implementation "org.spongepowered:mixin:"+modMixinVersion+""
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
-	implementation fg.deobf("curse.maven:xareo-317780:3551770")
+	implementation fg.deobf("curse.maven:xareo-317780:3732800")
 }
 
 jar {
