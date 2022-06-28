@@ -11,6 +11,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.VirtualMouseHelper;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.unionlib.util.Executor;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.KeyboardHandler;
@@ -173,11 +174,6 @@ public class ControllerUtil {
 		return false;
 	}
 
-	@FunctionalInterface
-	public interface Executor {
-		void execute();
-	}
-	
 	private static float getButtonPushDistance(String buttonId, Controller controller) {
 			for (int i = 0; i < controller.getButtons().capacity(); i++)
 				if (buttonId.equals("button"+i)) {
