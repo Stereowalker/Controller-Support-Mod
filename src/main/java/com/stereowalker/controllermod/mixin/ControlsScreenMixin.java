@@ -31,7 +31,7 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
 		super(pLastScreen, pOptions, pTitle);
 	}
 	
-	@ModifyVariable(method = "init", name = "k", at = @At(value = "INVOKE", shift = Shift.AFTER, ordinal = 4, target = "Lnet/minecraft/client/gui/screens/controls/ControlsScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
+	@ModifyVariable(method = "init", ordinal = 2, at = @At(value = "INVOKE", shift = Shift.AFTER, ordinal = 4, target = "Lnet/minecraft/client/gui/screens/controls/ControlsScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
 	public int init_inject(int k){
 		return k+24;
 	}
