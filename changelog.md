@@ -1,3 +1,6 @@
+[7.0.1]
+- Fix a crash caused when running alongside a lot of mods
+
 [7.0.0]
 - Changed the default bindings to match the defaults on the bedrock version of the game
 - Fix buttons that open other screen requiring double presses to open
