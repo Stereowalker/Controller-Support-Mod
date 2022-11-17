@@ -85,6 +85,7 @@ public class ControllerOptions {
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
 		builder.put(ControllerModel.PS4_WINDOWS, "button13");
+		collect(builder, "#select_button", ControllerModel.XBOX_360, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
