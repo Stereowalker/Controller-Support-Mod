@@ -171,12 +171,16 @@ public class Controller {
 		}
 	}
 
-	public ControllerModel getModel() {
+	public ControllerModel getActualModel() {
 		for (ControllerModel model : ControllerModel.modelList()) {
 			if (model.getGUID().equals(getGUID())) {
 				return model;
 			}
 		}
-		return ControllerMod.getInstance().controllerOptions.controllerModel;
+		return null;
+	}
+
+	public ControllerModel getModel() {
+		return getActualModel() == null ? ControllerMod.getInstance().controllerOptions.controllerModel : getActualModel();
 	}
 }

@@ -18,8 +18,9 @@ public class ControllerBindings {
 
 	public static final String NEW = "new";
 	public static final ControllerMapping SELECT_INPUT = new ControllerMapping(NEW, "select", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button0");
-		builder.put(ControllerModel.PS4, "button1");
+		builder.put(ControllerModel.XBOX_360, "#face_button_down");
+		builder.put(ControllerModel.PS4_WINDOWS, "#face_button_down");
+		builder.put(ControllerModel.PS4_LINUX, "#face_button_down");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);

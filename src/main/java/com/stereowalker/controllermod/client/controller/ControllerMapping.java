@@ -68,6 +68,8 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		for (ControllerModel model : ControllerModel.values()) {
 			if (!builder2.containsKey(model)) {
 				builder2.put(model, " ");
+			} else if (builder2.get(model).charAt(0) == '#') {
+				builder2.put(model, model.getIdFromAlias(builder2.get(model).replace('#', ' ').strip()));
 			}
 			inputTypeBuilder.put(model, inputType == null ? InputType.PRESS : inputType);
 			axisInvertedBuilder.put(model, isAxisInvertedIn);
@@ -98,9 +100,9 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 
 	public ControllerMapping(KeyMapping keybind, UseCase useCase) {
 		this(keybind.getCategory(), keybind.getName(), keybind.key, (builder) -> {
-			builder.put(ControllerModel.XBOX_360, ControllerUtil.getControllerInputId(0));
-			builder.put(ControllerModel.PS4, ControllerUtil.getControllerInputId(0));
-			builder.put(ControllerModel.CUSTOM, ControllerUtil.getControllerInputId(0));
+			for (ControllerModel model : ControllerModel.values()) {
+				builder.put(model, ControllerUtil.getControllerInputId(0));
+			}
 		}, InputType.PRESS, false, false, useCase, true);
 	}
 
@@ -112,7 +114,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	public ControllerMapping(KeyMapping keybind, String newDesc, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
 		this(keybind.getCategory(), newDesc, keybind.key, buttonId, InputType.PRESS, false, false, useCase, true);
 	}
-	
+
 	public ControllerMapping(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
 		this(keybind, keybind.getName(), buttonId, useCase);
 	}

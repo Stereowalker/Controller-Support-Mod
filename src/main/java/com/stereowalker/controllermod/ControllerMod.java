@@ -11,6 +11,7 @@ import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
+import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
@@ -65,7 +66,11 @@ public class ControllerMod extends MinecraftMod
 		for (int i = 0; i < this.getTotalConnectedControllers(); i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
 				Controller cont = new Controller(i);
-				System.out.println("Added ("+cont.getName()+") as Controller "+(i+1));
+				if (cont.getActualModel() == null) {
+					LOGGER.info("Added ("+cont.getName()+") as Controller "+(i+1)+". This is a custom controller and it's ID is "+cont.getGUID());
+				} else {
+					LOGGER.info("Added ("+cont.getName()+") as Controller "+(i+1)+". This is a registered "+cont.getActualModel()+" controller");
+				}
 				this.controllers.add(new Controller(i));
 			}
 		}
