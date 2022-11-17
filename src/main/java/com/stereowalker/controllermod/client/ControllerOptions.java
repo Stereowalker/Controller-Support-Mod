@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -52,188 +53,158 @@ public class ControllerOptions {
 	public static final String NEW = "key.categories.controller";
 	public static final String ON_SCREEN_KEYBOARD = "key.categories.on_screen_keyboard";
 	public static final String INVENTORY = "key.categories.inventory";
+	
+	private void collect(Map<ControllerModel, String> builder, String alias, ControllerModel... models) {
+		for (ControllerModel model : models) {
+			builder.put(model, alias);
+		}
+	}
 	public final ControllerMapping controllerBindBack = new ControllerMapping(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button1");
-		builder.put(ControllerModel.PS4, "button2");
+		collect(builder, "#face_button_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindPause = new ControllerMapping(NEW, "key.controller.pause", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button7");
-		builder.put(ControllerModel.PS4, "button9");
+		collect(builder, "#start_button", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.INGAME);
 	
 	public final ControllerMapping controllerBindSplit = new ControllerMapping(INVENTORY, "key.controller.split", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button3");
-		builder.put(ControllerModel.PS4, "button3");
+		collect(builder, "#face_button_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindQuickMove = new ControllerMapping(INVENTORY, "key.controller.quickMove", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button2");
-		builder.put(ControllerModel.PS4, "button0");
+		collect(builder, "#face_button_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(INVENTORY, "key.controller.hotbar_left", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button4");
-		builder.put(ControllerModel.PS4, "button4");
+		collect(builder, "#bumper_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindHotbarRight = new ControllerMapping(INVENTORY, "key.controller.hotbar_right",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button5");
-		builder.put(ControllerModel.PS4, "button5");
+		collect(builder, "#bumper_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
-		builder.put(ControllerModel.PS4, "button13");
+		builder.put(ControllerModel.PS4_WINDOWS, "button13");
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button2");
-		builder.put(ControllerModel.PS4, "button0");
+		collect(builder, "#face_button_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSelect = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_select",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button0");
-		builder.put(ControllerModel.PS4, "button1");
+		collect(builder, "#face_button_down", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardCaps = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_caps",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button3");
-		builder.put(ControllerModel.PS4, "button3");
+		collect(builder, "#face_button_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSpace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_space",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button1");
-		builder.put(ControllerModel.PS4, "button2");
+		collect(builder, "#face_button_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardUp = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_up",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg1");
-		builder.put(ControllerModel.PS4, "axis_neg1");
+		collect(builder, "#left_stick_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardDown = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_down",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos1");
-		builder.put(ControllerModel.PS4, "axis_pos1");
+		collect(builder, "#left_stick_down", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_left",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg0");
-		builder.put(ControllerModel.PS4, "axis_neg0");
+		collect(builder, "#left_stick_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_right",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos0");
-		builder.put(ControllerModel.PS4, "axis_pos0");
+		collect(builder, "#left_stick_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_left",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button4");
-		builder.put(ControllerModel.PS4, "button4");
+		collect(builder, "#bumper_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_right",  (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button5");
-		builder.put(ControllerModel.PS4, "button5");
+		collect(builder, "#bumper_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 
 	public final ControllerMapping controllerBindCameraHorizontal = new ControllerMapping(NEW, "key.controller.camera_horizontal", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis2");
-		builder.put(ControllerModel.PS4, "axis2");
+		collect(builder, "#right_stick_horizontal", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindCameraVertical = new ControllerMapping(NEW, "key.controller.camera_vertical", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis3");
-		builder.put(ControllerModel.PS4, "axis5");
+		collect(builder, "#right_stick_vertical", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMouseHorizontal = new ControllerMapping(NEW, "key.controller.mouse_horizontal", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis0");
-		builder.put(ControllerModel.PS4, "axis0");
+		collect(builder, "#left_stick_horizontal", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMouseVertical = new ControllerMapping(NEW, "key.controller.mouse_vertical", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis1");
-		builder.put(ControllerModel.PS4, "axis1");
+		collect(builder, "#left_stick_vertical", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMoveHorizontal = new ControllerMapping(NEW, "key.controller.move_horizontal", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis0");
-		builder.put(ControllerModel.PS4, "axis0");
+		collect(builder, "#left_stick_horizontal", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMoveVertical = new ControllerMapping(NEW, "key.controller.move_vertical", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis1");
-		builder.put(ControllerModel.PS4, "axis1");
+		collect(builder, "#left_stick_vertical", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindScroll = new ControllerMapping(NEW, "key.controller.scroll", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis3");
-		builder.put(ControllerModel.PS4, "axis5");
+		collect(builder, "#right_stick_vertical", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, "key.override.forward", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg1");
-		builder.put(ControllerModel.PS4, "axis_neg1");
+		collect(builder, "#left_stick_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindBack = new ControllerMapping(Minecraft.getInstance().options.keyDown, "key.override.back", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos1");
-		builder.put(ControllerModel.PS4, "axis_pos1");
+		collect(builder, "#left_stick_down", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindLeft = new ControllerMapping(Minecraft.getInstance().options.keyLeft, "key.override.left", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_neg0");
-		builder.put(ControllerModel.PS4, "axis_neg0");
+		collect(builder, "#left_stick_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindRight = new ControllerMapping(Minecraft.getInstance().options.keyRight, "key.override.right", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos0");
-		builder.put(ControllerModel.PS4, "axis_pos0");
+		collect(builder, "#left_stick_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindJump = new ControllerMapping(Minecraft.getInstance().options.keyJump, "key.override.jump", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button0");
-		builder.put(ControllerModel.PS4, "button1");
+		collect(builder, "#face_button_down", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindSneak = new ControllerMapping(Minecraft.getInstance().options.keyShift, "key.override.sneak", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button1");
-		builder.put(ControllerModel.PS4, "button2");
+		collect(builder, "#face_button_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 	
 	public final ControllerMapping controllerKeyBindSprint = new ControllerMapping(Minecraft.getInstance().options.keySprint, "key.override.sprint", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button8");
-		builder.put(ControllerModel.PS4, "button10");
+		collect(builder, "#stick_left", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindInventory = new ControllerMapping(Minecraft.getInstance().options.keyInventory, "key.override.inventory", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button3");
-		builder.put(ControllerModel.PS4, "button3");
+		collect(builder, "#face_button_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindDrop = new ControllerMapping(Minecraft.getInstance().options.keyDrop, "key.override.drop", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button12");
-		builder.put(ControllerModel.PS4, "button16");
+		collect(builder, "#dpad_down", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindUseItem = new ControllerMapping(Minecraft.getInstance().options.keyUse, "key.override.use", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos4");
-		builder.put(ControllerModel.PS4, "button6");
+		collect(builder, "#left_trigger", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindAttack = new ControllerMapping(Minecraft.getInstance().options.keyAttack, "key.override.attack", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "axis_pos5");
-		builder.put(ControllerModel.PS4, "button7");
+		collect(builder, "#right_trigger", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindChat = new ControllerMapping(Minecraft.getInstance().options.keyChat, "key.override.chat", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button11");
-		builder.put(ControllerModel.PS4, "button15");
+		collect(builder, "#dpad_right", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, "key.override.togglePerspective", (builder) -> {
-		builder.put(ControllerModel.XBOX_360, "button10");
-		builder.put(ControllerModel.PS4, "button14");
+		collect(builder, "#dpad_up", ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
 	}, UseCase.INGAME);
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight, this.controllerBindSplit, this.controllerBindQuickMove,
@@ -308,7 +279,10 @@ public class ControllerOptions {
 					}
 
 					if ("controllerModel".equals(s)) {
-						this.controllerModel = "ps4".equals(s1) ? ControllerModel.PS4 : "xbox_360".equals(s1) ? ControllerModel.XBOX_360 : ControllerModel.CUSTOM;
+						this.controllerModel = 
+								"ps4_windows".equals(s1) ? ControllerModel.PS4_WINDOWS : 
+									"ps4_linux".equals(s1) ? ControllerModel.PS4_LINUX : 
+										"xbox_360".equals(s1) ? ControllerModel.XBOX_360 : ControllerModel.CUSTOM;
 					}
 
 					this.paperDoll.readOptions(s, s1);
