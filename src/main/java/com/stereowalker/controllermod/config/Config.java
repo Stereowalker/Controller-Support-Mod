@@ -11,20 +11,17 @@ public class Config implements ConfigObject {
 	
 	@UnionConfig.Entry(group = "Controller", name = "Ingame Sensitivity")
 	@UnionConfig.Comment(comment = "The sensitivity of the controller ingame")
-	@UnionConfig.Range(max = 1.0, min = 0.0)
-	@UnionConfig.Slider
+	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
 	public float ingame_sensitivity = 0.5f;
 	
 	@UnionConfig.Entry(group = "Controller", name = "Menu Sensitivity")
 	@UnionConfig.Comment(comment = "The sensitivity of the controller in the menu")
-	@UnionConfig.Range(max = 1.0, min = 0.0)
-	@UnionConfig.Slider
+	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
 	public float menu_sensitivity = 0.2f;
 	
 	@UnionConfig.Entry(group = "Controller", name = "Deadzone")
 	@UnionConfig.Comment(comment = "The deadzone of the controller")
-	@UnionConfig.Range(max = 1.0, min = 0.0)
-	@UnionConfig.Slider
+	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
 	public float deadzone = 0.2f;
 	
 	@UnionConfig.Entry(group = "Controller", name = "Use Precise Movement")
@@ -41,8 +38,7 @@ public class Config implements ConfigObject {
 	
 	@UnionConfig.Entry(group = "Gameplay", name = "Safe Area")
 	@UnionConfig.Comment(comment = {"Allows you to determine the safe area of your screen","This only works ingame. Any elements in any other menus will not be moved"})
-	@UnionConfig.Range(max = 100.0, min = 0.0)
-	@UnionConfig.Slider
+	@UnionConfig.Range(max = 100.0, min = 0.0, useSlider = true)
 	public float safe_area = 100.0f;
 	
 	@UnionConfig.Entry(group = "Gameplay", name = "Show Button Hints")
