@@ -114,8 +114,10 @@ public class ControllerHandler {
 			if (useCase.contains(UseCase.INGAME)) this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 			int i = 0, j = 0;
 			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
-			//This shoudl release buttons we are no longer holding
-			for (ControllerMapping binding : previouslyUsed) {
+			//This should release buttons we are no longer holding
+			//I'm using this type of loop because REI crashes when I use an Iterator
+			for (int x = 0; x < previouslyUsed.size(); x++) {
+				ControllerMapping binding = previouslyUsed.get(x);
 				if ((!currentlyUsing.contains(binding) || forceRelease) && binding != null) {
 					j++;
 					if (!binding.isAxis()) {
