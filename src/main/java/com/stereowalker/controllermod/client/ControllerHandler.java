@@ -69,7 +69,7 @@ public class ControllerHandler {
 	boolean left = false, right = false, up = false, down = false;
 	public void processControllerInput(Controller controller, List<UseCase> useCase) {
 		if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD && !useCase.contains(UseCase.INGAME)) {
-			if (controller.isButtonDown(this.controllerMod.controllerOptions.controllerBindKeyboard.getButtonOnController(controller.getModel())) && this.controllerMod.onScreenKeyboard.switchCooldown == 0) {
+			if (controller.areButtonsDown(this.controllerMod.controllerOptions.controllerBindKeyboard.getButtonOnController(controller.getModel())) && this.controllerMod.onScreenKeyboard.switchCooldown == 0) {
 				this.controllerMod.onScreenKeyboard.switchKeyboard();
 			}
 			else {
@@ -122,11 +122,7 @@ public class ControllerHandler {
 					j++;
 					if (!binding.isAxis()) {
 						if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase()))) {
-							//							if (controller.isButtonDown(binding.getButtonOnController(controller.getModel()))) {
-							//								binding.tick();
-							//							} else {
 							binding.release();
-							//							}
 							ControllerUtil.updateButtonState(binding, binding.getButtonOnController(controller.getModel()), controller, binding.getButtonOnKeyboardOrMouse(), binding.getInputType(controller.getModel()));
 						}
 					} else {
@@ -140,7 +136,7 @@ public class ControllerHandler {
 				i++;
 				if (binding.isAxis()) {
 					if (binding.isBoundToButton(controller.getModel()) && (useCase.contains(binding.getUseCase())))
-						binding.axis = ControllerUtil.updateAxisState(binding.getButtonOnController(controller.getModel()), controller) * (binding.isAxisInverted(controller.getModel()) ? -1 : 1);
+						binding.axis = ControllerUtil.updateAxisState(binding.getButtonOnController(controller.getModel()).get(0), controller) * (binding.isAxisInverted(controller.getModel()) ? -1 : 1);
 					else
 						binding.axis = 0;
 				} else {

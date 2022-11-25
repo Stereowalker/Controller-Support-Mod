@@ -143,7 +143,7 @@ public class PaperDollOptions {
 		if (map.isBoundToButton(model)) {
 			int x1 = ControllerMod.getSafeArea() - 2;
 			int y1 = gui.screenHeight - 12;
-			ResourceLocation icon = model.getOrCreate(map.getButtonOnController(model)).getIcon();
+			ResourceLocation icon = model.getOrCreate(map.getButtonOnController(model))[0].getIcon();
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderTexture(0, icon);
 			Gui.blit(matrixStack, x1, y1 - 10, 0, 0, 20, 20, 20, 20);

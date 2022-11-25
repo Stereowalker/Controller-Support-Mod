@@ -23,7 +23,7 @@ import net.minecraft.client.resources.language.I18n;
 @Environment(EnvType.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
 
-	private static final Map<UseCase, Map<ControllerMap.Button, ControllerMapping>> MAP = Maps.newHashMap();
+	private static final Map<UseCase, Map<List<ControllerMap.Button>, ControllerMapping>> MAP = Maps.newHashMap();
 	private static final Map<String, ControllerMapping> ALL = Maps.newHashMap();
 
 	private final String descri;
@@ -31,8 +31,8 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	//	private final InputConstants.Type type;
 	public InputConstants.Key buttonOnKeyboardMouse; 
 	//private final int buttonOnKeyboardMouse;
-	private ImmutableMap<ControllerModel,String> buttonOnController;
-	private final ImmutableMap<ControllerModel,String> defaultButtonOnController;
+	private ImmutableMap<ControllerModel,List<String>> buttonOnController;
+	private final ImmutableMap<ControllerModel,List<String>> defaultButtonOnController;
 	private ImmutableMap<ControllerModel,InputType> inputType;
 	private final UseCase useCase;
 	private final boolean fromKeybind;
@@ -57,19 +57,30 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		p_205215_0_.put("key.categories.misc", 9);
 	});
 
-	private ControllerMapping(String category, String description, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
+	private ControllerMapping(String category, String description, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,List<String>>> buttonId, InputType inputType, boolean isAxisIn, boolean isAxisInvertedIn, UseCase useCase, boolean fromKeybindIn) {
 		this.category = category;
 		this.descri = description;
-		ImmutableMap.Builder<ControllerModel,String> builder = ImmutableMap.builder();
+		ImmutableMap.Builder<ControllerModel,List<String>> builder = ImmutableMap.builder();
 		ImmutableMap.Builder<ControllerModel,InputType> inputTypeBuilder = ImmutableMap.builder();
 		ImmutableMap.Builder<ControllerModel,Boolean> axisInvertedBuilder = ImmutableMap.builder();
-		Map<ControllerModel,String> builder2 = Maps.newHashMap();
+		Map<ControllerModel,List<String>> builder2 = Maps.newHashMap();
 		buttonId.accept(builder2);
 		for (ControllerModel model : ControllerModel.values()) {
 			if (!builder2.containsKey(model)) {
-				builder2.put(model, " ");
-			} else if (builder2.get(model).charAt(0) == '#') {
-				builder2.put(model, model.getIdFromAlias(builder2.get(model).replace('#', ' ').strip()));
+				builder2.put(model, Lists.newArrayList(" "));
+			} else {
+				/* We're creating a new list object to sever the connection between the list
+				 * here and the list the map has. This allows us to modify the list without affecting 
+				 * the copy owned by the map. If we don't do this, any modifications to this list will modify
+				 * every copy in the map
+				*/
+				List<String> before = Lists.newArrayList(builder2.get(model));
+				for (int i = 0; i < before.size(); i++) {
+					if (before.get(i).charAt(0) == '#') {
+						before.set(i, model.getIdFromAlias(before.get(i).replace('#', ' ').strip()));
+					}
+				}
+				builder2.put(model, before);
 			}
 			inputTypeBuilder.put(model, inputType == null ? InputType.PRESS : inputType);
 			axisInvertedBuilder.put(model, isAxisInvertedIn);
@@ -87,21 +98,21 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		ALL.put(description, this);
 		if (!MAP.containsKey(useCase))
 			MAP.put(useCase, Maps.newHashMap());
-		this.buttonOnController.forEach((key, val) -> MAP.get(useCase).put(key.getOrCreate(val), this));
+		this.buttonOnController.forEach((key, val) -> MAP.get(useCase).put(Lists.newArrayList(key.getOrCreate(Lists.newArrayList(val))), this));
 	}
 
-	public ControllerMapping(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+	public ControllerMapping(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ControllerModel,List<String>>> buttonId, InputType inputType, UseCase useCase) {
 		this(category, desc, buttonOnKeyboardMouse, buttonId, inputType, false, false, useCase, false);
 	}
 
-	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, InputType inputType, UseCase useCase) {
+	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,List<String>>> buttonId, InputType inputType, UseCase useCase) {
 		this(category, desc, null, buttonId, inputType, false, false, useCase, false);
 	}
 
 	public ControllerMapping(KeyMapping keybind, UseCase useCase) {
 		this(keybind.getCategory(), keybind.getName(), keybind.key, (builder) -> {
 			for (ControllerModel model : ControllerModel.values()) {
-				builder.put(model, ControllerUtil.getControllerInputId(0));
+				builder.put(model, Lists.newArrayList(ControllerUtil.getControllerInputId(0)));
 			}
 		}, InputType.PRESS, false, false, useCase, true);
 	}
@@ -111,11 +122,11 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @param keybind
 	 * @param buttonId
 	 */
-	public ControllerMapping(KeyMapping keybind, String newDesc, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
+	public ControllerMapping(KeyMapping keybind, String newDesc, Consumer<Map<ControllerModel,List<String>>> buttonId, UseCase useCase) {
 		this(keybind.getCategory(), newDesc, keybind.key, buttonId, InputType.PRESS, false, false, useCase, true);
 	}
 
-	public ControllerMapping(KeyMapping keybind, Consumer<Map<ControllerModel,String>> buttonId, UseCase useCase) {
+	public ControllerMapping(KeyMapping keybind, Consumer<Map<ControllerModel,List<String>>> buttonId, UseCase useCase) {
 		this(keybind, keybind.getName(), buttonId, useCase);
 	}
 
@@ -126,7 +137,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @param buttonId
 	 * @param conflictContext
 	 */
-	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,String>> buttonId, boolean isAxisInvertedIn, UseCase useCase) {
+	public ControllerMapping(String category, String desc, Consumer<Map<ControllerModel,List<String>>> buttonId, boolean isAxisInvertedIn, UseCase useCase) {
 		this(category, desc, null, buttonId, null, true, isAxisInvertedIn, useCase, false);
 	}
 
@@ -140,16 +151,19 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		return null;
 	}
 
-	public void bind(ControllerModel model, String key) {
-		if (!(key.contains("button") || key.contains("axis_pos") || key.contains("axis_neg") || key.equals(" ") || key.contains("axis"))) {
-			key = " ";
+	public void bind(ControllerModel model, List<String> key) {
+		for (int i = 0; i < key.size(); i++) {
+			if (!(key.get(i).contains("button") || key.get(i).contains("axis_pos") || key.get(i).contains("axis_neg") || key.get(i).equals(" ") || key.get(i).contains("axis")
+					|| key.get(i).contains("dpadup") || key.get(i).contains("dpaddo") || key.get(i).contains("dpadle") || key.get(i).contains("dpadri"))) {
+				key.set(i, " ");
+			}
 		}
-		Map<ControllerModel,String> builder = Maps.newHashMap();
+		Map<ControllerModel,List<String>> builder = Maps.newHashMap();
 		builder.putAll(buttonOnController);
 		builder.remove(model);
 		builder.put(model, key);
 
-		ImmutableMap.Builder<ControllerModel,String> builder2 = ImmutableMap.builder();
+		ImmutableMap.Builder<ControllerModel,List<String>> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		buttonOnController = builder2.build();
 	}
@@ -195,12 +209,16 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		return inputType.get(model);
 	}
 
-	public String getButtonOnController(ControllerModel model) {
+	public List<String> getButtonOnController(ControllerModel model) {
 		return buttonOnController.get(model);
 	}
 
-	public int getButtonOnControllerID(ControllerModel model) {
-		return ControllerUtil.getControllerInputCode(getButtonOnController(model));
+	public int[] getButtonOnControllerID(ControllerModel model) {
+		int[] ids = new int[getButtonOnController(model).size()];
+		for (int i = 0; i < ids.length; i++) {
+			ids[i] = ControllerUtil.getControllerInputCode(getButtonOnController(model).get(i));
+		}
+		return ids;
 	}
 
 
@@ -261,7 +279,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	/**
 	 * @return the defaultButtonOnController
 	 */
-	public String getDefault(ControllerModel model) {
+	public List<String> getDefault(ControllerModel model) {
 		return defaultButtonOnController.get(model);
 	}
 
@@ -270,19 +288,27 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public void setToDefault(ControllerModel model) {
-		String key = defaultButtonOnController.get(model);
-		Map<ControllerModel,String> builder = Maps.newHashMap();
+		List<String> key = defaultButtonOnController.get(model);
+		Map<ControllerModel,List<String>> builder = Maps.newHashMap();
 		builder.putAll(buttonOnController);
 		builder.remove(model);
 		builder.put(model, key);
 
-		ImmutableMap.Builder<ControllerModel,String> builder2 = ImmutableMap.builder();
+		ImmutableMap.Builder<ControllerModel,List<String>> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		buttonOnController = builder2.build();
 	}
 
 	public boolean isDefault(ControllerModel model) {
-		return buttonOnController.get(model).equalsIgnoreCase(defaultButtonOnController.get(model));
+		if (buttonOnController.get(model).size() != defaultButtonOnController.get(model).size()) return false;
+		else {
+			for (int i = 0; i < buttonOnController.get(model).size(); i++) {
+				if (!buttonOnController.get(model).get(i).equalsIgnoreCase(defaultButtonOnController.get(model).get(i))) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
 	@Override
@@ -336,7 +362,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	public static void resetMapping() {
 		MAP.forEach((use, submap) -> submap.clear());
 		for (ControllerMapping controllerMapping : ALL.values()) {
-			controllerMapping.buttonOnController.forEach((key, val) -> MAP.get(controllerMapping.useCase).put(key.getOrCreate(val), controllerMapping));
+			controllerMapping.buttonOnController.forEach((key, val) -> MAP.get(controllerMapping.useCase).put(Lists.newArrayList(key.getOrCreate(Lists.newArrayList(val))), controllerMapping));
 		}
 	}
 
@@ -345,7 +371,16 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		List<String> interactions = Lists.newArrayList();
 		interactions.addAll(controller.getButtonsDown());
 		interactions.addAll(controller.getAxesMoved());
-		interactions.forEach(interaction -> cases.forEach(use -> {if (MAP.get(use) != null)down.add(MAP.get(use).get(controller.getModel().getOrCreate(interaction)));}));
+		interactions.forEach(interaction -> cases.forEach(use -> {
+			if (MAP.get(use) != null) {
+				down.add(MAP.get(use).get(Lists.newArrayList(controller.getModel().getOrCreate(Lists.newArrayList(interaction)))));
+
+				interactions.forEach(interaction2 -> {
+					down.add(MAP.get(use).get(Lists.newArrayList(controller.getModel().getOrCreate(Lists.newArrayList(interaction, interaction2)))));
+				});
+			}
+
+		}));
 		down.removeIf((bind) -> bind == null);
 		return down;
 	}

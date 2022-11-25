@@ -129,15 +129,16 @@ public class Controller {
 				byte DOWN = this.getDpadDown();
 				byte LEFT = this.getDpadLeft();
 				byte RIGHT = this.getDpadRight();
-				if (UP > 0.1F) buttons.add("UP"); 
-				if (DOWN > 0.1F) buttons.add("DOWN"); 
-				if (LEFT > 0.1F) buttons.add("LEFT"); 
-				if (RIGHT > 0.1F) buttons.add("RIGHT"); 
+				if (UP > 0.1F) buttons.add("dpadup"); 
+				if (DOWN > 0.1F) buttons.add("dpaddo"); 
+				if (LEFT > 0.1F) buttons.add("dpadle"); 
+				if (RIGHT > 0.1F) buttons.add("dpadri"); 
 			}
 			else {
-				System.out.println("There are no buttons on this controller");
+				ControllerMod.debug("There are no buttons on this controller");
 			}
 		}
+		buttons.removeIf((cont) -> this.getModel().getDupeButtons().contains(cont));
 		return buttons;
 	}
 
@@ -161,6 +162,15 @@ public class Controller {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean areButtonsDown(List<String> buttons) {
+		for (int i = 0; i < buttons.size(); i++) {
+			if (!isButtonDown(buttons.get(i))) {
+				return false;
+			}
+		}
+		return buttons.size() > 0;
 	}
 
 	public boolean isAxisMoved(String axis) {
