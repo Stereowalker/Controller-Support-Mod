@@ -42,7 +42,7 @@ public class ControllerOptions {
 
 	public boolean enableController = false;
 	public int controllerNumber = 0;
-	public ControllerModel controllerModel = ControllerModel.XBOX_360;
+	public ControllerModel controllerModel = ControllerModel.XBOX_360_WINDOWS;
 
 	public PaperDollOptions paperDoll = new PaperDollOptions();
 
@@ -55,158 +55,161 @@ public class ControllerOptions {
 	public static final String ON_SCREEN_KEYBOARD = "key.categories.on_screen_keyboard";
 	public static final String INVENTORY = "key.categories.inventory";
 	
+	private static final ControllerModel[] ALL_MODELS = {ControllerModel.XBOX_360_WINDOWS, ControllerModel.XBOX_360_LINUX, 
+			ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX};
+	
 	private void collect(Map<ControllerModel, List<String>> builder, List<String> alias, ControllerModel... models) {
-		for (ControllerModel model : Lists.newArrayList(models)) {
+		for (ControllerModel model : models) {
 			builder.put(model, alias);
 		}
 	}
 	public final ControllerMapping controllerBindBack = new ControllerMapping(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindPause = new ControllerMapping(NEW, "key.controller.pause", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		collect(builder, Lists.newArrayList("#start_button"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#start_button"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.INGAME);
 	
 	public final ControllerMapping controllerBindSplit = new ControllerMapping(INVENTORY, "key.controller.split", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindQuickMove = new ControllerMapping(INVENTORY, "key.controller.quickMove", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_left"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(INVENTORY, "key.controller.hotbar_left", (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#bumper_left"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindHotbarRight = new ControllerMapping(INVENTORY, "key.controller.hotbar_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#bumper_right"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
 		builder.put(ControllerModel.PS4_WINDOWS, Lists.newArrayList("button13"));
-		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS, ControllerModel.XBOX_360_LINUX, ControllerModel.PS4_LINUX);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_left"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSelect = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_select",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_down"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_down"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardCaps = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_caps",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSpace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_space",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardUp = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_up",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_up"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardDown = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_down",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_down"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_down"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_left",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_left"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_right"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_left",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#bumper_left"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#bumper_right"), ALL_MODELS);
 	}, InputType.PRESS, UseCase.KEYBOARD);
 
 	public final ControllerMapping controllerBindCameraHorizontal = new ControllerMapping(NEW, "key.controller.camera_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_horizontal"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#right_stick_horizontal"), ALL_MODELS);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindCameraVertical = new ControllerMapping(NEW, "key.controller.camera_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_vertical"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#right_stick_vertical"), ALL_MODELS);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMouseHorizontal = new ControllerMapping(NEW, "key.controller.mouse_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ALL_MODELS);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMouseVertical = new ControllerMapping(NEW, "key.controller.mouse_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_vertical"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_vertical"), ALL_MODELS);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMoveHorizontal = new ControllerMapping(NEW, "key.controller.move_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ALL_MODELS);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMoveVertical = new ControllerMapping(NEW, "key.controller.move_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_vertical"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_vertical"), ALL_MODELS);
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindScroll = new ControllerMapping(NEW, "key.controller.scroll", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_vertical"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#right_stick_vertical"), ALL_MODELS);
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, "key.override.forward", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_up"), ALL_MODELS);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindBack = new ControllerMapping(Minecraft.getInstance().options.keyDown, "key.override.back", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_down"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_down"), ALL_MODELS);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindLeft = new ControllerMapping(Minecraft.getInstance().options.keyLeft, "key.override.left", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_left"), ALL_MODELS);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindRight = new ControllerMapping(Minecraft.getInstance().options.keyRight, "key.override.right", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_stick_right"), ALL_MODELS);
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindJump = new ControllerMapping(Minecraft.getInstance().options.keyJump, "key.override.jump", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_down"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_down"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindSneak = new ControllerMapping(Minecraft.getInstance().options.keyShift, "key.override.sneak", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
 	}, UseCase.INGAME);
 	
 	public final ControllerMapping controllerKeyBindSprint = new ControllerMapping(Minecraft.getInstance().options.keySprint, "key.override.sprint", (builder) -> {
-		collect(builder, Lists.newArrayList("#stick_left"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#stick_left"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindInventory = new ControllerMapping(Minecraft.getInstance().options.keyInventory, "key.override.inventory", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindDrop = new ControllerMapping(Minecraft.getInstance().options.keyDrop, "key.override.drop", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_down"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#dpad_down"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindUseItem = new ControllerMapping(Minecraft.getInstance().options.keyUse, "key.override.use", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_trigger"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#left_trigger"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindAttack = new ControllerMapping(Minecraft.getInstance().options.keyAttack, "key.override.attack", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_trigger"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#right_trigger"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindChat = new ControllerMapping(Minecraft.getInstance().options.keyChat, "key.override.chat", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_right"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#dpad_right"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, "key.override.togglePerspective", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_up"), ControllerModel.XBOX_360, ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX);
+		collect(builder, Lists.newArrayList("#dpad_up"), ALL_MODELS);
 	}, UseCase.INGAME);
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight, this.controllerBindSplit, this.controllerBindQuickMove,
@@ -284,7 +287,7 @@ public class ControllerOptions {
 						this.controllerModel = 
 								"ps4_windows".equals(s1) ? ControllerModel.PS4_WINDOWS : 
 									"ps4_linux".equals(s1) ? ControllerModel.PS4_LINUX : 
-										"xbox_360".equals(s1) ? ControllerModel.XBOX_360 : ControllerModel.CUSTOM;
+										"xbox_360".equals(s1) ? ControllerModel.XBOX_360_WINDOWS : ControllerModel.CUSTOM;
 					}
 
 					this.paperDoll.readOptions(s, s1);

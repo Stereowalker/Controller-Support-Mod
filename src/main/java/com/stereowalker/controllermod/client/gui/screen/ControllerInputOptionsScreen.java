@@ -56,19 +56,19 @@ public class ControllerInputOptionsScreen extends Screen {
 		}
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.keyBindingList);
-		this.buttonReset = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 100, 20, new TranslatableComponent("controls.resetAll"), (p_213125_1_) -> {
+		this.buttonReset = this.addRenderableWidget(new Button(this.width / 2 - 165, this.height - 29, 100, 20, new TranslatableComponent("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
 				keybinding.setToDefault(this.mod.controllerOptions.controllerModel);
 			}
 
 			ControllerMapping.resetMapping();
 		}));
-		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 105, this.height - 29, 100, 20, new TranslatableComponent("gui.model").append(" : "+this.mod.controllerOptions.controllerModel), (p_212984_1_) -> {
+		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 95, this.height - 29, 120, 20, new TranslatableComponent("gui.model").append(" : "+this.mod.controllerOptions.controllerModel), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = RegistryHelper.rotateEnumForward(this.mod.controllerOptions.controllerModel, ControllerModel.values());
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
 		}));
 		model.active = !isModelEnforced;
-		this.addRenderableWidget(new Button(this.width / 2 - 155 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
+		this.addRenderableWidget(new Button(this.width / 2 - 145 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
 		}));
 	}
