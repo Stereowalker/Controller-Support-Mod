@@ -8,7 +8,7 @@ import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.resources.ControllerModelManager;
 
 public class Controller {
 	private int id;
@@ -145,12 +145,17 @@ public class Controller {
 	public List<String> getAxesMoved() {
 		List<String> axes = new ArrayList<String>();
 		if (this != null) {
-			for (int i = 0; i < this.getAxes().capacity(); i++) {
-				List<Integer> triggersPos = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
-				List<Integer> triggersNeg = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
-				if (!triggersPos.contains(i) && !triggersNeg.contains(i))
-					if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0F) axes.add("axis"+i);
-					else if (this.getAxis(i) < -ControllerMod.CONFIG.deadzone && this.getAxis(i) >= -1.0F) axes.add("axis"+i);
+			if (this.getAxes() != null) {
+				for (int i = 0; i < this.getAxes().capacity(); i++) {
+					List<Integer> triggersPos = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
+					List<Integer> triggersNeg = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
+					if (!triggersPos.contains(i) && !triggersNeg.contains(i))
+						if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0F) axes.add("axis"+i);
+						else if (this.getAxis(i) < -ControllerMod.CONFIG.deadzone && this.getAxis(i) >= -1.0F) axes.add("axis"+i);
+				}
+			}
+			else {
+				ControllerMod.debug("There are no axes on this controller");
 			}
 		}
 		return axes;
@@ -182,7 +187,7 @@ public class Controller {
 	}
 
 	public ControllerModel getActualModel() {
-		for (ControllerModel model : ControllerModel.modelList()) {
+		for (ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
 			if (model.getGUID().equals(getGUID())) {
 				return model;
 			}

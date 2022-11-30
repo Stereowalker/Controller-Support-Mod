@@ -12,9 +12,9 @@ import com.stereowalker.controllermod.client.OnScreenKeyboard;
 import com.stereowalker.controllermod.client.PaperDollOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
+import com.stereowalker.controllermod.resources.ControllerModelManager;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
@@ -27,6 +27,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Mth;
 
 @Mod(value = ControllerMod.MOD_ID)
@@ -38,6 +39,7 @@ public class ControllerMod extends MinecraftMod
 	//
 	public static ControllerMod instance;
 	private ControllerHandler controllerHandler;
+	public ControllerModelManager controllerModelManager;
 	public OnScreenKeyboard onScreenKeyboard;
 	public static final String MOD_ID = "controllermod";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
@@ -65,13 +67,28 @@ public class ControllerMod extends MinecraftMod
 	}
 
 	@Override
+	public void registerClientRelaodableResources(ReloadableResourceManager resourceManager) {
+		this.controllerModelManager = new ControllerModelManager();
+		resourceManager.registerReloadListener(this.controllerModelManager);
+	}
+
+	@Override
 	public void initClientAfterMinecraft(Minecraft mc) {
 		LOGGER.info("Setting up all connected controlllers");
 		this.controllerHandler = new ControllerHandler(this, mc);
 		this.controllerHandler.setup(mc.getWindow().getWindow());
 		this.onScreenKeyboard = new OnScreenKeyboard(mc);
 		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
-		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
+		ControllerBindings.registerAll();
+		this.controllerOptions.loadOptions();
+	}
+
+	public void disconnectControllers() {
+		LOGGER.info("Disconnecting all "+this.getTotalConnectedControllers()+" controllers");
+		this.controllers.clear();
+	}
+
+	public void connectControllers() {
 		LOGGER.info("Total Connected Controllers "+this.getTotalConnectedControllers());
 		for (int i = 0; i < this.getTotalConnectedControllers(); i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
@@ -84,8 +101,6 @@ public class ControllerMod extends MinecraftMod
 				this.controllers.add(new Controller(i));
 			}
 		}
-		ControllerBindings.registerAll();
-		this.controllerOptions.loadOptions();
 	}
 
 	public ControllerHandler getControllerHandler() {
@@ -127,6 +142,10 @@ public class ControllerMod extends MinecraftMod
 
 	public static void debug(String message) {
 		if (CONFIG.debug)LOGGER.info(message);
+	}
+
+	public static void debug(String message, Object o1) {
+		if (CONFIG.debug)LOGGER.info(message, o1);
 	}
 
 	public ResourceLocation location(String name)

@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWJoystickCallbackI;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.VirtualMouseHelper;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.unionlib.util.Executor;
 
 import net.minecraft.client.KeyMapping;

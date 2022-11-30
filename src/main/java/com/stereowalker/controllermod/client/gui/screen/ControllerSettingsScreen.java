@@ -5,8 +5,9 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.controllermod.resources.ControllerModelManager;
 
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
@@ -36,7 +37,7 @@ public class ControllerSettingsScreen extends Screen {
 		ControllerOptions options = this.mod.controllerOptions;
 		options.lastGUID = ControllerMod.getInstance().getActiveController().getGUID();
 		options.saveOptions();
-		for (ControllerModel model : ControllerModel.modelList()) {
+		for (ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
 			if (model.getGUID().equals(
 					ControllerMod.getInstance().getActiveController().getGUID())) {
 				this.mod.controllerOptions.controllerModel = model;

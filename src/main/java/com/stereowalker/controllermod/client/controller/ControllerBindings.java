@@ -8,7 +8,6 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants.Type;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 
 import net.minecraft.client.KeyMapping;
@@ -19,10 +18,10 @@ public class ControllerBindings {
 
 	public static final String NEW = "new";
 	public static final ControllerMapping SELECT_INPUT = new ControllerMapping(NEW, "select", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT), (builder) -> {
-		builder.put(ControllerModel.XBOX_360_WINDOWS, Lists.newArrayList("#face_button_down"));
-		builder.put(ControllerModel.XBOX_360_LINUX, Lists.newArrayList("#face_button_down"));
-		builder.put(ControllerModel.PS4_WINDOWS, Lists.newArrayList("#face_button_down"));
-		builder.put(ControllerModel.PS4_LINUX, Lists.newArrayList("#face_button_down"));
+		builder.put(ControllerModel.XBOX_360_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
+		builder.put(ControllerModel.XBOX_360_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
+		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
+		builder.put(ControllerModel.PS4_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);

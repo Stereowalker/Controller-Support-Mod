@@ -12,8 +12,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
+import com.stereowalker.controllermod.client.controller.ControllerModel;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

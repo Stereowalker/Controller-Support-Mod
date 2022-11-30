@@ -28,6 +28,7 @@ import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 
 @Mixin(Minecraft.class)
@@ -37,6 +38,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	@Shadow @Final public MouseHandler mouseHandler;
 	@Shadow @Final public File gameDirectory;
 	@Shadow @Final private Window window;
+	@Shadow @Final private ReloadableResourceManager resourceManager;
 
 	public MinecraftMixin(String p_18765_) {
 		super(p_18765_);

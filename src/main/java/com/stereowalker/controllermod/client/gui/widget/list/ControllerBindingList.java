@@ -10,10 +10,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerMap;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
+import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 import com.stereowalker.unionlib.client.gui.components.OverlayImageButton;
@@ -124,7 +123,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
 			this.btnChangeKeyBinding = new OverlayImageButton(0, 0, 65 /*Forge: add space*/, 20, 
 					//Overlay1
-					0, 0, 20, 20, model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)))[0].getIcon(), 20, 20, 
+					0, 0, 20, 20, null, 20, 20, 
 					//Overlay2
 					0, 0, 20, 20, null, 20, 20, 
 					(p_214386_2_) -> {
