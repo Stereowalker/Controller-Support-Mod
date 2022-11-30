@@ -8,11 +8,11 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
-import com.stereowalker.unionlib.util.RegistryHelper;
+import com.stereowalker.controllermod.resources.ControllerModelManager;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,7 +43,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	@Override
 	public void init() {
 		boolean isModelEnforced = false;
-		for (ControllerModel model : ControllerModel.modelList()) {
+		for (ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
 			if (model.getGUID().equals(
 					ControllerMod.getInstance().getActiveController().getGUID())) {
 				this.mod.controllerOptions.controllerModel = model;
@@ -63,8 +63,8 @@ public class ControllerInputOptionsScreen extends Screen {
 
 			ControllerMapping.resetMapping();
 		}));
-		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 95, this.height - 29, 120, 20, new TranslatableComponent("gui.model").append(" : "+this.mod.controllerOptions.controllerModel), (p_212984_1_) -> {
-			this.mod.controllerOptions.controllerModel = RegistryHelper.rotateEnumForward(this.mod.controllerOptions.controllerModel, ControllerModel.values());
+		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 95, this.height - 29, 120, 20, new TranslatableComponent("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)), (p_212984_1_) -> {
+			this.mod.controllerOptions.controllerModel = ControllerModel.nextModel(this.mod.controllerOptions.controllerModel);
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
 		}));
 		model.active = !isModelEnforced;

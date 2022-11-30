@@ -23,15 +23,17 @@ import com.google.common.io.Files;
 import com.mojang.blaze3d.platform.InputConstants.Type;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
-import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
+import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.controller.UseCase;
+import com.stereowalker.controllermod.resources.ControllerModelManager;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.DataFixTypes;
 
 @Environment(EnvType.CLIENT)
@@ -55,161 +57,158 @@ public class ControllerOptions {
 	public static final String ON_SCREEN_KEYBOARD = "key.categories.on_screen_keyboard";
 	public static final String INVENTORY = "key.categories.inventory";
 	
-	private static final ControllerModel[] ALL_MODELS = {ControllerModel.XBOX_360_WINDOWS, ControllerModel.XBOX_360_LINUX, 
-			ControllerModel.PS4_WINDOWS, ControllerModel.PS4_LINUX};
-	
-	private void collect(Map<ControllerModel, List<String>> builder, List<String> alias, ControllerModel... models) {
-		for (ControllerModel model : models) {
+	private void collect(Map<ResourceLocation, List<String>> builder, List<String> alias, ResourceLocation... models) {
+		for (ResourceLocation model : models) {
 			builder.put(model, alias);
 		}
 	}
 	public final ControllerMapping controllerBindBack = new ControllerMapping(NEW, "key.controller.back", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindPause = new ControllerMapping(NEW, "key.controller.pause", Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_ESCAPE), (builder) -> {
-		collect(builder, Lists.newArrayList("#start_button"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#start_button"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.INGAME);
 	
 	public final ControllerMapping controllerBindSplit = new ControllerMapping(INVENTORY, "key.controller.split", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindQuickMove = new ControllerMapping(INVENTORY, "key.controller.quickMove", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_RIGHT), (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindHotbarLeft = new ControllerMapping(INVENTORY, "key.controller.hotbar_left", (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#bumper_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindHotbarRight = new ControllerMapping(INVENTORY, "key.controller.hotbar_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#bumper_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
-		builder.put(ControllerModel.PS4_WINDOWS, Lists.newArrayList("button13"));
-		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS, ControllerModel.XBOX_360_LINUX, ControllerModel.PS4_LINUX);
+		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("button13"));
+		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, ControllerModel.PS4_LINUX.defaultName);
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSelect = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_select",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_down"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_down"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardCaps = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_caps",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardSpace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_space",  (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardUp = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_up",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardDown = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_down",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_down"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_down"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_left",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowLeft = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_left",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#bumper_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
 	public final ControllerMapping controllerBindKeyboardArrowRight = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_arrow_right",  (builder) -> {
-		collect(builder, Lists.newArrayList("#bumper_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#bumper_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 
 	public final ControllerMapping controllerBindCameraHorizontal = new ControllerMapping(NEW, "key.controller.camera_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_horizontal"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#right_stick_horizontal"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindCameraVertical = new ControllerMapping(NEW, "key.controller.camera_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_vertical"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#right_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMouseHorizontal = new ControllerMapping(NEW, "key.controller.mouse_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_horizontal"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMouseVertical = new ControllerMapping(NEW, "key.controller.mouse_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_vertical"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerBindMoveHorizontal = new ControllerMapping(NEW, "key.controller.move_horizontal", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_horizontal"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_horizontal"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindMoveVertical = new ControllerMapping(NEW, "key.controller.move_vertical", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_vertical"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindScroll = new ControllerMapping(NEW, "key.controller.scroll", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_stick_vertical"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#right_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, false, UseCase.ANY_SCREEN);
 
 	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, "key.override.forward", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindBack = new ControllerMapping(Minecraft.getInstance().options.keyDown, "key.override.back", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_down"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_down"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindLeft = new ControllerMapping(Minecraft.getInstance().options.keyLeft, "key.override.left", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindRight = new ControllerMapping(Minecraft.getInstance().options.keyRight, "key.override.right", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_stick_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_stick_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);//TODO: Remove these default keybinds in a later update
 
 	public final ControllerMapping controllerKeyBindJump = new ControllerMapping(Minecraft.getInstance().options.keyJump, "key.override.jump", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_down"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_down"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindSneak = new ControllerMapping(Minecraft.getInstance().options.keyShift, "key.override.sneak", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 	
 	public final ControllerMapping controllerKeyBindSprint = new ControllerMapping(Minecraft.getInstance().options.keySprint, "key.override.sprint", (builder) -> {
-		collect(builder, Lists.newArrayList("#stick_left"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#stick_left"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindInventory = new ControllerMapping(Minecraft.getInstance().options.keyInventory, "key.override.inventory", (builder) -> {
-		collect(builder, Lists.newArrayList("#face_button_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#face_button_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindDrop = new ControllerMapping(Minecraft.getInstance().options.keyDrop, "key.override.drop", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_down"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#dpad_down"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindUseItem = new ControllerMapping(Minecraft.getInstance().options.keyUse, "key.override.use", (builder) -> {
-		collect(builder, Lists.newArrayList("#left_trigger"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#left_trigger"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindAttack = new ControllerMapping(Minecraft.getInstance().options.keyAttack, "key.override.attack", (builder) -> {
-		collect(builder, Lists.newArrayList("#right_trigger"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#right_trigger"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindChat = new ControllerMapping(Minecraft.getInstance().options.keyChat, "key.override.chat", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_right"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#dpad_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, "key.override.togglePerspective", (builder) -> {
-		collect(builder, Lists.newArrayList("#dpad_up"), ALL_MODELS);
+		collect(builder, Lists.newArrayList("#dpad_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight, this.controllerBindSplit, this.controllerBindQuickMove,
@@ -225,9 +224,14 @@ public class ControllerOptions {
 		this.mc = mcIn;
 		this.optionsFile = new File(mcDataDir, "controller-options.txt");
 	}
+	
+	public ControllerOptions(ControllerOptions old) {
+		this.mc = old.mc;
+		this.optionsFile = old.optionsFile;
+	}
 
 	public void setKeyBindingCode(ControllerModel model, ControllerMapping keyBindingIn, List<String> inputIn) {
-		keyBindingIn.bind(model, inputIn);
+		keyBindingIn.bind(model.getKey(), inputIn);
 		this.saveOptions();
 	}
 
@@ -310,11 +314,12 @@ public class ControllerOptions {
 						this.negativeTriggerAxes = negativeTriggerAxes;
 					}
 
-					for(ControllerModel model : ControllerModel.values()) {
+					for(ResourceLocation key : ControllerModelManager.ALL_MODELS.keySet()) {
+						ControllerModel model = ControllerModelManager.ALL_MODELS.get(key);
 						for(ControllerMapping keybinding : this.controllerBindings) {
 							if (s.equals(model.getModelName() + "_binding_" + keybinding.getDescripti())) {
 								String[] pts = s1.split(":");
-								keybinding.bind(model, Lists.newArrayList(pts[0].split(";")));
+								keybinding.bind(key, Lists.newArrayList(pts[0].split(";")));
 								if (pts.length > 1) keybinding.setInputType(model, pts[1].equals("null") ? null : InputType.valueOf(pts[1]));
 								if (pts.length > 2) keybinding.setAxisInverted(model, Boolean.parseBoolean(pts[2]));
 							}
@@ -374,7 +379,7 @@ public class ControllerOptions {
 			}
 			printwriter.println("customControls_negativeTriggerAxes:"+neg);
 			this.paperDoll.writeOptions(printwriter);
-			for(ControllerModel model : ControllerModel.values()) {
+			for(ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
 				for(ControllerMapping keybinding : this.controllerBindings) {
 					String buttons = "";
 					for (int i = 0; i < keybinding.getButtonOnController(model).size(); i++) {

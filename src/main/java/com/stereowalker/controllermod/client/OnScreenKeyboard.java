@@ -22,7 +22,6 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.Listening
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,6 +31,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
+@SuppressWarnings("deprecation")
+//TODO: Use the newer package "org.apache.commons.text" instead of "org.apache.commons.lang3"
 @Environment(EnvType.CLIENT)
 public class OnScreenKeyboard {
 
@@ -103,7 +104,6 @@ public class OnScreenKeyboard {
 	public int xPos;
 	public int yPos;
 
-
 	public OnScreenKeyboard(Minecraft minecraft) {
 		this.minecraft = minecraft;
 	}
@@ -156,6 +156,7 @@ public class OnScreenKeyboard {
 
 	}
 
+	
 	public void drawKeyboard(PoseStack poseStack, Font font, int x, int y) {
 		List<List<MutableComponent>> layers = Lists.newArrayList();
 		for (int j = 0; j < layout.ySize; j++) {
