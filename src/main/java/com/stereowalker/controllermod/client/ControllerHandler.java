@@ -2,6 +2,7 @@ package com.stereowalker.controllermod.client;
 
 import java.util.List;
 
+import com.google.common.collect.Sets;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -115,7 +116,7 @@ public class ControllerHandler {
 			int i = 0, j = 0;
 			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
 			//This shoudl release buttons we are no longer holding
-			for (ControllerMapping binding : previouslyUsed) {
+			for (ControllerMapping binding : Sets.newHashSet(previouslyUsed)) {
 				if ((!currentlyUsing.contains(binding) || forceRelease) && binding != null) {
 					j++;
 					if (!binding.isAxis()) {
