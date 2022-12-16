@@ -12,6 +12,7 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 public class ControllerBindings {
 
@@ -20,7 +21,8 @@ public class ControllerBindings {
 		builder.put(ControllerModel.XBOX_360_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
 		builder.put(ControllerModel.XBOX_360_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
 		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
-		builder.put(ControllerModel.PS4_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
+		builder.put(new ResourceLocation("controllermod:ps4_linux"), Lists.newArrayList("#face_button_down"));
+		builder.put(new ResourceLocation("controllermod:nintendo_wii_u_pro"), Lists.newArrayList("#face_button_down"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);

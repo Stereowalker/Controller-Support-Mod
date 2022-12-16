@@ -68,27 +68,32 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		Map<ResourceLocation,List<String>> builder2 = Maps.newHashMap();
 		buttonId.accept(builder2);
 		System.out.println(description);
+		builder2.put(ControllerModel.CUSTOM.defaultName, Lists.newArrayList(" "));
+		inputTypeBuilder.put(ControllerModel.CUSTOM, InputType.PRESS);
 		for (Entry<ResourceLocation, ControllerModel> model : ControllerModelManager.ALL_MODELS.entrySet()) {
-			if (!builder2.containsKey(model.getKey())) {
-				builder2.put(model.getKey(), Lists.newArrayList(" "));
-			} else {
-				/* We're creating a new list object to sever the connection between the list
-				 * here and the list the map has. This allows us to modify the list without affecting 
-				 * the copy owned by the map. If we don't do this, any modifications to this list will modify
-				 * every copy in the map
-				*/
-				List<String> before = Lists.newArrayList(builder2.get(model.getKey()));
-				for (int i = 0; i < before.size(); i++) {
-					if (before.get(i).charAt(0) == '#') {
-						before.set(i, model.getValue().getIdFromAlias(before.get(i).replace('#', ' ').strip()));
+			if (model.getValue() == null) {
+				ControllerMod.LOGGER.error("Cannot create mapping for "+description+" because "+model.getKey()+" is not regsitered in the controller model registry");
+			} else if (model.getValue() != ControllerModel.CUSTOM) {
+				if (!builder2.containsKey(model.getKey())) {
+					builder2.put(model.getKey(), Lists.newArrayList(" "));
+				} else {
+					/* We're creating a new list object to sever the connection between the list
+					 * here and the list the map has. This allows us to modify the list without affecting 
+					 * the copy owned by the map. If we don't do this, any modifications to this list will modify
+					 * every copy in the map
+					*/
+					List<String> before = Lists.newArrayList(builder2.get(model.getKey()));
+					for (int i = 0; i < before.size(); i++) {
+						if (before.get(i).charAt(0) == '#') {
+							before.set(i, model.getValue().getIdFromAlias(before.get(i).replace('#', ' ').strip()));
+						}
 					}
+					builder2.put(model.getKey(), before);
 				}
-				builder2.put(model.getKey(), before);
+				inputTypeBuilder.put(model.getValue(), inputType == null ? InputType.PRESS : inputType);
+				System.out.println(model.getKey());
+				axisInvertedBuilder.put(model.getValue(), isAxisInvertedIn);
 			}
-			inputTypeBuilder.put(model.getValue(), inputType == null ? InputType.PRESS : inputType);
-			System.out.println(model.getKey());
-			axisInvertedBuilder.put(model.getValue(), isAxisInvertedIn);
-
 		}
 		builder.putAll(builder2);
 		this.buttonOnController = builder.build();
@@ -104,7 +109,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		ALL.put(description, this);
 		if (!MAP.containsKey(useCase))
 			MAP.put(useCase, Maps.newHashMap());
-		this.buttonOnController.forEach((key, val) -> MAP.get(useCase).put(Lists.newArrayList(ControllerModelManager.ALL_MODELS.get(key).getOrCreate(Lists.newArrayList(val))), this));
+		this.buttonOnController.forEach((key, val) -> {
+			if (ControllerModelManager.ALL_MODELS.get(key) == null) {
+				ControllerMod.LOGGER.error("Cannot create mapping for "+description+" because "+key+" is not regsitered in the controller model registry");
+			} else {
+				MAP.get(useCase).put(Lists.newArrayList(ControllerModelManager.ALL_MODELS.get(key).getOrCreate(Lists.newArrayList(val))), this);
+			}
+		});
 	}
 
 	public ControllerMapping(String category, String desc, InputConstants.Key buttonOnKeyboardMouse, Consumer<Map<ResourceLocation,List<String>>> buttonId, InputType inputType, UseCase useCase) {
@@ -196,7 +207,11 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public boolean isBoundToButton(ControllerModel model) {
-		return !getButtonOnController(model).get(0).equals(" ") && !getButtonOnController(model).get(0).equals("> <");
+		if (model == null)
+			model = ControllerModel.CUSTOM;
+		if (getButtonOnController(model) != null)
+			return !getButtonOnController(model).get(0).equals(" ") && !getButtonOnController(model).get(0).equals("> <");
+		else return false;
 	}
 
 	public boolean isBoundToKey() {
@@ -216,6 +231,8 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public List<String> getButtonOnController(ControllerModel model) {
+		if (model == null)
+			model = ControllerModel.CUSTOM;
 		return buttonOnController.get(model.getKey());
 	}
 
@@ -235,10 +252,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public boolean isDown(ControllerModel model) {
-		switch (inputType.get(model)) {
-		case PRESS: return isPressed();
-		case TOGGLE: return isToggled();
-		case HOLD: return isHeld();
+		if (model != null) {
+			switch (inputType.get(model)) {
+			case PRESS: return isPressed();
+			case TOGGLE: return isToggled();
+			case HOLD: return isHeld();
+			}
 		}
 		return false;
 	}

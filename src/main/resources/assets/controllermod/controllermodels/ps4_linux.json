@@ -1,0 +1,162 @@
+{
+	"modelName": "ps4",
+	"GUID": "050000004c050000cc09000000810000",
+	"os": "linux",
+	"dupe_buttons": [
+		"button13",
+		"button14",
+		"button15",
+		"button16"
+	],
+	"triggers": [
+		-2,
+		-5
+	],
+	"buttons": {
+		"button0": {
+			"name": "button.ps4",
+			"alias": "face_button_down",
+			"icon": "controllers/ps4_face_button_down.png"
+		},
+		"button1": {
+			"name": "button.ps4",
+			"alias": "face_button_right",
+			"icon": "controllers/ps4_face_button_right.png"
+		},
+		"button2": {
+			"name": "button.ps4",
+			"alias": "face_button_up",
+			"icon": "controllers/ps4_face_button_up.png"
+		},
+		"button3": {
+			"name": "button.ps4",
+			"alias": "face_button_left",
+			"icon": "controllers/ps4_face_button_left.png"
+		},
+		"button4": {
+			"name": "button.ps4",
+			"alias": "bumper_left",
+			"icon": "controllers/ps4_bumper_left.png"
+		},
+		"button5": {
+			"name": "button.ps4",
+			"alias": "bumper_right",
+			"icon": "controllers/ps4_bumper_right.png"
+		},
+		"button6": {
+			"name": "button.ps4",
+			"alias": "left_trigger",
+			"icon": "controllers/ps4_left_trigger.png"
+		},
+		"button7": {
+			"name": "button.ps4",
+			"alias": "right_trigger",
+			"icon": "controllers/ps4_right_trigger.png"
+		},
+		"button8": {
+			"name": "button.ps4",
+			"alias": "select_button",
+			"icon": "controllers/ps4_select_button.png"
+		},
+		"button9": {
+			"name": "button.ps4",
+			"alias": "start_button",
+			"icon": "controllers/ps4_start_button.png"
+		},
+		"button10": {
+			"name": "button.ps4",
+			"alias": "guide_button",
+			"icon": "controllers/wii_u_pro_guide_button.png"
+		},
+		"button11": {
+			"name": "button.ps4",
+			"alias": "stick_left",
+			"icon": "controllers/ps4_stick_left.png"
+		},
+		"button12": {
+			"name": "button.ps4",
+			"alias": "stick_right",
+			"icon": "controllers/ps4_stick_right.png"
+		},
+		"dpadup": {
+			"name": "button.nintendo",
+			"alias": "dpad_up",
+			"icon": "controllers/ps4_dpad_up.png"
+		},
+		"dpaddo": {
+			"name": "button.nintendo",
+			"alias": "dpad_down",
+			"icon": "controllers/ps4_dpad_down.png"
+		},
+		"dpadle": {
+			"name": "button.nintendo",
+			"alias": "dpad_left",
+			"icon": "controllers/ps4_dpad_left.png"
+		},
+		"dpadri": {
+			"name": "button.nintendo",
+			"alias": "dpad_right",
+			"icon": "controllers/ps4_dpad_right.png"
+		},
+		"axis0": {
+			"name": "axis.ps4.0",
+			"alias": "left_stick_horizontal",
+			"icon": "controllers/ps4_stick_left_horizontal.png"
+		},
+		"axis1": {
+			"name": "axis.ps4.1",
+			"alias": "left_stick_vertical",
+			"icon": "controllers/ps4_stick_left_vertical.png"
+		},
+		"axis3": {
+			"name": "axis.ps4.3",
+			"alias": "right_stick_horizontal",
+			"icon": "controllers/ps4_stick_right_horizontal.png"
+		},
+		"axis4": {
+			"name": "axis.ps4.4",
+			"alias": "right_stick_vertical",
+			"icon": "controllers/ps4_stick_right_vertical.png"
+		},
+		"axis_neg0": {
+			"name": "negat_axis.ps4.0",
+			"alias": "left_stick_left",
+			"icon": "controllers/ps4_stick_left_left.png"
+		},
+		"axis_neg1": {
+			"name": "negat_axis.ps4.1",
+			"alias": "left_stick_up",
+			"icon": "controllers/ps4_stick_left_up.png"
+		},
+		"axis_neg3": {
+			"name": "negat_axis.ps4.3",
+			"alias": "right_stick_left",
+			"icon": "controllers/ps4_stick_right_left.png"
+		},
+		"axis_neg4": {
+			"name": "negat_axis.ps4.4",
+			"alias": "right_stick_up",
+			"icon": "controllers/ps4_stick_right_up.png"
+		},
+		"axis_pos0": {
+			"name": "posit_axis.ps4.0",
+			"alias": "left_stick_right",
+			"icon": "controllers/ps4_stick_left_right.png"
+		},
+		"axis_pos1": {
+			"name": "posit_axis.ps4.1",
+			"alias": "left_stick_down",
+			"icon": "controllers/ps4_stick_left_down.png"
+		},
+		"axis_pos3": {
+			"name": "posit_axis.ps4.3",
+			"alias": "right_stick_right",
+			"icon": "controllers/ps4_stick_right_right.png"
+		},
+		"axis_pos4": {
+			"name": "posit_axis.ps4.4",
+			"alias": "right_stick_down",
+			"icon": "controllers/ps4_stick_right_down.png"
+		}
+	}
+}

@@ -27,7 +27,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 @Environment(value=EnvType.CLIENT)
 public class ControllerModelManager extends SimplePreparableReloadListener<Map<ResourceLocation,ControllerModel>> {
 	public static final Map<ResourceLocation,ControllerModel> ALL_MODELS = new HashMap<ResourceLocation,ControllerModel>();
-	
+
 	@Override
 	protected Map<ResourceLocation,ControllerModel> prepare(ResourceManager manager, ProfilerFiller var2) {
 		Map<ResourceLocation,ControllerModel> models = new HashMap<>();
@@ -45,14 +45,24 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 
 					JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
 					List<String> dupe_buttons = Lists.newArrayList();
-					object.get("dupe_buttons").getAsJsonArray().forEach((a) -> dupe_buttons.add(a.getAsString()));
+					if (object.has("dupe_buttons"))
+						object.get("dupe_buttons").getAsJsonArray().forEach((a) -> dupe_buttons.add(a.getAsString()));
+					List<Integer> positive_triggers = Lists.newArrayList();
+					List<Integer> negative_triggers = Lists.newArrayList();
+					if (object.has("triggers"))
+						object.get("triggers").getAsJsonArray().forEach((a) -> { 
+							if (a.getAsInt() > 0) positive_triggers.add(a.getAsInt());
+							else if (a.getAsInt() < 0) negative_triggers.add(a.getAsInt()*-1);
+						});
 					ControllerModel model = new ControllerModel(
 							object.get("modelName").getAsString(), 
 							object.get("GUID").getAsString(), 
 							object.get("os").getAsString().equals("windows") ? OS.WINDOWS :
-									object.get("os").getAsString().equals("linux") ? OS.LINUX : OS.UNKNOWN, new Integer[] {}, new Integer[] {}, 
-							dupe_buttons);
-					
+								object.get("os").getAsString().equals("linux") ? OS.LINUX : OS.UNKNOWN, 
+										negative_triggers.toArray(new Integer[] {}), 
+										positive_triggers.toArray(new Integer[] {}), 
+										dupe_buttons);
+
 					for (Entry<String, JsonElement> el : object.get("buttons").getAsJsonObject().entrySet()) {
 						JsonObject ob = el.getValue().getAsJsonObject();
 						ControllerModel.addButton(model, ob.get("name"), ob.get("alias"), ob.get("icon"), el.getKey());
@@ -61,7 +71,7 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 					models.put(modelId, model);
 				}
 			} catch (Throwable e) {
-								ControllerMod.debug("Failed to read textures!", e);
+				ControllerMod.debug("Failed to read textures!", e);
 			}
 		}
 
