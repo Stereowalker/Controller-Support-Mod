@@ -32,15 +32,14 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 	protected Map<ResourceLocation,ControllerModel> prepare(ResourceManager manager, ProfilerFiller var2) {
 		Map<ResourceLocation,ControllerModel> models = new HashMap<>();
 		ControllerModel.DEFAULTS.forEach(def -> models.put(def.defaultName, def));
-		for (ResourceLocation id : manager.listResources("controllermodels/", (s) -> s.endsWith(".json"))) {
-			System.out.println(id);
+		for (Entry<ResourceLocation, Resource> resource : manager.listResources("controllermodels", (s) -> s.toString().endsWith(".json")).entrySet()) {
+			System.out.println(resource);
 			ResourceLocation modelId = new ResourceLocation(
-					id.getNamespace(),
-					id.getPath().replace("controllermodels/", "").replace(".json", "")
+					resource.getKey().getNamespace(),
+					resource.getKey().getPath().replace("controllermodels/", "").replace(".json", "")
 					);
 			try {
-				Resource resource = manager.getResource(id);
-				try (InputStream stream = resource.getInputStream(); 
+				try (InputStream stream = resource.getValue().open(); 
 						InputStreamReader reader = new InputStreamReader(stream)) {
 
 					JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();

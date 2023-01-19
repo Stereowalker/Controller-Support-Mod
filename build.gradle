@@ -36,9 +36,9 @@ dependencies {
   		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
-	modImplementation "curse.maven:forge_config_api-547434:3551753"
-	modImplementation "curse.maven:archi-419699:3929414"
-	modImplementation "curse.maven:cloth-348521:3972425"
+	modImplementation "curse.maven:forge_config_api-547434:4325269"
+	//modImplementation "curse.maven:archi-419699:3929414"
+	//modImplementation "curse.maven:cloth-348521:3972425"
 	//modImplementation "curse.maven:rei-310111:4082323"
 	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
 

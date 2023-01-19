@@ -16,7 +16,7 @@ import com.stereowalker.controllermod.client.gui.toasts.ControllerStatusToast;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 public class ControllerHandler {
@@ -36,12 +36,12 @@ public class ControllerHandler {
 			GLFW.glfwGetGamepadName(jid);
 			controller = new Controller(jid, GLFW.glfwGetJoystickName(jid), GLFW.glfwGetJoystickGUID(jid), GLFW.glfwGetJoystickUserPointer(jid));
 			controllerMod.controllers.add(controller);
-			ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.CONNECT, new TextComponent(controller.getName()));
+			ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.CONNECT, Component.literal(controller.getName()));
 		}
 		else if (disconnected) {
 			controller = controllerMod.getController(jid);
 			if (controller != null) {
-				ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.DISCONNECT, new TextComponent(controller.getName()));
+				ControllerStatusToast.addOrUpdate(minecraft.getToasts(), ControllerStatusToast.Type.DISCONNECT, Component.literal(controller.getName()));
 				controllerMod.controllers.remove(controller);
 			}
 		}
@@ -111,7 +111,8 @@ public class ControllerHandler {
 			}
 		}
 		else if (ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS) {
-			if (useCase.contains(UseCase.INGAME)) this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+			//TODO: Find out where this went
+			//if (useCase.contains(UseCase.INGAME)) this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
 			int i = 0, j = 0;
 			List<ControllerMapping> currentlyUsing = ControllerMapping.retrieveActiveMappings(controller, useCase);
 			//This should release buttons we are no longer holding

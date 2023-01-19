@@ -24,7 +24,7 @@ public class VirtualMouseHelper extends MouseHandler {
 	 */
 	public void scrollCallback(long handle, double xoffset, double yoffset) {
 		if (handle == Minecraft.getInstance().getWindow().getWindow()) {
-			double d0 = (this.minecraft.options.discreteMouseScroll ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity;
+			double d0 = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity().get();
 			if (this.minecraft.getOverlay() == null) {
 				if (this.minecraft.screen != null) {
 					double d1 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();

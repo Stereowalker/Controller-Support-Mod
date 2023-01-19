@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public class TriggerSetupScreen extends Screen {
@@ -19,7 +19,7 @@ public class TriggerSetupScreen extends Screen {
 	private ControllerMod mod;
 
 	public TriggerSetupScreen(Screen previousScreen) {
-		super(new TranslatableComponent("trigger_setup.title"));
+		super(Component.translatable("trigger_setup.title"));
 		this.previousScreen = previousScreen;
 		this.mod = ControllerMod.getInstance();
 	}
@@ -28,9 +28,9 @@ public class TriggerSetupScreen extends Screen {
 	public void init() {
 		this.triggerAxesList = new TriggerAxesList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.triggerAxesList);
-		this.addRenderableWidget(new Button(this.width / 2 - 155 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
+		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
-		}));
+		}).bounds(this.width / 2 - 155 + 210, this.height - 29, 100, 20).build());
 	}
 
 	@Override

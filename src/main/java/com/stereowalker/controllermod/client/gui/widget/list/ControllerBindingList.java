@@ -27,8 +27,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @Environment(EnvType.CLIENT)
 public class ControllerBindingList extends ContainerObjectSelectionList<ControllerBindingList.Entry> {
@@ -48,10 +46,10 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			String s1 = keybinding.getCategory();
 			if (!s1.equals(s)) {
 				s = s1;
-				this.addEntry(new ControllerBindingList.CategoryEntry(new TranslatableComponent(s1)));
+				this.addEntry(new ControllerBindingList.CategoryEntry(Component.translatable(s1)));
 			}
 
-			Component itextcomponent = new TranslatableComponent(keybinding.getDescripti());
+			Component itextcomponent = Component.translatable(keybinding.getDescripti());
 			int i = mcIn.font.width(itextcomponent);
 			if (i > this.maxListLabelWidth) {
 				this.maxListLabelWidth = i;
@@ -131,19 +129,15 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 					}, keyDesc) {
 				@Override
 				protected MutableComponent createNarrationMessage() {
-					return controllerBinding.isBoundToButton(model) ? new TranslatableComponent("narrator.controls.unbound", keyDesc) : new TranslatableComponent("narrator.controls.bound", keyDesc, super.createNarrationMessage());
+					return controllerBinding.isBoundToButton(model) ? Component.translatable("narrator.controls.unbound", keyDesc) : Component.translatable("narrator.controls.bound", keyDesc, super.createNarrationMessage());
 				}
 			};
-			this.btnReset = new Button(0, 0, 50, 20, new TranslatableComponent("controls.reset"), (p_214387_2_) -> {
+			this.btnReset = Button.builder(Component.translatable("controls.reset"), (p_214387_2_) -> {
 				controllerBinding.setToDefault(ControllerMod.getInstance().controllerOptions.controllerModel);
 				ControllerBindingList.this.mod.controllerOptions.setKeyBindingCode(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().controllerOptions.controllerModel));
 				//            ControllerBinding.resetKeyBindingArrayAndHash();
-			}) {
-				protected MutableComponent createNarrationMessage() {
-					return new TranslatableComponent("narrator.controls.reset", keyDesc);
-				}
-			};
-			this.btnInputType = new Button(0, 10, 70, 20, controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) != null ? controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel).getDisplayName() : new TextComponent(""), (p_214387_2_) -> {
+			}).bounds(0, 0, 50, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
+			this.btnInputType = Button.builder(controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) != null ? controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
 				if (controllerBinding.isAxis()) {
 					ControllerBindingList.this.mod.controllerOptions.setKeyBindingInverted(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, !controllerBinding.isAxisInverted(ControllerMod.getInstance().controllerOptions.controllerModel));
 				} else {
@@ -151,12 +145,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 					else if (controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().controllerOptions.controllerModel ,controllerBinding, InputType.HOLD);
 					else ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, InputType.PRESS);
 				}
-			}) {
-				@Override
-				protected MutableComponent createNarrationMessage() {
-					return new TranslatableComponent("narrator.controls.reset", keyDesc);
-				}
-			};
+			}).bounds(0, 10, 70, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
 		}
 
 		@Override
@@ -165,20 +154,20 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
 			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
 			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.keyDesc, (float)(p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
-			this.btnInputType.x = p_230432_4_ + 166;
-			this.btnInputType.y = p_230432_3_;
+			this.btnInputType.setX(p_230432_4_ + 166);
+			this.btnInputType.setY(p_230432_3_);
 			if (controllerBinding.isAxis()) {
-				this.btnInputType.setMessage(controllerBinding.isAxisInverted(model) ? new TranslatableComponent("gui.inverted") : new TranslatableComponent("Not Inverted"));
+				this.btnInputType.setMessage(controllerBinding.isAxisInverted(model) ? Component.translatable("gui.inverted") : Component.translatable("Not Inverted"));
 			} else {
 				this.btnInputType.setMessage(controllerBinding.getInputType(model).getDisplayName());
 			}
 			this.btnInputType.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.btnReset.x = p_230432_4_ + 190 + 50;
-			this.btnReset.y = p_230432_3_;
+			this.btnReset.setX(p_230432_4_ + 190 + 50);
+			this.btnReset.setY(p_230432_3_);
 			this.btnReset.active = !this.controllerBinding.isDefault(model);
 			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.btnChangeKeyBinding.x = p_230432_4_ + 98;
-			this.btnChangeKeyBinding.y = p_230432_3_;
+			this.btnChangeKeyBinding.setX(p_230432_4_ + 98);
+			this.btnChangeKeyBinding.setY(p_230432_3_);
 			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
 			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
 			this.btnChangeKeyBinding.adjustSecondOverlay(0, 0);
@@ -187,12 +176,12 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 				this.btnChangeKeyBinding.adjustFirstOverlay(-15, 0);
 				this.btnChangeKeyBinding.adjustSecondOverlay(15, 0);
 				this.btnChangeKeyBinding.showMessage();
-				this.btnChangeKeyBinding.setMessage(new TextComponent("+"));
+				this.btnChangeKeyBinding.setMessage(Component.literal("+"));
 			} else {
 				if (button[0].getIcon() != null)
 					this.btnChangeKeyBinding.hideMessage();
 				this.btnChangeKeyBinding.setSecondOverlay(null);
-				this.btnChangeKeyBinding.setMessage(new TextComponent(ControllerMap.map(controllerBinding.getButtonOnController(model).get(0), model)));
+				this.btnChangeKeyBinding.setMessage(Component.literal(ControllerMap.map(controllerBinding.getButtonOnController(model).get(0), model)));
 			}
 			boolean flag1 = false;
 			boolean keyCodeModifierConflict = false;//true; // less severe form of conflict, like SHIFT conflicting with SHIFT+G
@@ -210,13 +199,13 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 				this.btnChangeKeyBinding.setSecondOverlay(null);
 				this.btnChangeKeyBinding.showMessage();
 				if (button[0].getIcon() != null)
-					this.btnChangeKeyBinding.setMessage((new TextComponent("> ")).append(" <").withStyle(ChatFormatting.YELLOW));
+					this.btnChangeKeyBinding.setMessage((Component.literal("> ")).append(" <").withStyle(ChatFormatting.YELLOW));
 				else
-					this.btnChangeKeyBinding.setMessage((new TextComponent("> ")).append(this.btnChangeKeyBinding.getMessage().copy().withStyle(ChatFormatting.YELLOW)).append(" <").withStyle(ChatFormatting.YELLOW));
+					this.btnChangeKeyBinding.setMessage((Component.literal("> ")).append(this.btnChangeKeyBinding.getMessage().copy().withStyle(ChatFormatting.YELLOW)).append(" <").withStyle(ChatFormatting.YELLOW));
 			} else if (flag1) {
 				this.btnChangeKeyBinding.showMessage();
 				if (button[0].getIcon() != null)
-					this.btnChangeKeyBinding.setMessage(new TextComponent("CONFLICT").withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));
+					this.btnChangeKeyBinding.setMessage(Component.literal("CONFLICT").withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));
 				else
 					this.btnChangeKeyBinding.setMessage(this.btnChangeKeyBinding.getMessage().copy().withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));
 			}

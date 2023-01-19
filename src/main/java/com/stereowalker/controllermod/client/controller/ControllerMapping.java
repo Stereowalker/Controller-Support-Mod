@@ -252,7 +252,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public boolean isDown(ControllerModel model) {
-		if (model != null) {
+		if (model != null && inputType.get(model) != null) {
 			switch (inputType.get(model)) {
 			case PRESS: return isPressed();
 			case TOGGLE: return isToggled();

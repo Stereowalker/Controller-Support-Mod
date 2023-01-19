@@ -1,6 +1,6 @@
 accessWidener v1 named
 accessible field net/minecraft/client/gui/screens/Screen itemRenderer Lnet/minecraft/client/renderer/entity/ItemRenderer;
-accessible method net/minecraft/client/gui/GuiComponent fillGradient (Lcom/mojang/math/Matrix4f;Lcom/mojang/blaze3d/vertex/BufferBuilder;IIIIIII)V
+accessible method net/minecraft/client/gui/GuiComponent fillGradient (Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/vertex/BufferBuilder;IIIIIII)V
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 
 accessible field net/minecraft/client/gui/Gui screenWidth I

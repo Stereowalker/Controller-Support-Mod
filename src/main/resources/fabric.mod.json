@@ -26,10 +26,10 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.11.3",
-    "minecraft": "1.18.2",
+    "fabricloader": ">=0.14.12",
+    "minecraft": "1.19.3",
     "java": ">=17",
-	"unionlib": [">=7.2.2", "<7.3.0"]
+	"unionlib": [">=8.0.0", "<9.0.0"]
   },
   "accessWidener": "controllermod.accesswidener",
   "suggests": {

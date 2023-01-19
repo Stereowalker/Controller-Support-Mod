@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public class ControllerInputOptionsScreen extends Screen {
@@ -33,7 +33,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	private Button buttonReset;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
-		super(new TranslatableComponent("options.controller_input.title"));
+		super(Component.translatable("options.controller_input.title"));
 		this.previousScreen = previousScreen;
 		this.keyToSet = keyToSet;
 		this.previousInputs = previousInputs;
@@ -56,21 +56,21 @@ public class ControllerInputOptionsScreen extends Screen {
 		}
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.keyBindingList);
-		this.buttonReset = this.addRenderableWidget(new Button(this.width / 2 - 165, this.height - 29, 100, 20, new TranslatableComponent("controls.resetAll"), (p_213125_1_) -> {
+		this.buttonReset = this.addRenderableWidget(Button.builder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
 				keybinding.setToDefault(this.mod.controllerOptions.controllerModel);
 			}
 
 			ControllerMapping.resetMapping();
-		}));
-		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 95, this.height - 29, 120, 20, new TranslatableComponent("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)), (p_212984_1_) -> {
+		}).bounds(this.width / 2 - 165, this.height - 29, 100, 20).build());
+		Button model = this.addRenderableWidget(Button.builder(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = ControllerModel.nextModel(this.mod.controllerOptions.controllerModel);
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
-		}));
+		}).bounds(this.width / 2 - 155 + 95, this.height - 29, 120, 20).build());
 		model.active = !isModelEnforced;
-		this.addRenderableWidget(new Button(this.width / 2 - 145 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
+		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
-		}));
+		}).bounds(this.width / 2 - 145 + 210, this.height - 29, 100, 20).build());
 	}
 
 	@Override

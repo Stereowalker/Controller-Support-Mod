@@ -19,7 +19,6 @@ import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @Mixin(ControlsScreen.class)
 @Environment(EnvType.CLIENT)
@@ -36,12 +35,12 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
 
 	@Inject(method = "init", at = @At(value = "INVOKE", shift = Shift.AFTER, ordinal = 4, target = "Lnet/minecraft/client/gui/screens/controls/ControlsScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void init_inject(CallbackInfo ci, int i, int j, int k){
-		this.addRenderableWidget(new Button(j, k-24, 150, 20, new TranslatableComponent("options.controller_settings"), (p_213088_1_) -> {
+		this.addRenderableWidget(Button.builder(Component.translatable("options.controller_settings"), (p_213088_1_) -> {
 			this.minecraft.setScreen(new ControllerSettingsScreen(this));
-		}));
-		this.addRenderableWidget(new Button(i, k, 150, 20, new TranslatableComponent("controls.controllerbinds"), (p_212984_1_) -> {
+		}).bounds(j, k-24, 150, 20).build());
+		this.addRenderableWidget(Button.builder(Component.translatable("controls.controllerbinds"), (p_212984_1_) -> {
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(this, null, new int[] {0}));
-		}));
+		}).bounds(i, k, 150, 20).build());
 	}
 
 }

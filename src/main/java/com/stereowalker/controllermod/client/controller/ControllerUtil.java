@@ -20,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @Environment(EnvType.CLIENT)
 public class ControllerUtil {
@@ -399,7 +398,7 @@ public class ControllerUtil {
 		}
 
 		public Component getDisplayName() {
-			return new TranslatableComponent("input_type." + this.name);
+			return Component.translatable("input_type." + this.name);
 		}
 	}
 }

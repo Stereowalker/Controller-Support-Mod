@@ -15,8 +15,6 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @Environment(EnvType.CLIENT)
 public class ControllerSettingsScreen extends Screen {
@@ -27,7 +25,7 @@ public class ControllerSettingsScreen extends Screen {
 	private ControllerMod mod;
 
 	public ControllerSettingsScreen(Screen screenIn) {
-		super(new TranslatableComponent("options.controller_settings.title"));
+		super(Component.translatable("options.controller_settings.title"));
 		this.previousScreen = screenIn;
 		this.mod = ControllerMod.getInstance();
 	}
@@ -45,35 +43,35 @@ public class ControllerSettingsScreen extends Screen {
 		}
 		boolean hasName = GLFW.glfwGetJoystickName(options.controllerNumber) != null;
 		boolean controllerPresent = ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber);
-		prevController = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6, 20, 20, new TextComponent("<<"), (p_212984_1_) -> {
+		prevController = this.addRenderableWidget(Button.builder(Component.literal("<<"), (p_212984_1_) -> {
 			if(options.controllerNumber>0)options.controllerNumber = options.controllerNumber-1;
 			if (!ControllerUtil.isControllerAvailable(options.controllerNumber)) options.enableController = false;
 			this.minecraft.setScreen(new ControllerSettingsScreen(previousScreen));
-		}));
+		}).bounds(this.width / 2 - 155, this.height  / 6, 20, 20).build());
 		Component name;
 		if (hasName) {
-			name = new TranslatableComponent("<").append((options.controllerNumber+1)+"> "+GLFW.glfwGetJoystickName(options.controllerNumber)+" [").append(new TranslatableComponent(ControllerUtil.isControllerAvailable(options.controllerNumber) ? "controller.connected" : "controller.disconnected")).append("]"+" : ").append(new TranslatableComponent(options.enableController ? "options.on" : "options.off"));
+			name = Component.translatable("<").append((options.controllerNumber+1)+"> "+GLFW.glfwGetJoystickName(options.controllerNumber)+" [").append(Component.translatable(ControllerUtil.isControllerAvailable(options.controllerNumber) ? "controller.connected" : "controller.disconnected")).append("]"+" : ").append(Component.translatable(options.enableController ? "options.on" : "options.off"));
 		} else {
-			name = new TranslatableComponent("<").append((options.controllerNumber+1)+"> ");
+			name = Component.translatable("<").append((options.controllerNumber+1)+"> ");
 		}
 		if (!controllerPresent) {
 			this.mod.controllerOptions.controllerModel = ControllerModel.CUSTOM;
 		}
-		controller = this.addRenderableWidget(new Button(this.width / 2 - 125, this.height  / 6, 250, 20, name, (p_212984_1_) -> {
+		controller = this.addRenderableWidget(Button.builder(name, (p_212984_1_) -> {
 			options.enableController = !options.enableController;
 			this.minecraft.setScreen(new ControllerSettingsScreen(previousScreen));
-		}));
-		nextController = this.addRenderableWidget(new Button(this.width / 2 + 135, this.height  / 6, 20, 20, new TextComponent(">>"), (p_212984_1_) -> {
+		}).bounds(this.width / 2 - 125, this.height  / 6, 250, 20).build());
+		nextController = this.addRenderableWidget(Button.builder(Component.literal(">>"), (p_212984_1_) -> {
 			if(options.controllerNumber<ControllerMod.getInstance().getTotalConnectedControllers())options.controllerNumber = options.controllerNumber+1;
 			if (!ControllerUtil.isControllerAvailable(options.controllerNumber)) options.enableController = false;
 			this.minecraft.setScreen(new ControllerSettingsScreen(previousScreen));
-		}));
-		this.addRenderableWidget(new Button(this.width / 2 - 155, this.height  / 6 + 24, 150, 20, new TranslatableComponent("gui.paperDollOptions"), (p_212984_1_) -> {
+		}).bounds(this.width / 2 + 135, this.height  / 6, 20, 20).build());
+		this.addRenderableWidget(Button.builder(Component.translatable("gui.paperDollOptions"), (p_212984_1_) -> {
 			this.minecraft.setScreen(new PaperDollOptionsScreen(previousScreen));
-		}));
-		Button trigger = this.addRenderableWidget(new Button(this.width / 2 + 5, this.height  / 6 + 24, 150, 20, new TranslatableComponent("gui.triggerSetup"), (p_212984_1_) -> {
+		}).bounds(this.width / 2 - 155, this.height  / 6 + 24, 150, 20).build());
+		Button trigger = this.addRenderableWidget(Button.builder(Component.translatable("gui.triggerSetup"), (p_212984_1_) -> {
 			this.minecraft.setScreen(new TriggerSetupScreen(this));
-		}));
+		}).bounds(this.width / 2 + 5, this.height  / 6 + 24, 150, 20).build());
 		if (options.enableController && controllerPresent) {
 			trigger.active = (this.mod.controllerOptions.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
 					getActiveController().
@@ -86,9 +84,9 @@ public class ControllerSettingsScreen extends Screen {
 		else {
 			trigger.active = false;
 		}
-		this.addRenderableWidget(new Button(this.width / 2 - 100, this.height  / 6 + 168, 200, 20, new TranslatableComponent("gui.done"), (p_212984_1_) -> {
+		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), (p_212984_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
-		}));
+		}).bounds(this.width / 2 - 100, this.height  / 6 + 168, 200, 20).build());
 		nextController.active = options.controllerNumber<ControllerMod.getInstance().getTotalConnectedControllers();
 		prevController.active = options.controllerNumber>0;
 		controller.active = hasName && controllerPresent;

@@ -13,7 +13,6 @@ import com.stereowalker.controllermod.resources.ControllerModelManager;
 import net.minecraft.Util;
 import net.minecraft.Util.OS;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class ControllerModel {
@@ -272,7 +271,7 @@ public class ControllerModel {
 	}
 	
 	public Component getDisplayName(boolean showOS) {
-		return new TranslatableComponent("model."+modelName).append((showOS?" ("+getOs().telemetryName().substring(0, 1).toUpperCase()+getOs().telemetryName().substring(1)+")":""));
+		return Component.translatable("model."+modelName).append((showOS?" ("+getOs().telemetryName().substring(0, 1).toUpperCase()+getOs().telemetryName().substring(1)+")":""));
 	}
 	
 	public List<String> getDupeButtons() {
