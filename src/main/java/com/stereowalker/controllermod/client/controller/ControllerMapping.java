@@ -355,7 +355,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @return the isAxisInverted
 	 */
 	public boolean isAxisInverted(ControllerModel model) {
-		return axisInverted.get(model);
+		Boolean inverted = axisInverted.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		if (inverted == null) {
+			return false;
+		}
+		else {
+			return inverted.booleanValue();
+		}
 	}
 
 	/**
