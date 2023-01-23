@@ -231,9 +231,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public List<String> getButtonOnController(ControllerModel model) {
-		if (model == null)
-			model = ControllerModel.CUSTOM;
-		return buttonOnController.get(model.getKey());
+		List<String> buttons = buttonOnController.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		if (buttons == null || buttons.isEmpty()) {
+			return Lists.newArrayList(" ");
+		}
+		else {
+			return buttons;
+		}
 	}
 
 	public int[] getButtonOnControllerID(ControllerModel model) {
