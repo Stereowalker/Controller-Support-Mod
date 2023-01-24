@@ -122,7 +122,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 				if (ControllerMod.getInstance().onScreenKeyboard.switchCooldown > 0) {
 					ControllerMod.getInstance().onScreenKeyboard.switchCooldown--;
 				}
-				if (ControllerMod.getInstance().controllerOptions.controllerBindKeyboard.isDown(ControllerMod.getInstance().controllerOptions.controllerModel)) {
+				if (ControllerMod.getInstance().controllerOptions.controllerBindKeyboard.isDown(ControllerMod.getInstance().getActiveController().getModel())) {
 					if (ControllerUtil.listeningMode == ListeningMode.LISTEN_TO_MAPPINGS && ControllerMod.getInstance().onScreenKeyboard.switchCooldown == 0) {
 						ControllerMod.getInstance().onScreenKeyboard.switchKeyboard();
 					}
@@ -153,10 +153,10 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	@Inject(method = "handleKeybinds", at = @At("TAIL"))
 	public void handleKeybinds_inject(CallbackInfo ci) {
 		if(this.screen==null) {
-			if (ControllerMod.getInstance().controllerOptions.controllerBindHotbarLeft.isDown(ControllerMod.getInstance().controllerOptions.controllerModel)) {
+			if (ControllerMod.getInstance().controllerOptions.controllerBindHotbarLeft.isDown(ControllerMod.getInstance().getActiveController().getModel())) {
 				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getWindow().getWindow(), 0.0D, 1.0D);
 			}
-			if (ControllerMod.getInstance().controllerOptions.controllerBindHotbarRight.isDown(ControllerMod.getInstance().controllerOptions.controllerModel)) {
+			if (ControllerMod.getInstance().controllerOptions.controllerBindHotbarRight.isDown(ControllerMod.getInstance().getActiveController().getModel())) {
 				ControllerUtil.virtualmouse.scrollCallback(Minecraft.getInstance().getWindow().getWindow(), 0.0D, -1.0D);
 			}
 		}

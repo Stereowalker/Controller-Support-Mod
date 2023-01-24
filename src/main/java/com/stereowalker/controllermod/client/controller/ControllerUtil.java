@@ -145,8 +145,8 @@ public class ControllerUtil {
 			float controlleraxis = 0.0F; 
 			if (controller.getAxes() != null) {
 				for (int i = 0; i < controller.getAxes().capacity(); i++) {
-					List<Integer> triggersPos = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
-					List<Integer> triggersNeg = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+					List<Integer> triggersPos = controller.getModel().getControllerPositiveTriggers();
+					List<Integer> triggersNeg = controller.getModel().getControllerNegativeTriggers();
 					if (!triggersPos.contains(i) && !triggersNeg.contains(i))
 						if (buttonId.equals("axis"+i)) controlleraxis = controller.getAxes().get(i);
 				}
@@ -201,13 +201,13 @@ public class ControllerUtil {
 						continue main_loop;
 					}
 				for (int j = 0; j < controller.getAxes().capacity(); j++) {
-					List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
+					List<Integer> triggers0 = controller.getModel().getControllerPositiveTriggers();
 					if (!triggers0.contains(j))
 						if (buttonId.get(i).equals("axis_pos"+j)) {
 							results[i] = controller.getAxes().get(j);
 							continue main_loop;
 						}
-					List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+					List<Integer> triggers1 = controller.getModel().getControllerNegativeTriggers();
 					if (!triggers1.contains(j))
 						if (buttonId.get(i).equals("axis_neg"+j)) {
 							results[i] = -controller.getAxes().get(j);

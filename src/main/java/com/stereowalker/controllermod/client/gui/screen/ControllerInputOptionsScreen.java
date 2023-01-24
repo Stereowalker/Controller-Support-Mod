@@ -42,14 +42,7 @@ public class ControllerInputOptionsScreen extends Screen {
 
 	@Override
 	public void init() {
-		boolean isModelEnforced = false;
-		for (ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
-			if (model.getGUID().equals(
-					ControllerMod.getInstance().getActiveController().getGUID())) {
-				this.mod.controllerOptions.controllerModel = model;
-				isModelEnforced = true;
-			}
-		}
+		boolean isModelEnforced = ControllerMod.getInstance().getActiveController().getActualModel() != null && !ControllerMod.CONFIG.useAnyModel;
 		if (!isModelEnforced && !ControllerUtil.isControllerAvailable(mod.controllerOptions.controllerNumber)) {
 			this.mod.controllerOptions.controllerModel = ControllerModel.CUSTOM;
 			isModelEnforced = true;
@@ -58,16 +51,20 @@ public class ControllerInputOptionsScreen extends Screen {
 		this.addWidget(this.keyBindingList);
 		this.buttonReset = this.addRenderableWidget(Button.builder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
-				keybinding.setToDefault(this.mod.controllerOptions.controllerModel);
+				keybinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
 			}
 
 			ControllerMapping.resetMapping();
 		}).bounds(this.width / 2 - 165, this.height - 29, 100, 20).build());
-		Button model = this.addRenderableWidget(Button.builder(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)), (p_212984_1_) -> {
+		Button model = this.addRenderableWidget(Button.builder(Component.empty(), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = ControllerModel.nextModel(this.mod.controllerOptions.controllerModel);
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
 		}).bounds(this.width / 2 - 155 + 95, this.height - 29, 120, 20).build());
 		model.active = !isModelEnforced;
+		if (isModelEnforced)
+			model.setMessage(Component.translatable("gui.model").append(" : ").append(ControllerMod.getInstance().getActiveController().getModel().getDisplayName(false)));
+		else
+			model.setMessage(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)));
 		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
 		}).bounds(this.width / 2 - 145 + 210, this.height - 29, 100, 20).build());
@@ -76,7 +73,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE && keyToSet != null) {
-			ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, Lists.newArrayList(" "));
+			ControllerMod.getInstance().controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), keyToSet, Lists.newArrayList(" "));
 			ControllerMapping.resetMapping();
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
@@ -99,7 +96,7 @@ public class ControllerInputOptionsScreen extends Screen {
 				awaitingTicks++;
 				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0 && buttons.size() <= 2) {
 					ControllerMod.debug(buttons.toString());
-					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, keyToSet.isAxis() ? Lists.newArrayList(buttons.get(0)) : buttons);
+					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), keyToSet, keyToSet.isAxis() ? Lists.newArrayList(buttons.get(0)) : buttons);
 					keyToSet = null;
 					ControllerMapping.resetMapping();
 				}
@@ -108,7 +105,7 @@ public class ControllerInputOptionsScreen extends Screen {
 					for (int i = 0; i < previousInputs.length; i++) {
 						prev.add(ControllerUtil.getControllerInputId(previousInputs[i]));
 					}
-					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, prev);
+					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), keyToSet, prev);
 					keyToSet = null;
 					ControllerMapping.resetMapping();
 				}
@@ -134,7 +131,7 @@ public class ControllerInputOptionsScreen extends Screen {
 		boolean flag = false;
 
 		for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
-			if (!keybinding.isDefault(this.mod.controllerOptions.controllerModel)) {
+			if (!keybinding.isDefault(ControllerMod.getInstance().getActiveController().getModel())) {
 				flag = true;
 				break;
 			}
