@@ -3,6 +3,7 @@ package com.stereowalker.controllermod.client.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -43,7 +44,12 @@ public class ControllerModel {
 	//
 	ResourceLocation key = null;
 	public ResourceLocation getKey() {
-		return key;
+		for (Entry<ResourceLocation, ControllerModel> set : ControllerModelManager.ALL_MODELS.entrySet()) {
+			if (set.getValue().equals(this)) {
+				return set.getKey();
+			}
+		}
+		return null;
 	}
 	public void setKey(ResourceLocation key) {
 		this.key = key;
