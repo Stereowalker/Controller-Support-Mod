@@ -181,7 +181,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		builder.put(model, key);
 
 		ImmutableMap.Builder<ResourceLocation,List<String>> builder2 = ImmutableMap.builder();
-		builder2.putAll(builder);
+		builder.forEach((k, v) -> {
+			if (k != null)
+				builder2.put(k,v);
+			else
+				ControllerMod.LOGGER.warn("Caught a null key with values {}", v);
+		});
 		buttonOnController = builder2.build();
 	}
 
