@@ -309,7 +309,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @return the defaultButtonOnController
 	 */
 	public List<String> getDefault(ControllerModel model) {
-		return defaultButtonOnController.get(model.getKey());
+		List<String> buttons = defaultButtonOnController.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		if (buttons == null || buttons.isEmpty()) {
+			return Lists.newArrayList(" ");
+		}
+		else {
+			return buttons;
+		}
 	}
 
 	public void setToDefault() {
@@ -329,10 +335,10 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public boolean isDefault(ControllerModel model) {
-		if (buttonOnController.get(model.getKey()).size() != defaultButtonOnController.get(model.getKey()).size()) return false;
+		if (getButtonOnController(model).size() != getDefault(model).size()) return false;
 		else {
-			for (int i = 0; i < buttonOnController.get(model.getKey()).size(); i++) {
-				if (!buttonOnController.get(model.getKey()).get(i).equalsIgnoreCase(defaultButtonOnController.get(model.getKey()).get(i))) {
+			for (int i = 0; i < getButtonOnController(model).size(); i++) {
+				if (!getButtonOnController(model).get(i).equalsIgnoreCase(getDefault(model).get(i))) {
 					return false;
 				}
 			}
