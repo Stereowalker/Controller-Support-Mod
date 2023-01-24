@@ -16,7 +16,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ControllerModel {
-	public static final ControllerModel CUSTOM = new ControllerModel(new ResourceLocation("minecraft:custom_unknown"), "custom", "", OS.UNKNOWN, new Integer[] {}, new Integer[] {}, Lists.newArrayList());
+	public static final ControllerModel CUSTOM = new ControllerModel(new ResourceLocation("minecraft:custom_unknown"), "custom", "", OS.UNKNOWN, new Integer[] {}, new Integer[] {}, Lists.newArrayList()) {
+		@Override
+		public List<Integer> getControllerPositiveTriggers() {
+			return ControllerMod.getInstance().controllerOptions.positiveTriggerAxes;
+		}
+		
+		@Override
+		public List<Integer> getControllerNegativeTriggers() {
+			return ControllerMod.getInstance().controllerOptions.negativeTriggerAxes;
+		}
+	};
 	public static final ControllerModel XBOX_360_WINDOWS = new ControllerModel(new ResourceLocation("minecraft:xbox_360_windows"), "xbox_360", "78696e70757401000000000000000000", OS.WINDOWS, new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList());
 	public static final ControllerModel XBOX_360_LINUX = new ControllerModel(new ResourceLocation("minecraft:xbox_360_linux"), "xbox_360", "03000000de280000ff11000001000000", OS.LINUX, new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList());
 	public static final ControllerModel PS4_WINDOWS = new ControllerModel(new ResourceLocation("minecraft:ps4_windows"), "ps4", "030000004c050000cc09000000000000", OS.WINDOWS, new Integer[] {3,4}, new Integer[] {}, Lists.newArrayList());

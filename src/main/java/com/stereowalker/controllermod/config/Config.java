@@ -9,6 +9,10 @@ public class Config implements ConfigObject {
 	@UnionConfig.Entry(group = "General", name = "Debug Mode")
 	public boolean debug = false;
 	
+	@UnionConfig.Entry(group = "Controller", name = "Use Any Model")
+	@UnionConfig.Comment(comment = "This prevents the mod from restricting you from changing what model the mod sees your controller as")
+	public boolean useAnyModel = false;
+	
 	@UnionConfig.Entry(group = "Controller", name = "Ingame Sensitivity")
 	@UnionConfig.Comment(comment = "The sensitivity of the controller ingame")
 	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)

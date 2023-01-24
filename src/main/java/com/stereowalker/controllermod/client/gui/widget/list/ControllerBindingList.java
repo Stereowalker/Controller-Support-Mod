@@ -119,7 +119,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		private KeyEntry(final ControllerMapping controllerBinding, final Component keyDesc) {
 			this.controllerBinding = controllerBinding;
 			this.keyDesc = keyDesc;
-			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
+			ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 			this.btnChangeKeyBinding = new OverlayImageButton(0, 0, 65 /*Forge: add space*/, 20, 
 					//Overlay1
 					0, 0, 20, 20, null, 20, 20, 
@@ -134,17 +134,17 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 				}
 			};
 			this.btnReset = ScreenHelper.buttonBuilder(Component.translatable("controls.reset"), (p_214387_2_) -> {
-				controllerBinding.setToDefault(ControllerMod.getInstance().controllerOptions.controllerModel);
-				ControllerBindingList.this.mod.controllerOptions.setKeyBindingCode(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().controllerOptions.controllerModel));
+				controllerBinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
+				ControllerBindingList.this.mod.controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().getActiveController().getModel()));
 				//            ControllerBinding.resetKeyBindingArrayAndHash();
-			}).bounds(0, 0, 50, 20).createNarration((s)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
-			this.btnInputType = ScreenHelper.buttonBuilder(controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) != null ? controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
+			}).bounds(0, 0, 50, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
+			this.btnInputType = ScreenHelper.buttonBuilder(controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) != null ? controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
 				if (controllerBinding.isAxis()) {
-					ControllerBindingList.this.mod.controllerOptions.setKeyBindingInverted(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, !controllerBinding.isAxisInverted(ControllerMod.getInstance().controllerOptions.controllerModel));
+					ControllerBindingList.this.mod.controllerOptions.setKeyBindingInverted(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, !controllerBinding.isAxisInverted(ControllerMod.getInstance().getActiveController().getModel()));
 				} else {
-					if (controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) == InputType.PRESS) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, InputType.TOGGLE);
-					else if (controllerBinding.getInputType(ControllerMod.getInstance().controllerOptions.controllerModel) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().controllerOptions.controllerModel ,controllerBinding, InputType.HOLD);
-					else ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().controllerOptions.controllerModel, controllerBinding, InputType.PRESS);
+					if (controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) == InputType.PRESS) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, InputType.TOGGLE);
+					else if (controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, InputType.HOLD);
+					else ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, InputType.PRESS);
 				}
 			}).bounds(0, 10, 70, 20).createNarration((s)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
 		}
@@ -152,7 +152,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		@Override
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			boolean flag = ControllerBindingList.this.controlsScreen.keyToSet == this.controllerBinding;
-			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
+			ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
 			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.keyDesc, (float)(p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
 			ScreenHelper.setWidgetPosition(this.btnInputType, p_230432_4_ + 166, p_230432_3_);

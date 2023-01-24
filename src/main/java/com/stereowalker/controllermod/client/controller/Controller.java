@@ -149,8 +149,8 @@ public class Controller {
 		if (this != null) {
 			if (this.getAxes() != null && getModel() != null) {
 				for (int i = 0; i < this.getAxes().capacity(); i++) {
-					List<Integer> triggersPos = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : getModel().getControllerPositiveTriggers();
-					List<Integer> triggersNeg = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : getModel().getControllerNegativeTriggers();
+					List<Integer> triggersPos = getModel().getControllerPositiveTriggers();
+					List<Integer> triggersNeg = getModel().getControllerNegativeTriggers();
 					if (!triggersPos.contains(i) && !triggersNeg.contains(i))
 						if (this.getAxis(i) > ControllerMod.CONFIG.deadzone && this.getAxis(i) <= 1.0F) axes.add("axis"+i);
 						else if (this.getAxis(i) < -ControllerMod.CONFIG.deadzone && this.getAxis(i) >= -1.0F) axes.add("axis"+i);
@@ -199,7 +199,9 @@ public class Controller {
 	}
 
 	public ControllerModel getModel() {
-		if (getActualModel() != null)
+		if (ControllerMod.CONFIG.useAnyModel)
+			return ControllerMod.getInstance().controllerOptions.controllerModel;
+		else if (getActualModel() != null)
 			return getActualModel();
 		else if (ControllerMod.getInstance().controllerOptions.controllerModel != null)
 			return ControllerMod.getInstance().controllerOptions.controllerModel;

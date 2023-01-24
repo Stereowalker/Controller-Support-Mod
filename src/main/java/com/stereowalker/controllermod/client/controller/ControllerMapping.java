@@ -182,10 +182,8 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 
 		ImmutableMap.Builder<ResourceLocation,List<String>> builder2 = ImmutableMap.builder();
 		builder.forEach((k, v) -> {
-			if (k != null)
-				builder2.put(k,v);
-			else
-				ControllerMod.LOGGER.warn("Caught a null key with values {}", v);
+			if (k != null) builder2.put(k,v);
+			else ControllerMod.LOGGER.warn("Caught a null key with values {}", v);
 		});
 		buttonOnController = builder2.build();
 	}
@@ -322,7 +320,7 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public void setToDefault(ControllerModel model) {
-		List<String> key = defaultButtonOnController.get(model.getKey());
+		List<String> key = getDefault(model);
 		Map<ResourceLocation,List<String>> builder = Maps.newHashMap();
 		builder.putAll(buttonOnController);
 		builder.remove(model.getKey());

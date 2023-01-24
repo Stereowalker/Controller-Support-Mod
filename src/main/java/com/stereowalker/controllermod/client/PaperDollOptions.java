@@ -137,7 +137,7 @@ public class PaperDollOptions {
 	@OnlyIn(Dist.CLIENT)
 	public static void renderButtonHints(Gui gui, PoseStack matrixStack) {
 		ControllerMapping map = ControllerMod.getInstance().controllerOptions.controllerKeyBindInventory;
-		ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
+		ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 		if (map.isBoundToButton(model)) {
 			int x1 = ControllerMod.getSafeArea() - 2;
 			int y1 = gui.screenHeight - 12;

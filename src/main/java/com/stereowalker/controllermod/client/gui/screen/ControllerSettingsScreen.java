@@ -36,12 +36,6 @@ public class ControllerSettingsScreen extends Screen {
 		ControllerOptions options = this.mod.controllerOptions;
 		options.lastGUID = ControllerMod.getInstance().getActiveController().getGUID();
 		options.saveOptions();
-		for (ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
-			if (model.getGUID().equals(
-					ControllerMod.getInstance().getActiveController().getGUID())) {
-				this.mod.controllerOptions.controllerModel = model;
-			}
-		}
 		boolean hasName = GLFW.glfwGetJoystickName(options.controllerNumber) != null;
 		boolean controllerPresent = ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber);
 		prevController = this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.literal("<<"), (p_212984_1_) -> {
@@ -74,7 +68,7 @@ public class ControllerSettingsScreen extends Screen {
 			this.minecraft.setScreen(new TriggerSetupScreen(this));
 		}).bounds(this.width / 2 + 5, this.height  / 6 + 24, 150, 20).build());
 		if (options.enableController && controllerPresent) {
-			trigger.active = (this.mod.controllerOptions.controllerModel == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
+			trigger.active = (ControllerMod.getInstance().getActiveController().getModel() == ControllerModel.CUSTOM || ControllerMod.CONFIG.debug) && mod.
 					getActiveController().
 					getAxes() != null && 
 					mod.
