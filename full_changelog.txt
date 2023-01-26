@@ -1,2 +1,5 @@
+[8.0.1]
+- Fix certain models not being parsed properly by the mod 
+
 [8.0.0]
 - Ported to 1.19.3

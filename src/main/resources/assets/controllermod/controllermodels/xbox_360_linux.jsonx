@@ -1,0 +1,148 @@
+{
+	"modelName": "xbox_360",
+	"GUID": "03000000de280000ff11000001000000",
+	"os": "linux",
+	"dupe_buttons": [
+	],
+	"triggers": [
+		-2,
+		-5
+	],
+	"buttons": {
+		"button0": {
+			"name": "button.xbox_360",
+			"alias": "face_button_down",
+			"icon": "controllers/xbox_face_button_down.png"
+		},
+		"button1": {
+			"name": "button.xbox_360",
+			"alias": "face_button_right",
+			"icon": "controllers/xbox_face_button_right.png"
+		},
+		"button2": {
+			"name": "button.xbox_360",
+			"alias": "face_button_left",
+			"icon": "controllers/xbox_face_button_left.png"
+		},
+		"button3": {
+			"name": "button.xbox_360",
+			"alias": "face_button_up",
+			"icon": "controllers/xbox_face_button_up.png"
+		},
+		"button4": {
+			"name": "button.xbox_360",
+			"alias": "bumper_left",
+			"icon": "controllers/xbox_bumper_left.png"
+		},
+		"button5": {
+			"name": "button.xbox_360",
+			"alias": "bumper_right",
+			"icon": "controllers/xbox_bumper_right.png"
+		},
+		"button6": {
+			"name": "button.xbox_360",
+			"alias": "select_button",
+			"icon": "controllers/xbox_select_button.png"
+		},
+		"button7": {
+			"name": "button.xbox_360",
+			"alias": "start_button",
+			"icon": "controllers/xbox_start_button.png"
+		},
+		"button8": {
+			"name": "button.ps4",
+			"alias": "select_button",
+			"icon": "controllers/ps4_select_button.png"
+		},
+		"button9": {
+			"name": "button.xbox_360",
+			"alias": "stick_left",
+			"icon": "controllers/xbox_stick_left.png"
+		},
+		"button10": {
+			"name": "button.xbox_360",
+			"alias": "stick_right",
+			"icon": "controllers/xbox_stick_right.png"
+		},
+		"button11": {
+			"name": "button.xbox_360",
+			"alias": "dpad_up",
+			"icon": "controllers/xbox_dpad_up.png"
+		},
+		"button12": {
+			"name": "button.xbox_360",
+			"alias": "dpad_right",
+			"icon": "controllers/xbox_dpad_right.png"
+		},
+		"button13": {
+			"name": "button.xbox_360",
+			"alias": "dpad_down",
+			"icon": "controllers/xbox_dpad_down.png"
+		},
+		"button14": {
+			"name": "button.xbox_360",
+			"alias": "dpad_left",
+			"icon": "controllers/xbox_dpad_left.png"
+		},
+		"axis0": {
+			"name": "axis.xbox_360.0",
+			"alias": "left_stick_horizontal",
+			"icon": "controllers/ps4_stick_left_horizontal.png"
+		},
+		"axis1": {
+			"name": "axis.xbox_360.1",
+			"alias": "left_stick_vertical",
+			"icon": "controllers/ps4_stick_left_vertical.png"
+		},
+		"axis3": {
+			"name": "axis.xbox_360.3",
+			"alias": "right_stick_horizontal",
+			"icon": "controllers/ps4_stick_right_horizontal.png"
+		},
+		"axis4": {
+			"name": "axis.xbox_360.4",
+			"alias": "right_stick_vertical",
+			"icon": "controllers/ps4_stick_right_vertical.png"
+		},
+		"axis_neg0": {
+			"name": "negat_axis.xbox_360.0",
+			"alias": "left_stick_left",
+			"icon": "controllers/ps4_stick_left_left.png"
+		},
+		"axis_neg1": {
+			"name": "negat_axis.xbox_360.1",
+			"alias": "left_stick_up",
+			"icon": "controllers/ps4_stick_left_up.png"
+		},
+		"axis_neg3": {
+			"name": "negat_axis.xbox_360.3",
+			"alias": "right_stick_left",
+			"icon": "controllers/ps4_stick_right_left.png"
+		},
+		"axis_neg4": {
+			"name": "negat_axis.xbox_360.4",
+			"alias": "right_stick_up",
+			"icon": "controllers/ps4_stick_right_up.png"
+		},
+		"axis_pos0": {
+			"name": "posit_axis.xbox_360.0",
+			"alias": "left_stick_right",
+			"icon": "controllers/ps4_stick_left_right.png"
+		},
+		"axis_pos1": {
+			"name": "posit_axis.xbox_360.1",
+			"alias": "left_stick_down",
+			"icon": "controllers/ps4_stick_left_down.png"
+		},
+		"axis_pos3": {
+			"name": "posit_axis.xbox_360.3",
+			"alias": "right_stick_right",
+			"icon": "controllers/ps4_stick_right_right.png"
+		},
+		"axis_pos4": {
+			"name": "posit_axis.xbox_360.0",
+			"alias": "right_stick_down",
+			"icon": "controllers/ps4_stick_right_down.png"
+		}
+	}
+}
