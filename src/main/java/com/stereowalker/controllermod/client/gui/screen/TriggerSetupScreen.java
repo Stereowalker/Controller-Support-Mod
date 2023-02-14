@@ -3,6 +3,7 @@ package com.stereowalker.controllermod.client.gui.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.widget.list.TriggerAxesList;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +29,7 @@ public class TriggerSetupScreen extends Screen {
 	public void init() {
 		this.triggerAxesList = new TriggerAxesList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.triggerAxesList);
-		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
+		this.addRenderableWidget(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
 		}).bounds(this.width / 2 - 155 + 210, this.height - 29, 100, 20).build());
 	}

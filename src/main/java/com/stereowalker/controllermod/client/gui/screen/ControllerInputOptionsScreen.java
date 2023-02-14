@@ -12,7 +12,7 @@ import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
-import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,14 +49,14 @@ public class ControllerInputOptionsScreen extends Screen {
 		}
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.keyBindingList);
-		this.buttonReset = this.addRenderableWidget(Button.builder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
+		this.buttonReset = this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
 				keybinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
 			}
 
 			ControllerMapping.resetMapping();
 		}).bounds(this.width / 2 - 165, this.height - 29, 100, 20).build());
-		Button model = this.addRenderableWidget(Button.builder(Component.empty(), (p_212984_1_) -> {
+		Button model = this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.empty(), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = ControllerModel.nextModel(this.mod.controllerOptions.controllerModel);
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
 		}).bounds(this.width / 2 - 155 + 95, this.height - 29, 120, 20).build());
@@ -65,7 +65,7 @@ public class ControllerInputOptionsScreen extends Screen {
 			model.setMessage(Component.translatable("gui.model").append(" : ").append(ControllerMod.getInstance().getActiveController().getModel().getDisplayName(false)));
 		else
 			model.setMessage(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)));
-		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
+		this.addRenderableWidget(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
 			this.minecraft.setScreen(this.previousScreen);
 		}).bounds(this.width / 2 - 145 + 210, this.height - 29, 100, 20).build());
 	}

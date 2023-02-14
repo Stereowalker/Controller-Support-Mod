@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 import com.stereowalker.controllermod.client.gui.screen.ControllerSettingsScreen;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,10 +36,10 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
 
 	@Inject(method = "init", at = @At(value = "INVOKE", shift = Shift.AFTER, ordinal = 4, target = "Lnet/minecraft/client/gui/screens/controls/ControlsScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void init_inject(CallbackInfo ci, int i, int j, int k){
-		this.addRenderableWidget(Button.builder(Component.translatable("options.controller_settings"), (p_213088_1_) -> {
+		this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("options.controller_settings"), (p_213088_1_) -> {
 			this.minecraft.setScreen(new ControllerSettingsScreen(this));
 		}).bounds(j, k-24, 150, 20).build());
-		this.addRenderableWidget(Button.builder(Component.translatable("controls.controllerbinds"), (p_212984_1_) -> {
+		this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("controls.controllerbinds"), (p_212984_1_) -> {
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(this, null, new int[] {0}));
 		}).bounds(i, k, 150, 20).build());
 	}

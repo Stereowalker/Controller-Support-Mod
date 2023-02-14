@@ -16,6 +16,7 @@ import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 import com.stereowalker.unionlib.client.gui.components.OverlayImageButton;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -132,12 +133,12 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 					return controllerBinding.isBoundToButton(model) ? Component.translatable("narrator.controls.unbound", keyDesc) : Component.translatable("narrator.controls.bound", keyDesc, super.createNarrationMessage());
 				}
 			};
-			this.btnReset = Button.builder(Component.translatable("controls.reset"), (p_214387_2_) -> {
+			this.btnReset = ScreenHelper.buttonBuilder(Component.translatable("controls.reset"), (p_214387_2_) -> {
 				controllerBinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
 				ControllerBindingList.this.mod.controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().getActiveController().getModel()));
 				//            ControllerBinding.resetKeyBindingArrayAndHash();
 			}).bounds(0, 0, 50, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
-			this.btnInputType = Button.builder(controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) != null ? controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
+			this.btnInputType = ScreenHelper.buttonBuilder(controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) != null ? controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
 				if (controllerBinding.isAxis()) {
 					ControllerBindingList.this.mod.controllerOptions.setKeyBindingInverted(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, !controllerBinding.isAxisInverted(ControllerMod.getInstance().getActiveController().getModel()));
 				} else {
@@ -154,20 +155,17 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
 			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.keyDesc, (float)(p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
-			this.btnInputType.setX(p_230432_4_ + 166);
-			this.btnInputType.setY(p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnInputType, p_230432_4_ + 166, p_230432_3_);
 			if (controllerBinding.isAxis()) {
 				this.btnInputType.setMessage(controllerBinding.isAxisInverted(model) ? Component.translatable("gui.inverted") : Component.translatable("Not Inverted"));
 			} else {
 				this.btnInputType.setMessage(controllerBinding.getInputType(model).getDisplayName());
 			}
 			this.btnInputType.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.btnReset.setX(p_230432_4_ + 190 + 50);
-			this.btnReset.setY(p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnReset, p_230432_4_ + 190 + 50, p_230432_3_);
 			this.btnReset.active = !this.controllerBinding.isDefault(model);
 			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			this.btnChangeKeyBinding.setX(p_230432_4_ + 98);
-			this.btnChangeKeyBinding.setY(p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnChangeKeyBinding, p_230432_4_ + 98, p_230432_3_);
 			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
 			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
 			this.btnChangeKeyBinding.adjustSecondOverlay(0, 0);

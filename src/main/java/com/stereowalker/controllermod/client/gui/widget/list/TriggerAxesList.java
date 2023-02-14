@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.TriggerSetupScreen;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -88,7 +89,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 			this.labelText = p_i232280_2_;
 			this.isPostitve = isPostitve;
 			this.axis = axis;
-			this.btnTrigger = Button.builder(Component.translatable("gui.trigger.mark"), (p_214387_2_) -> {
+			this.btnTrigger = ScreenHelper.buttonBuilder(Component.translatable("gui.trigger.mark"), (p_214387_2_) -> {
 				if (isPostitve)
 					if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
 						mod.controllerOptions.positiveTriggerAxes.remove(Integer.valueOf(axis));
@@ -108,8 +109,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			TriggerAxesList.this.minecraft.font.draw(p_230432_1_, this.labelText, (float)(p_230432_4_), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
 
-			this.btnTrigger.setX(p_230432_4_ + 190);
-			this.btnTrigger.setY(p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnTrigger, p_230432_4_ + 190, p_230432_3_);
 			this.btnTrigger.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			
 			if (isPostitve)
