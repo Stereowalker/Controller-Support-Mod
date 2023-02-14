@@ -78,13 +78,13 @@ public class ControllerHandler {
 				int mods = keyboard.isCapsLocked ? GLFW.GLFW_MOD_CAPS_LOCK : 0;
 				long handle = minecraft.getWindow().getWindow();
 				if (options.controllerBindKeyboardLeft.isBoundToButton(controller.getModel()))
-					ControllerUtil.pushDown(options.controllerBindKeyboardLeft.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> left = true, () -> left = false);
+					ControllerUtil.pushDown(options.controllerBindKeyboardLeft.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzoneOSK, () -> left = true, () -> left = false);
 				if (options.controllerBindKeyboardRight.isBoundToButton(controller.getModel()))
-					ControllerUtil.pushDown(options.controllerBindKeyboardRight.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> right = true, () -> right = false);
+					ControllerUtil.pushDown(options.controllerBindKeyboardRight.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzoneOSK, () -> right = true, () -> right = false);
 				if (options.controllerBindKeyboardUp.isBoundToButton(controller.getModel()))
-					ControllerUtil.pushDown(options.controllerBindKeyboardUp.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> up = true, () -> up = false);
+					ControllerUtil.pushDown(options.controllerBindKeyboardUp.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzoneOSK, () -> up = true, () -> up = false);
 				if (options.controllerBindKeyboardDown.isBoundToButton(controller.getModel()))
-					ControllerUtil.pushDown(options.controllerBindKeyboardDown.getButtonOnController(controller.getModel()), controller, InputType.PRESS, 0.9f, () -> down = true, () -> down = false);
+					ControllerUtil.pushDown(options.controllerBindKeyboardDown.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzoneOSK, () -> down = true, () -> down = false);
 				
 				keyboard.changeKey(up, down, left, right);
 				
