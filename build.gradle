@@ -2,6 +2,7 @@ plugins {
 	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
   	id "com.matthewprenger.cursegradle" version "1.4.0"
+  	id "com.modrinth.minotaur" version "2.+"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -96,6 +97,20 @@ curseforge {
     	debug = false // defaults to false
     	forgeGradleIntegration = false
   	}	
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") 
+    projectId = modId
+    versionNumber = "${project.version}"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = [modMinecraftVersion]
+    loaders = ["${project.modLoader}".toLowerCase()]
+	changelog = file('changelog.md').text
+    dependencies {
+    	required.project "unionlib"
+    }
 }
 
 publishing {
