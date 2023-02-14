@@ -4,12 +4,13 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
@@ -199,8 +200,8 @@ public class PaperDollOptions {
 		matrixstack.scale(1.0F, 1.0F, -1.0F);
 		matrixstack.translate(0.0D, 0.0D, 1000.0D);
 		matrixstack.scale((float)scale, (float)scale, (float)scale);
-        Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
-        Quaternionf quaternionf2 = new Quaternionf().rotateX(f1 * 20.0f * ((float)Math.PI / 180));
+        Quaternion quaternionf = Vector3f.ZP.rotationDegrees(180.0F);
+        Quaternion quaternionf2 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
 		quaternionf.mul(quaternionf2);
 		matrixstack.mulPose(quaternionf);
 		float f2 = entity.yBodyRot;
@@ -215,7 +216,7 @@ public class PaperDollOptions {
 		entity.yHeadRotO = renderHeadYaw;
 
 		EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
-		quaternionf2.conjugate();
+		quaternionf2.conj();
 		entityrenderermanager.overrideCameraOrientation(quaternionf2);
 		entityrenderermanager.setRenderShadow(false);
 		MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();

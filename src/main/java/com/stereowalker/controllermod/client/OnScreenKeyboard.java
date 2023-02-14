@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -16,6 +15,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Matrix4f;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;

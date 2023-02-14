@@ -27,6 +27,10 @@ repositories {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
     }
+     maven {
+        name = "Fuzs Mod Resources"
+        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+    }
 }
 
 dependencies {
@@ -37,7 +41,7 @@ dependencies {
   		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
-	modImplementation "curse.maven:forge_config_api-547434:4325269"
+	modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.2.9"
 	//modImplementation "curse.maven:archi-419699:3929414"
 	//modImplementation "curse.maven:cloth-348521:3972425"
 	//modImplementation "curse.maven:rei-310111:4082323"

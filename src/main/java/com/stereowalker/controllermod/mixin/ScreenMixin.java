@@ -18,14 +18,14 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.Listening
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 
 @Mixin(Screen.class)
-public abstract class ScreenMixin extends AbstractContainerEventHandler implements Renderable {
+public abstract class ScreenMixin extends AbstractContainerEventHandler implements Widget {
 	@Shadow protected Font font;
 
 	@Inject(method = "render", at = @At("TAIL"))
