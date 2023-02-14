@@ -102,7 +102,9 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 						mod.controllerOptions.negativeTriggerAxes.add(Integer.valueOf(axis));
 
 				mod.controllerOptions.saveOptions();
-			}).bounds(0, 0, 100, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset")).build();
+			}).bounds(0, 0, 100, 20)./*
+										 * createNarration((narr)-> Component.translatable("narrator.controls.reset")).
+										 */build();
 		}
 
 		@Override

@@ -137,7 +137,10 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 				controllerBinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
 				ControllerBindingList.this.mod.controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, controllerBinding.getDefault(ControllerMod.getInstance().getActiveController().getModel()));
 				//            ControllerBinding.resetKeyBindingArrayAndHash();
-			}).bounds(0, 0, 50, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
+			}).bounds(0, 0, 50, 20)/*
+									 * .createNarration((narr)-> Component.translatable("narrator.controls.reset",
+									 * keyDesc))
+									 */.build();
 			this.btnInputType = ScreenHelper.buttonBuilder(controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) != null ? controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()).getDisplayName() : Component.literal(""), (p_214387_2_) -> {
 				if (controllerBinding.isAxis()) {
 					ControllerBindingList.this.mod.controllerOptions.setKeyBindingInverted(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, !controllerBinding.isAxisInverted(ControllerMod.getInstance().getActiveController().getModel()));
@@ -146,7 +149,10 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 					else if (controllerBinding.getInputType(ControllerMod.getInstance().getActiveController().getModel()) == InputType.TOGGLE) ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, InputType.HOLD);
 					else ControllerBindingList.this.mod.controllerOptions.setKeyBindingInputType(ControllerMod.getInstance().getActiveController().getModel(), controllerBinding, InputType.PRESS);
 				}
-			}).bounds(0, 10, 70, 20).createNarration((narr)-> Component.translatable("narrator.controls.reset", keyDesc)).build();
+			}).bounds(0, 10, 70, 20)./*
+										 * createNarration((narr)-> Component.translatable("narrator.controls.reset",
+										 * keyDesc)).
+										 */build();
 		}
 
 		@Override
