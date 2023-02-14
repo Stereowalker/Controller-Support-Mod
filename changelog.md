@@ -1,1 +1,2 @@
-- Fix certain models not being parsed properly by the mod
+- Renamed the deadzone option in the config
+- The on-screen keyboard deadzone can now be adjusted in the configs
