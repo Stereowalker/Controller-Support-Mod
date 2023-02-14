@@ -23,16 +23,6 @@ public class Config implements ConfigObject {
 	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
 	public float menu_sensitivity = 0.2f;
 	
-	@UnionConfig.Entry(group = "Controller", name = "Deadzone")
-	@UnionConfig.Comment(comment = "The deadzone of the controller")
-	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
-	public float deadzone = 0.2f;
-	
-	@UnionConfig.Entry(group = "Deadzone", name = "On-Screen Keyboard")
-	@UnionConfig.Comment(comment = "The deadzone of the controller while using the on-screen keyboard")
-	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
-	public float deadzoneOSK = 0.7f;
-	
 	@UnionConfig.Entry(group = "Controller", name = "Use Precise Movement")
 	@UnionConfig.Comment(comment = {"Allows you to use mose fine movements using your thumbstick"})
 	public boolean usePreciseMovement = true;
@@ -57,4 +47,14 @@ public class Config implements ConfigObject {
 	@UnionConfig.Entry(group = "Gameplay", name = "Show Paper Doll")
 	@UnionConfig.Comment(comment = {"Shows the mini you at the top left corner of the screen","Adorable right?"})
 	public boolean show_paper_doll = true;
+	
+	@UnionConfig.Entry(group = "Deadzone", name = "General")
+	@UnionConfig.Comment(comment = "The deadzone of the controller during general use")
+	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
+	public float deadzone = 0.2f;
+	
+	@UnionConfig.Entry(group = "Deadzone", name = "On-Screen Keyboard")
+	@UnionConfig.Comment(comment = "The deadzone of the controller while using the on-screen keyboard")
+	@UnionConfig.Range(max = 1.0, min = 0.0, useSlider = true)
+	public float deadzoneOSK = 0.7f;
 }
