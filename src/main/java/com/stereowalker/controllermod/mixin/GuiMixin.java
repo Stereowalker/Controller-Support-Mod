@@ -32,7 +32,7 @@ public class GuiMixin extends GuiComponent {
 	
 	
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(FFF)F", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void render2(PoseStack arg0, float arg1, CallbackInfo ci, Window w, Font font, float f) {
+	public void render2(PoseStack arg0, float arg1, CallbackInfo ci, Font font, float f) {
 		PaperDollOptions.renderPlayerDoll((Gui)(Object)this, arg0);
 	}
 	
