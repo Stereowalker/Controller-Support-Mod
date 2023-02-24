@@ -1,2 +1,1 @@
-- Renamed the deadzone option in the config
-- The on-screen keyboard deadzone can now be adjusted in the configs
+- Backported the changes in 8.0.2 to 1.19.2
