@@ -1,19 +1,10 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-		maven { url = 'https://repo.spongepowered.org/maven' }
-		maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-		classpath 'org.parchmentmc:librarian:1.+'
-		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-  id "com.matthewprenger.cursegradle" version "1.4.0"
+  	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -39,6 +30,7 @@ repositories {
     maven {url = "https://repo.spongepowered.org/maven"} // mixin
 	maven {url "https://www.cursemaven.com"} //cursemaven
 	maven {url "https://modmaven.dev/" } //UnionLib
+	maven { url "https://maven.shedaniel.me/" }//Cloth
 }
 
 minecraft {
@@ -89,10 +81,10 @@ dependencies {
 	implementation "org.spongepowered:mixin:"+modMixinVersion+""
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
-	implementation fg.deobf("curse.maven:xareo-317780:3732800")
-	implementation fg.deobf("curse.maven:archi-419699:4384391")
-	implementation fg.deobf("curse.maven:cloth-348521:3972426")
-	//implementation fg.deobf("curse.maven:rei-310111:4401133")
+	implementation fg.deobf("curse.maven:xareo-317780:4381127")
+	implementation fg.deobf("curse.maven:archi-419699:4384409")
+	implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
+	//implementation fg.deobf("curse.maven:rei-310111:4401136")
 }
 
 jar {
@@ -130,6 +122,8 @@ curseforge {
   	}	
 }
 
+jar.finalizedBy('reobfJar')
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -152,4 +146,9 @@ publishing {
 			url = "https://modmaven.dev/artifactory/local-releases/"
         }
     }
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
