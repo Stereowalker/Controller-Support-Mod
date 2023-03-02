@@ -32,6 +32,6 @@ Grants the ablility to play Minecraft with controllers and gives opportunity to 
 [[dependencies.controllermod]]
     modId="unionlib"
     mandatory=true
-    versionRange="[7.1,7.2)"
+    versionRange="[7.2.3,7.3)"
     ordering="NONE"
     side="BOTH"
