@@ -1,3 +1,7 @@
+[8.0.3]
+- Fix Dualshock 4 and Xbox 360 controllers not saving controls properly
+- Disables the mod when the loading overlay is active
+
 [8.0.2]
 - Renamed the deadzone option in the config
 - The on-screen keyboard deadzone can now be adjusted in the configs

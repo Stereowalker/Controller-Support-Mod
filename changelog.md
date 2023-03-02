@@ -1,2 +1,2 @@
-- Renamed the deadzone option in the config
-- The on-screen keyboard deadzone can now be adjusted in the configs
+- Fix Dualshock 4 and Xbox 360 controllers not saving controls properly
+- Disables the mod when the loading overlay is active
