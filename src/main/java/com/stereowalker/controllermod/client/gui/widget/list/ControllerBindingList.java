@@ -7,8 +7,10 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
+import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerMap;
 import com.stereowalker.controllermod.client.controller.ControllerMap.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
@@ -120,9 +122,14 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			this.controllerBinding = controllerBinding;
 			this.keyDesc = keyDesc;
 			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
-			this.btnChangeKeyBinding = new OverlayImageButton(0, 0, 65 /*Forge: add space*/, 20, 0, 0, 20, 20, model.getOrCreate(controllerBinding.getButtonOnController(model)).getIcon(), 20, 20, (p_214386_2_) -> {
-				ControllerBindingList.this.controlsScreen.keyToSet = controllerBinding;
-			}, keyDesc) {
+			this.btnChangeKeyBinding = new OverlayImageButton(0, 0, 65 /*Forge: add space*/, 20, 
+					//Overlay1
+					0, 0, 20, 20, model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)))[0].getIcon(), 20, 20, 
+					//Overlay2
+					0, 0, 20, 20, null, 20, 20, 
+					(p_214386_2_) -> {
+						ControllerBindingList.this.controlsScreen.keyToSet = controllerBinding;
+					}, keyDesc) {
 				@Override
 				protected MutableComponent createNarrationMessage() {
 					return controllerBinding.isBoundToButton(model) ? new TranslatableComponent("narrator.controls.unbound", keyDesc) : new TranslatableComponent("narrator.controls.bound", keyDesc, super.createNarrationMessage());
@@ -157,7 +164,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			boolean flag = ControllerBindingList.this.controlsScreen.keyToSet == this.controllerBinding;
 			ControllerModel model = ControllerMod.getInstance().controllerOptions.controllerModel;
-			ControllerMap.Button button = model.getOrCreate(controllerBinding.getButtonOnController(model));
+			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
 			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.keyDesc, (float)(p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
 			this.btnInputType.x = p_230432_4_ + 166;
 			this.btnInputType.y = p_230432_3_;
@@ -173,10 +180,21 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			this.btnChangeKeyBinding.x = p_230432_4_ + 98;
 			this.btnChangeKeyBinding.y = p_230432_3_;
-			this.btnChangeKeyBinding.setOverlay(button.getIcon());
-			if (button.getIcon() != null)
-				this.btnChangeKeyBinding.hideMessage();
-			this.btnChangeKeyBinding.setMessage(new TextComponent(ControllerMap.map(controllerBinding.getButtonOnController(model), model)));
+			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
+			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
+			this.btnChangeKeyBinding.adjustSecondOverlay(0, 0);
+			if (button.length > 1) {
+				this.btnChangeKeyBinding.setSecondOverlay(button[1].getIcon());
+				this.btnChangeKeyBinding.adjustFirstOverlay(-15, 0);
+				this.btnChangeKeyBinding.adjustSecondOverlay(15, 0);
+				this.btnChangeKeyBinding.showMessage();
+				this.btnChangeKeyBinding.setMessage(new TextComponent("+"));
+			} else {
+				if (button[0].getIcon() != null)
+					this.btnChangeKeyBinding.hideMessage();
+				this.btnChangeKeyBinding.setSecondOverlay(null);
+				this.btnChangeKeyBinding.setMessage(new TextComponent(ControllerMap.map(controllerBinding.getButtonOnController(model).get(0), model)));
+			}
 			boolean flag1 = false;
 			boolean keyCodeModifierConflict = false;//true; // less severe form of conflict, like SHIFT conflicting with SHIFT+G
 			if (this.controllerBinding.isBoundToButton(model)) {
@@ -189,15 +207,16 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			}
 
 			if (flag) {
-				this.btnChangeKeyBinding.setOverlay(null);
+				this.btnChangeKeyBinding.setFirstOverlay(null);
+				this.btnChangeKeyBinding.setSecondOverlay(null);
 				this.btnChangeKeyBinding.showMessage();
-				if (button.getIcon() != null)
+				if (button[0].getIcon() != null)
 					this.btnChangeKeyBinding.setMessage((new TextComponent("> ")).append(" <").withStyle(ChatFormatting.YELLOW));
 				else
 					this.btnChangeKeyBinding.setMessage((new TextComponent("> ")).append(this.btnChangeKeyBinding.getMessage().copy().withStyle(ChatFormatting.YELLOW)).append(" <").withStyle(ChatFormatting.YELLOW));
 			} else if (flag1) {
 				this.btnChangeKeyBinding.showMessage();
-				if (button.getIcon() != null)
+				if (button[0].getIcon() != null)
 					this.btnChangeKeyBinding.setMessage(new TextComponent("CONFLICT").withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));
 				else
 					this.btnChangeKeyBinding.setMessage(this.btnChangeKeyBinding.getMessage().copy().withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));

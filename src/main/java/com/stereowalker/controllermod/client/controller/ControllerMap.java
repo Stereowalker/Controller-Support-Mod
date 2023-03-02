@@ -74,7 +74,11 @@ public class ControllerMap {
 		default:
 			break;
 		}
-		return I18n.get(model.getOrCreate(input).getName());
+		if (input.equals("dpadup")) return "UP";
+		else if (input.equals("dpadri")) return "RIGHT";
+		else if (input.equals("dpaddo")) return "DOWN";
+		else if (input.equals("dpadle")) return "LEFT";
+		return I18n.get(model.getOrCreate(Lists.newArrayList(input))[0].getName());
 	}
 	
 
@@ -129,17 +133,18 @@ public class ControllerMap {
 	}
 	
 	public enum ControllerModel {
-		CUSTOM("custom", "", new Integer[] {}, new Integer[] {}),
-		XBOX_360("xbox_360", "78696e70757401000000000000000000", new Integer[] {4,5}, new Integer[] {}),
-		PS4_WINDOWS("ps4_windows", "030000004c050000cc09000000000000", new Integer[] {3,4}, new Integer[] {}),
-		PS4_LINUX("ps4_linux", "050000004c050000cc09000000810000", new Integer[] {2,5}, new Integer[] {});
+		CUSTOM("custom", "", new Integer[] {}, new Integer[] {}, Lists.newArrayList()),
+		XBOX_360("xbox_360", "78696e70757401000000000000000000", new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList()),
+		PS4_WINDOWS("ps4_windows", "030000004c050000cc09000000000000", new Integer[] {3,4}, new Integer[] {}, Lists.newArrayList()),
+		PS4_LINUX("ps4_linux", "050000004c050000cc09000000810000", new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList("button13", "button14", "button15", "button16"));
 		
-		List<Integer> controllerNegativeTriggers;
-		List<Integer> controllerPositiveTriggers;
-		Map<String, Button> map = new HashMap<String, Button>();
-		Map<String, String> aliases = new HashMap<String, String>();
 		String modelName;
 		String GUID;
+		List<Integer> controllerNegativeTriggers;
+		List<Integer> controllerPositiveTriggers;
+		List<String> dupeButtons;
+		Map<String, Button> map = new HashMap<String, Button>();
+		Map<String, String> aliases = new HashMap<String, String>();
 
 		@Deprecated
         private static void addOButton(ControllerModel model, String name, String icon, String buttonId) {
@@ -165,26 +170,31 @@ public class ControllerMap {
         	model.aliases.put(alias, buttonId);
         }
         
-		private ControllerModel(String modelNameIn, String GUIDIn, Integer[] controllerNegativeTriggersIn, Integer[] controllerPositiveTriggersIn) {
+		private ControllerModel(String modelNameIn, String GUIDIn, Integer[] controllerNegativeTriggersIn, Integer[] controllerPositiveTriggersIn, List<String> dupeButtonsIn) {
 			modelName = modelNameIn;
 			GUID = GUIDIn;
 			controllerNegativeTriggers = Lists.newArrayList(controllerNegativeTriggersIn);
 			controllerPositiveTriggers = Lists.newArrayList(controllerPositiveTriggersIn);
+			dupeButtons = dupeButtonsIn;
 		}
 		
 		public String getIdFromAlias(String alias) {
 			return this.aliases.getOrDefault(alias, "NULL");
 		}
 
-        public Button getOrCreate(String buttonId) {
-            return this.map.computeIfAbsent(buttonId, i -> {
-                String j = i;
-//                if (this == MOUSE) {
-//                    ++j;
-//                }
-                String string = this.modelName + ".unknown." + j;
-                return new Button(string, this, null, i);
-            });
+        public Button[] getOrCreate(List<String> buttonId) {
+        	Button[] buts = new Button[buttonId.size()];
+        	for (int x = 0; x < buttonId.size(); x++) {
+        		buts[x] = this.map.computeIfAbsent(buttonId.get(x), i -> {
+                    String j = i;
+//                  if (this == MOUSE) {
+//                      ++j;
+//                  }
+                  String string = this.modelName + ".unknown." + j;
+                  return new Button(string, this, null, i);
+              });
+        	}
+            return buts; 
         }
         
         static {
@@ -261,10 +271,10 @@ public class ControllerMap {
         	ControllerModel.addButton(PS4_LINUX, "button.ps4.12", "button10");
         	ControllerModel.addButton(PS4_LINUX, "button.ps4", "stick_left", "controllers/ps4_stick_left.png", "button11");
         	ControllerModel.addButton(PS4_LINUX, "button.ps4", "stick_right", "controllers/ps4_stick_right.png", "button12");
-        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_up", "controllers/ps4_dpad_up.png", "button13");
-        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_right", "controllers/ps4_dpad_right.png", "button14");
-        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_down", "controllers/ps4_dpad_down.png", "button15");
-        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_left", "controllers/ps4_dpad_left.png", "button16");
+        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_up", "controllers/ps4_dpad_up.png", "dpadup");
+        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_right", "controllers/ps4_dpad_right.png", "dpadri");
+        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_down", "controllers/ps4_dpad_down.png", "dpaddo");
+        	ControllerModel.addButton(PS4_LINUX, "button.ps4", "dpad_left", "controllers/ps4_dpad_left.png", "dpadle");
         	ControllerModel.addButton(PS4_LINUX, "posit_axis.ps4.0", "left_stick_right", "axis_pos0");
         	ControllerModel.addButton(PS4_LINUX, "posit_axis.ps4.1", "left_stick_down", "axis_pos1");
         	ControllerModel.addButton(PS4_LINUX, "posit_axis.ps4.3", "right_stick_right", "axis_pos3");
@@ -297,6 +307,10 @@ public class ControllerMap {
 		
 		public String getModelName() {
 			return modelName;
+		}
+		
+		public List<String> getDupeButtons() {
+			return dupeButtons;
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWJoystickCallbackI;
 
@@ -57,10 +58,10 @@ public class ControllerUtil {
 		for (int i = 76; i < 101; i++) {
 			if (input == i) return "axis_neg"+(i-76);
 		}
-		if (input == 101) return "UP"; 
-		if (input == 102) return "DOWN"; 
-		if (input == 103) return "LEFT"; 
-		if (input == 104) return "RIGHT"; 
+		if (input == 101) return "dpadup"; 
+		if (input == 102) return "dpaddo"; 
+		if (input == 103) return "dpadle"; 
+		if (input == 104) return "dpadri"; 
 		return "???";
 	}
 
@@ -109,12 +110,28 @@ public class ControllerUtil {
 			map.put("axis_pos"+i, Integer.valueOf(0));
 			map.put("axis_neg"+i, Integer.valueOf(0));
 		}
-		map.put("UP", Integer.valueOf(0));
-		map.put("DOWN", Integer.valueOf(0));
-		map.put("LEFT", Integer.valueOf(0));
-		map.put("RIGHT", Integer.valueOf(0));
+		map.put("dpadup", Integer.valueOf(0));
+		map.put("dpaddo", Integer.valueOf(0));
+		map.put("dpadle", Integer.valueOf(0));
+		map.put("dpadri", Integer.valueOf(0));
 	}
-	
+
+	public static boolean obtainKeyInMap(List<String> id, Map<String, Integer> map, int value){
+		for (int i = 0; i < id.size(); i++) {
+			if (((Integer)keyMap.get(id.get(i))).intValue() != value) {
+				return false;
+			}
+		}
+		return true;
+
+	}
+
+	public static void setKeyInMap(List<String> id, Map<String, Integer> map, int value){
+		for (int i = 0; i < id.size(); i++) {
+			map.put(id.get(i), value);
+		}
+	}
+
 	public static void emptyAllKeys() {
 		putKeysInMap(keyMap);
 		putKeysInMap(keyToggleMap);
@@ -155,80 +172,117 @@ public class ControllerUtil {
 	 * @param inputType
 	 * @return
 	 */
-	public static boolean updateButtonState(ControllerMapping controllerBinding, String buttonId, Controller controller, InputConstants.Key buttonOnComputer, InputType inputType) {
-		if (buttonId != null && buttonId != " " && buttonId != "???") {
-			if (buttonOnComputer == null) {
+	public static boolean updateButtonState(ControllerMapping controllerBinding, List<String> buttonId, Controller controller, InputConstants.Key buttonOnComputer, InputType inputType) {
+		for (int i = 0; i < buttonId.size(); i++) {
+			if (buttonId.get(i) == null || buttonId.get(i) == " " || buttonId.get(i) == "???") {
 				return false;
 			}
-
-			if (controllerBinding.isFromKeybind()) {
-				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
-			} else if (buttonOnComputer.getType() == InputConstants.Type.KEYSYM) {
-				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
-			} else if (buttonOnComputer.getType() == InputConstants.Type.SCANCODE) {
-				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
-			} else if (buttonOnComputer.getType() == InputConstants.Type.MOUSE) {
-				return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
-			} 
 		}
+		if (buttonOnComputer == null) {
+			return false;
+		}
+
+		if (controllerBinding.isFromKeybind()) {
+			return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> {KeyMapping.set(buttonOnComputer, true); KeyMapping.click(buttonOnComputer);}, () -> KeyMapping.set(buttonOnComputer, false));
+		} else if (buttonOnComputer.getType() == InputConstants.Type.KEYSYM) {
+			return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+		} else if (buttonOnComputer.getType() == InputConstants.Type.SCANCODE) {
+			return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> keyboard.keyPress(handle(), 0, buttonOnComputer.getValue(), 1, 0), () -> keyboard.keyPress(handle(), buttonOnComputer.getValue(), 0, 0, 0));
+		} else if (buttonOnComputer.getType() == InputConstants.Type.MOUSE) {
+			return pushDown(buttonId, controller, inputType, ControllerMod.CONFIG.deadzone, () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 1, 0), () -> virtualmouse.onPress(handle(), buttonOnComputer.getValue(), 0, 0));
+		} 
 		return false;
 	}
 
-	private static float getButtonPushDistance(String buttonId, Controller controller) {
-			for (int i = 0; i < controller.getButtons().capacity(); i++)
-				if (buttonId.equals("button"+i)) {
-					return controller.getButtons().get(i);
+	private static float[] getButtonPushDistance(List<String> buttonId, Controller controller) {
+		float[] results = new float[buttonId.size()];
+		main_loop:
+			for (int i = 0; i < results.length; i++) {
+				for (int j = 0; j < controller.getButtons().capacity(); j++)
+					if (buttonId.get(i).equals("button"+j)) {
+						results[i] = controller.getButtons().get(j);
+						continue main_loop;
+					}
+				for (int j = 0; j < controller.getAxes().capacity(); j++) {
+					List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
+					if (!triggers0.contains(j))
+						if (buttonId.get(i).equals("axis_pos"+j)) {
+							results[i] = controller.getAxes().get(j);
+							continue main_loop;
+						}
+					List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
+					if (!triggers1.contains(j))
+						if (buttonId.get(i).equals("axis_neg"+j)) {
+							results[i] = -controller.getAxes().get(j);
+							continue main_loop;
+						}
 				}
-			for (int i = 0; i < controller.getAxes().capacity(); i++) {
-				List<Integer> triggers0 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.positiveTriggerAxes : controller.getModel().getControllerPositiveTriggers();
-				if (!triggers0.contains(i))
-					if (buttonId.equals("axis_pos"+i)) return controller.getAxes().get(i);
-				List<Integer> triggers1 = ControllerMod.getInstance().controllerOptions.controllerModel == ControllerModel.CUSTOM ? ControllerMod.getInstance().controllerOptions.negativeTriggerAxes : controller.getModel().getControllerNegativeTriggers();
-				if (!triggers1.contains(i))
-					if (buttonId.equals("axis_neg"+i)) return -controller.getAxes().get(i);
+				byte UP = controller.getDpadUp();
+				byte DOWN = controller.getDpadDown();
+				byte LEFT = controller.getDpadLeft();
+				byte RIGHT = controller.getDpadRight();
+				if (buttonId.get(i) == "dpadup") {
+					results[i] = UP;
+					continue main_loop;
+				}
+				if (buttonId.get(i) == "dpaddo") {
+					results[i] = DOWN;
+					continue main_loop;
+				}
+				if (buttonId.get(i) == "dpadle") {
+					results[i] = LEFT;
+					continue main_loop;
+				}
+				if (buttonId.get(i) == "dpadri") {
+					results[i] = RIGHT;
+					continue main_loop;
+				}
+				results[i] = 2.0F;
 			}
-		byte UP = controller.getDpadUp();
-		byte DOWN = controller.getDpadDown();
-		byte LEFT = controller.getDpadLeft();
-		byte RIGHT = controller.getDpadRight();
-		if (buttonId == "UP") return UP;
-		if (buttonId == "DOWN") return DOWN;
-		if (buttonId == "LEFT") return LEFT;
-		if (buttonId == "RIGHT") return RIGHT;
-		return 2.0F;
+
+		return results;
 	}
 
-	public static boolean pushDown(String buttonId, Controller controller, InputType inputType, float threshold, Executor pressAction, Executor releaseAction) {
-		float controllerButton = getButtonPushDistance(buttonId, controller);
-		boolean isDown = controllerButton > threshold && controllerButton <= 1.0D;
+	public static boolean pushDown(List<String> buttonId, Controller controller, InputType inputType, float threshold, Executor pressAction, Executor releaseAction) {
+//		buttonId = ArrayUtils.add(buttonId, "button10");
+		float[] controllerButton = getButtonPushDistance(buttonId, controller);
+		boolean isDown = true;
+		boolean isBelowThresh = false;
+		for (int i = 0; i < controllerButton.length; i++) {
+			if (isDown) {
+				isDown = controllerButton[i] > threshold && controllerButton[i] <= 1.0D;
+			}
+			if (!isBelowThresh)
+				isBelowThresh = controllerButton[i] <= threshold;
+		}
 		if (keyMap.isEmpty()) putKeysInMap(keyMap);
 		if (keyToggleMap.isEmpty()) putKeysInMap(keyToggleMap);
 		if (inputType == InputType.PRESS) {
-			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0) {
-				keyMap.put(buttonId, 1);
+			if (isDown && obtainKeyInMap(buttonId, keyMap, 0)) {
+				setKeyInMap(buttonId, keyMap, 1);
 				pressAction.execute();
 				return true;
 			} 
-			if (controllerButton <= threshold && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
-				keyMap.put(buttonId, 0);
+			if (isBelowThresh && obtainKeyInMap(buttonId, keyMap, 1)) {
+				setKeyInMap(buttonId, keyMap, 0);
 				releaseAction.execute();
 				return false;
 			} 
 		}
 		if (inputType == InputType.TOGGLE) {
-			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 0) {
-				keyMap.put(buttonId, 1);
-				keyToggleMap.put(buttonId, 1);
+			if (isDown && obtainKeyInMap(buttonId, keyMap, 0) && obtainKeyInMap(buttonId, keyToggleMap, 0)) {
+				setKeyInMap(buttonId, keyMap, 1);
+				setKeyInMap(buttonId, keyToggleMap, 1);
 				pressAction.execute();
 				return true;
 			} 
-			if (controllerButton <= threshold && ((Integer)keyMap.get(buttonId)).intValue() == 1) {
-				keyMap.put(buttonId, 0); 
+			if (isBelowThresh && obtainKeyInMap(buttonId, keyMap, 1)) {
+				setKeyInMap(buttonId, keyMap, 0);
 				return false;
 			}
-			if (isDown && ((Integer)keyMap.get(buttonId)).intValue() == 0 && ((Integer)keyToggleMap.get(buttonId)).intValue() == 1) {
-				keyMap.put(buttonId, 1);
-				keyToggleMap.put(buttonId, 0);
+			if (isDown && obtainKeyInMap(buttonId, keyMap, 0) && obtainKeyInMap(buttonId, keyToggleMap, 1)) {
+				setKeyInMap(buttonId, keyMap, 1);
+				setKeyInMap(buttonId, keyToggleMap, 0);
 				releaseAction.execute();
 				return false;
 			} 
@@ -238,11 +292,12 @@ public class ControllerUtil {
 				pressAction.execute();
 				return true;
 			}
-			if (controllerButton <= threshold) {
+			if (isBelowThresh) {
 				releaseAction.execute();
 				return false;
 			}
 		}
+
 		return isDown;
 	}
 

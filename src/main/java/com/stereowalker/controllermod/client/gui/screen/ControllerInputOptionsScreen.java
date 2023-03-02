@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
@@ -26,16 +27,16 @@ public class ControllerInputOptionsScreen extends Screen {
 	private final Screen previousScreen;
 	/** The ID of the button that has been pressed. */
 	public ControllerMapping keyToSet;
-	private int previousInput;
+	private int[] previousInputs;
 	private ControllerBindingList keyBindingList;
 	private ControllerMod mod;
 	private Button buttonReset;
 
-	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int previousInput) {
+	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
 		super(new TranslatableComponent("options.controller_input.title"));
 		this.previousScreen = previousScreen;
 		this.keyToSet = keyToSet;
-		this.previousInput = previousInput;
+		this.previousInputs = previousInputs;
 		this.mod = ControllerMod.getInstance();
 	}
 
@@ -64,7 +65,7 @@ public class ControllerInputOptionsScreen extends Screen {
 		}));
 		Button model = this.addRenderableWidget(new Button(this.width / 2 - 155 + 105, this.height - 29, 100, 20, new TranslatableComponent("gui.model").append(" : "+this.mod.controllerOptions.controllerModel), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = RegistryHelper.rotateEnumForward(this.mod.controllerOptions.controllerModel, ControllerModel.values());
-			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, awaitingTicks));
+			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
 		}));
 		model.active = !isModelEnforced;
 		this.addRenderableWidget(new Button(this.width / 2 - 155 + 210, this.height - 29, 100, 20, CommonComponents.GUI_DONE, (p_213124_1_) -> {
@@ -75,7 +76,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE && keyToSet != null) {
-			ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, " ");
+			ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, Lists.newArrayList(" "));
 			ControllerMapping.resetMapping();
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
@@ -96,13 +97,18 @@ public class ControllerInputOptionsScreen extends Screen {
 				else buttons = ControllerMod.getInstance().getActiveController().getButtonsDown();
 				ControllerUtil.listeningMode = ListeningMode.CHANGE_MAPPINGS;
 				awaitingTicks++;
-				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0) {
-					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, buttons.get(0));
+				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0 && buttons.size() <= 2) {
+					ControllerMod.debug(buttons.toString());
+					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, keyToSet.isAxis() ? Lists.newArrayList(buttons.get(0)) : buttons);
 					keyToSet = null;
 					ControllerMapping.resetMapping();
 				}
 				if (awaitingTicks >= 100) {
-					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, ControllerUtil.getControllerInputId(previousInput));
+					List<String> prev = Lists.newArrayList();
+					for (int i = 0; i < previousInputs.length; i++) {
+						prev.add(ControllerUtil.getControllerInputId(previousInputs[i]));
+					}
+					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(this.mod.controllerOptions.controllerModel, keyToSet, prev);
 					keyToSet = null;
 					ControllerMapping.resetMapping();
 				}

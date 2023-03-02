@@ -8,13 +8,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
 import com.stereowalker.controllermod.client.gui.screen.ControllerSettingsScreen;
 
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
@@ -42,7 +40,7 @@ public abstract class ControlsScreenMixin extends OptionsSubScreen {
 			this.minecraft.setScreen(new ControllerSettingsScreen(this));
 		}));
 		this.addRenderableWidget(new Button(i, k, 150, 20, new TranslatableComponent("controls.controllerbinds"), (p_212984_1_) -> {
-			this.minecraft.setScreen(new ControllerInputOptionsScreen(this, null, 0));
+			this.minecraft.setScreen(new ControllerInputOptionsScreen(this, null, new int[] {0}));
 		}));
 	}
 

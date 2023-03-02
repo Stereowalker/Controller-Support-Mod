@@ -66,13 +66,13 @@ public class ControllerMod extends MinecraftMod
 
 	@Override
 	public void initClientAfterMinecraft(Minecraft mc) {
-		System.out.println("Setting up all connected controlllers");
+		LOGGER.info("Setting up all connected controlllers");
 		this.controllerHandler = new ControllerHandler(this, mc);
 		this.controllerHandler.setup(mc.getWindow().getWindow());
 		this.onScreenKeyboard = new OnScreenKeyboard(mc);
 		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
 		this.controllerOptions.lastGUID = this.getActiveController().getGUID();
-		System.out.println("Total Connected Controllers "+this.getTotalConnectedControllers());
+		LOGGER.info("Total Connected Controllers "+this.getTotalConnectedControllers());
 		for (int i = 0; i < this.getTotalConnectedControllers(); i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
 				Controller cont = new Controller(i);
@@ -101,7 +101,6 @@ public class ControllerMod extends MinecraftMod
 		int maxControllers = 0;
 		for (int i = 0; i < 16; i++) {
 			if (ControllerUtil.isControllerAvailable(i)) {
-				//				System.out.println("Controller "+(i+1)+" Is Available");
 				maxControllers = i+1;
 			}
 		}
