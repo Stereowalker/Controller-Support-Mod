@@ -388,7 +388,7 @@ public class ControllerOptions {
 					for (int i = 0; i < keybinding.getButtonOnController(model).size(); i++) {
 						buttons += keybinding.getButtonOnController(model).get(i) + (i==keybinding.getButtonOnController(model).size()-1?"":";");
 					}
-					printwriter.println(model.getModelName() + "_binding_" + keybinding.getDescripti() + ":" + buttons + ":" + keybinding.getInputType(model)+ ":" + keybinding.isAxisInverted(model));
+					printwriter.println(model.toString() + "_binding_" + keybinding.getDescripti() + ":" + buttons + ":" + keybinding.getInputType(model)+ ":" + keybinding.isAxisInverted(model));
 				}
 			}
 		} catch (Exception exception) {
