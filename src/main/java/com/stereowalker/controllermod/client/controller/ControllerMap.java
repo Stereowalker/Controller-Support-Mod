@@ -21,7 +21,7 @@ public class ControllerMap {
 		String dAr = "\u2193";
 		if (input.equals("empty") || input.equals(" ")) return " ";
 		switch (model) {
-		case XBOX_360:
+		case XBOX_360_WINDOWS:
 			if (input.equals("button7")) return "START";
 			else if (input.equals("button8")) return "LS";
 			else if (input.equals("button9")) return "RS";
@@ -134,7 +134,8 @@ public class ControllerMap {
 	
 	public enum ControllerModel {
 		CUSTOM("custom", "", new Integer[] {}, new Integer[] {}, Lists.newArrayList()),
-		XBOX_360("xbox_360", "78696e70757401000000000000000000", new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList()),
+		XBOX_360_WINDOWS("xbox_360_windows", "78696e70757401000000000000000000", new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList()),
+		XBOX_360_LINUX("xbox_360_linux", "78696e70757401000000000000000001", new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList()),
 		PS4_WINDOWS("ps4_windows", "030000004c050000cc09000000000000", new Integer[] {3,4}, new Integer[] {}, Lists.newArrayList()),
 		PS4_LINUX("ps4_linux", "050000004c050000cc09000000810000", new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList("button13", "button14", "button15", "button16"));
 		
@@ -198,34 +199,65 @@ public class ControllerMap {
         }
         
         static {
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "face_button_down", "controllers/xbox_face_button_down.png", "button0");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "face_button_right", "controllers/xbox_face_button_right.png", "button1");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "face_button_left", "controllers/xbox_face_button_left.png", "button2");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "face_button_up", "controllers/xbox_face_button_up.png", "button3");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "bumper_left", "controllers/xbox_bumper_left.png", "button4");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "bumper_right", "controllers/xbox_bumper_right.png", "button5");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "select_button", "controllers/xbox_select_button.png", "button6");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "start_button", "controllers/xbox_start_button.png", "button7");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "stick_left", "controllers/xbox_stick_left.png", "button8");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "stick_right", "controllers/xbox_stick_right.png", "button9");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "dpad_up", "controllers/xbox_dpad_up.png", "button10");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "dpad_right", "controllers/xbox_dpad_right.png", "button11");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "dpad_down", "controllers/xbox_dpad_down.png", "button12");
-        	ControllerModel.addButton(XBOX_360, "button.xbox_360", "dpad_left", "controllers/xbox_dpad_left.png", "button13");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.0", "left_stick_right", "axis_pos0");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.1", "left_stick_down", "axis_pos1");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.2", "right_stick_right", "axis_pos2");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360.3", "right_stick_down", "axis_pos3");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360", "left_trigger", "controllers/xbox_left_trigger.png", "axis_pos4");
-        	ControllerModel.addButton(XBOX_360, "posit_axis.xbox_360", "right_trigger", "controllers/xbox_right_trigger.png", "axis_pos5");
-        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.0", "left_stick_left", "axis_neg0");
-        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.1", "left_stick_up", "axis_neg1");
-        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.2", "right_stick_left", "axis_neg2");
-        	ControllerModel.addButton(XBOX_360, "negat_axis.xbox_360.3", "right_stick_up", "axis_neg3");
-        	ControllerModel.addButton(XBOX_360, "axis.xbox_360.0", "left_stick_horizontal", "axis0");
-        	ControllerModel.addButton(XBOX_360, "axis.xbox_360.1", "left_stick_vertical", "axis1");
-        	ControllerModel.addButton(XBOX_360, "axis.xbox_360.2", "right_stick_horizontal", "axis2");
-        	ControllerModel.addButton(XBOX_360, "axis.xbox_360.3", "right_stick_vertical", "axis3");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "face_button_down", "controllers/xbox_face_button_down.png", "button0");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "face_button_right", "controllers/xbox_face_button_right.png", "button1");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "face_button_left", "controllers/xbox_face_button_left.png", "button2");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "face_button_up", "controllers/xbox_face_button_up.png", "button3");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "bumper_left", "controllers/xbox_bumper_left.png", "button4");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "bumper_right", "controllers/xbox_bumper_right.png", "button5");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "select_button", "controllers/xbox_select_button.png", "button6");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "start_button", "controllers/xbox_start_button.png", "button7");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "stick_left", "controllers/xbox_stick_left.png", "button8");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "stick_right", "controllers/xbox_stick_right.png", "button9");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "dpad_up", "controllers/xbox_dpad_up.png", "button10");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "dpad_right", "controllers/xbox_dpad_right.png", "button11");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "dpad_down", "controllers/xbox_dpad_down.png", "button12");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "button.xbox_360", "dpad_left", "controllers/xbox_dpad_left.png", "button13");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360.0", "left_stick_right", "axis_pos0");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360.1", "left_stick_down", "axis_pos1");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360.2", "right_stick_right", "axis_pos2");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360.3", "right_stick_down", "axis_pos3");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360", "left_trigger", "controllers/xbox_left_trigger.png", "axis_pos4");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "posit_axis.xbox_360", "right_trigger", "controllers/xbox_right_trigger.png", "axis_pos5");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "negat_axis.xbox_360.0", "left_stick_left", "axis_neg0");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "negat_axis.xbox_360.1", "left_stick_up", "axis_neg1");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "negat_axis.xbox_360.2", "right_stick_left", "axis_neg2");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "negat_axis.xbox_360.3", "right_stick_up", "axis_neg3");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "axis.xbox_360.0", "left_stick_horizontal", "axis0");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "axis.xbox_360.1", "left_stick_vertical", "axis1");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "axis.xbox_360.2", "right_stick_horizontal", "axis2");
+        	ControllerModel.addButton(XBOX_360_WINDOWS, "axis.xbox_360.3", "right_stick_vertical", "axis3");
+        	
+
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "face_button_down", "controllers/xbox_face_button_down.png", "button0");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "face_button_right", "controllers/xbox_face_button_right.png", "button1");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "face_button_left", "controllers/xbox_face_button_left.png", "button2");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "face_button_up", "controllers/xbox_face_button_up.png", "button3");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "bumper_left", "controllers/xbox_bumper_left.png", "button4");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "bumper_right", "controllers/xbox_bumper_right.png", "button5");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "select_button", "controllers/xbox_select_button.png", "button6");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "start_button", "controllers/xbox_start_button.png", "button7");
+        	//Missing button?
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "stick_left", "controllers/xbox_stick_left.png", "button9");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "stick_right", "controllers/xbox_stick_right.png", "button10");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "dpad_up", "controllers/xbox_dpad_up.png", "button11");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "dpad_right", "controllers/xbox_dpad_right.png", "button12");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "dpad_down", "controllers/xbox_dpad_down.png", "button13");
+        	ControllerModel.addButton(XBOX_360_LINUX, "button.xbox_360", "dpad_left", "controllers/xbox_dpad_left.png", "button14");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360.0", "left_stick_right", "axis_pos0");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360.1", "left_stick_down", "axis_pos1");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360.3", "right_stick_right", "axis_pos3");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360.4", "right_stick_down", "axis_pos4");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360", "left_trigger", "controllers/xbox_left_trigger.png", "axis_pos4");
+        	ControllerModel.addButton(XBOX_360_LINUX, "posit_axis.xbox_360", "right_trigger", "controllers/xbox_right_trigger.png", "axis_pos5");
+        	ControllerModel.addButton(XBOX_360_LINUX, "negat_axis.xbox_360.0", "left_stick_left", "axis_neg0");
+        	ControllerModel.addButton(XBOX_360_LINUX, "negat_axis.xbox_360.1", "left_stick_up", "axis_neg1");
+        	ControllerModel.addButton(XBOX_360_LINUX, "negat_axis.xbox_360.3", "right_stick_left", "axis_neg3");
+        	ControllerModel.addButton(XBOX_360_LINUX, "negat_axis.xbox_360.4", "right_stick_up", "axis_neg4");
+        	ControllerModel.addButton(XBOX_360_LINUX, "axis.xbox_360.0", "left_stick_horizontal", "axis0");
+        	ControllerModel.addButton(XBOX_360_LINUX, "axis.xbox_360.1", "left_stick_vertical", "axis1");
+        	ControllerModel.addButton(XBOX_360_LINUX, "axis.xbox_360.3", "right_stick_horizontal", "axis3");
+        	ControllerModel.addButton(XBOX_360_LINUX, "axis.xbox_360.4", "right_stick_vertical", "axis4");
 
         	ControllerModel.addButton(PS4_WINDOWS, "button.ps4", "face_button_left", "controllers/ps4_face_button_left.png", "button0");
         	ControllerModel.addButton(PS4_WINDOWS, "button.ps4", "face_button_down", "controllers/ps4_face_button_down.png", "button1");
