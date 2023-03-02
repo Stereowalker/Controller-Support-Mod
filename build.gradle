@@ -90,6 +90,9 @@ dependencies {
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
 	implementation fg.deobf("curse.maven:xareo-317780:3732800")
+	implementation fg.deobf("curse.maven:archi-419699:4384391")
+	implementation fg.deobf("curse.maven:cloth-348521:3972426")
+	//implementation fg.deobf("curse.maven:rei-310111:4401133")
 }
 
 jar {
