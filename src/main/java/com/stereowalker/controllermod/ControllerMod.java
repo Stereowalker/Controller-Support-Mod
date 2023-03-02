@@ -27,7 +27,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Mth;
 
 @Mod(value = ControllerMod.MOD_ID)
@@ -67,9 +66,9 @@ public class ControllerMod extends MinecraftMod
 	}
 
 	@Override
-	public void registerClientRelaodableResources(ReloadableResourceManager resourceManager) {
+	public void registerClientRelaodableResources(ReloadListeners listeners) {
 		this.controllerModelManager = new ControllerModelManager();
-		resourceManager.registerReloadListener(this.controllerModelManager);
+		listeners.listenTo(this.controllerModelManager);
 	}
 
 	@Override

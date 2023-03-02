@@ -88,7 +88,7 @@ public class ControllerOptions {
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
 		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("button13"));
-		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, ControllerModel.PS4_LINUX.defaultName);
+		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, new ResourceLocation("controllermod:ps4_linux"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
@@ -288,10 +288,7 @@ public class ControllerOptions {
 					}
 
 					if ("controllerModel".equals(s)) {
-						this.controllerModel = 
-								"ps4_windows".equals(s1) ? ControllerModel.PS4_WINDOWS : 
-									"ps4_linux".equals(s1) ? ControllerModel.PS4_LINUX : 
-										"xbox_360".equals(s1) ? ControllerModel.XBOX_360_WINDOWS : ControllerModel.CUSTOM;
+						this.controllerModel = ControllerModelManager.ALL_MODELS.get(new ResourceLocation(s1));
 					}
 
 					this.paperDoll.readOptions(s, s1);
@@ -357,7 +354,10 @@ public class ControllerOptions {
 			if (ControllerMod.CONFIG.debug) printwriter.println("lastGUID:"+this.lastGUID);
 			printwriter.println("enableController:"+this.enableController);
 			printwriter.println("controllerNumber:"+this.controllerNumber);
-			printwriter.println("controllerModel:"+this.controllerModel.getModelName());
+			ControllerModelManager.ALL_MODELS.forEach((key, val) -> {
+				if (val == this.controllerModel)
+					printwriter.println("controllerModel:"+key);
+			});
 			String pos = "";
 			if (this.positiveTriggerAxes.size() > 0) {
 				pos = this.positiveTriggerAxes.get(0)+"";
@@ -381,6 +381,9 @@ public class ControllerOptions {
 			this.paperDoll.writeOptions(printwriter);
 			for(ControllerModel model : ControllerModelManager.ALL_MODELS.values()) {
 				for(ControllerMapping keybinding : this.controllerBindings) {
+					if (keybinding.getButtonOnController(model) == null) {
+						LOGGER.warn("Skipping binding {} because it's button on controller returned null", keybinding.getDescripti());
+					}
 					String buttons = "";
 					for (int i = 0; i < keybinding.getButtonOnController(model).size(); i++) {
 						buttons += keybinding.getButtonOnController(model).get(i) + (i==keybinding.getButtonOnController(model).size()-1?"":";");
