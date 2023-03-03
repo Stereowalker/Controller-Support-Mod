@@ -2,6 +2,7 @@ package com.stereowalker.controllermod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,12 +23,12 @@ import com.stereowalker.unionlib.mod.MinecraftMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraft.util.Mth;
 
 @Mod(value = ControllerMod.MOD_ID)
 @OnlyIn(Dist.CLIENT)
@@ -59,9 +60,11 @@ public class ControllerMod extends MinecraftMod
 
 	@Override
 	public void onModStartupInClient() {
-		OverlayRegistry.registerOverlayTop("Paper Doll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-			gui.setupOverlayRenderState(true, false);
-			PaperDollOptions.renderPlayerDoll(gui, mStack);
+		eventBus().addListener((Consumer<RegisterGuiOverlaysEvent>)event -> {
+			event.registerAboveAll("tired", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+				gui.setupOverlayRenderState(true, false);
+				PaperDollOptions.renderPlayerDoll(gui, mStack);
+			});
 		});
 	}
 

@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.TriggerSetupScreen;
+import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -15,8 +16,6 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,14 +26,14 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 	public TriggerAxesList(TriggerSetupScreen controls, Minecraft mcIn, ControllerMod modIn) {
 		super(mcIn, controls.width + 45, controls.height, 43, controls.height - 32, 20);
 		this.mod = modIn;
-		this.addEntry(new TriggerAxesList.CategoryEntry(new TranslatableComponent("gui.positive_triggers")));
+		this.addEntry(new TriggerAxesList.CategoryEntry(Component.translatable("gui.positive_triggers")));
 		for (int i = 0; i < mod.getActiveController().getAxes().capacity(); i++) {
-			this.addEntry(new TriggerAxesList.TriggerEntry(new TranslatableComponent("Positive Axis "+ i), true, i));
+			this.addEntry(new TriggerAxesList.TriggerEntry(Component.translatable("Positive Axis "+ i), true, i));
 		}
 
-		this.addEntry(new TriggerAxesList.CategoryEntry(new TranslatableComponent("gui.negative_triggers")));
+		this.addEntry(new TriggerAxesList.CategoryEntry(Component.translatable("gui.negative_triggers")));
 		for (int i = 0; i < mod.getActiveController().getAxes().capacity(); i++) {
-			this.addEntry(new TriggerAxesList.TriggerEntry(new TranslatableComponent("Negative Axis "+ i), false, i));
+			this.addEntry(new TriggerAxesList.TriggerEntry(Component.translatable("Negative Axis "+ i), false, i));
 		}
 	}
 
@@ -90,7 +89,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 			this.labelText = p_i232280_2_;
 			this.isPostitve = isPostitve;
 			this.axis = axis;
-			this.btnTrigger = new Button(0, 0, 100, 20, new TranslatableComponent("gui.trigger.mark"), (p_214387_2_) -> {
+			this.btnTrigger = ScreenHelper.buttonBuilder(Component.translatable("gui.trigger.mark"), (p_214387_2_) -> {
 				if (isPostitve)
 					if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
 						mod.controllerOptions.positiveTriggerAxes.remove(Integer.valueOf(axis));
@@ -103,32 +102,26 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 						mod.controllerOptions.negativeTriggerAxes.add(Integer.valueOf(axis));
 
 				mod.controllerOptions.saveOptions();
-			}) {
-				@Override
-				protected MutableComponent createNarrationMessage() {
-					return new TranslatableComponent("narrator.controls.reset");
-				}
-			};
+			}).bounds(0, 0, 100, 20).createNarration((s)-> Component.translatable("narrator.controls.reset")).build();
 		}
 
 		@Override
 		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			TriggerAxesList.this.minecraft.font.draw(p_230432_1_, this.labelText, (float)(p_230432_4_), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
 
-			this.btnTrigger.x = p_230432_4_ + 190;
-			this.btnTrigger.y = p_230432_3_;
+			ScreenHelper.setWidgetPosition(this.btnTrigger, p_230432_4_ + 190, p_230432_3_);
 			this.btnTrigger.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
 			
 			if (isPostitve)
 				if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
-					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.unmark").withStyle(ChatFormatting.RED));
+					this.btnTrigger.setMessage(Component.translatable("gui.trigger.unmark").withStyle(ChatFormatting.RED));
 				else
-					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
+					this.btnTrigger.setMessage(Component.translatable("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
 			else
 				if (mod.controllerOptions.negativeTriggerAxes.contains(axis))
-					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.unmark").withStyle(ChatFormatting.RED));
+					this.btnTrigger.setMessage(Component.translatable("gui.trigger.unmark").withStyle(ChatFormatting.RED));
 				else
-					this.btnTrigger.setMessage(new TranslatableComponent("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
+					this.btnTrigger.setMessage(Component.translatable("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
 		}
 
 		@Override

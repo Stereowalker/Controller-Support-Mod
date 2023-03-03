@@ -49,14 +49,14 @@ public class VirtualMouseHelper extends MouseHandler {
 			}
 
 			if (flag) {
-				if (this.minecraft.options.touchscreen && this.clickDepth++ > 0) {
+				if (this.minecraft.options.touchscreen().get() && this.clickDepth++ > 0) {
 					return;
 				}
 
 				this.activeButton = button;
 				this.mousePressedTime = Blaze3D.getTime();
 			} else if (this.activeButton != -1) {
-				if (this.minecraft.options.touchscreen && --this.clickDepth > 0) {
+				if (this.minecraft.options.touchscreen().get() && --this.clickDepth > 0) {
 					return;
 				}
 
@@ -69,7 +69,7 @@ public class VirtualMouseHelper extends MouseHandler {
 					if (!this.mouseGrabbed && flag) {
 						this.grabMouse();
 					}
-					if (net.minecraftforge.client.ForgeHooksClient.onRawMouseClicked(button, action, mods)) return;
+					if (net.minecraftforge.client.ForgeHooksClient.onMouseButtonPre(button, action, mods)) return;
 				} else {
 					double d0 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
 					double d1 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
@@ -108,7 +108,7 @@ public class VirtualMouseHelper extends MouseHandler {
 					}
 				}
 			}
-			net.minecraftforge.client.ForgeHooksClient.fireMouseInput(button, action, mods);
+			net.minecraftforge.client.ForgeHooksClient.onMouseButtonPost(button, action, mods);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class VirtualMouseHelper extends MouseHandler {
 	 */
 	public void scrollCallback(long handle, double xoffset, double yoffset) {
 		if (handle == Minecraft.getInstance().getWindow().getWindow()) {
-			double d0 = (this.minecraft.options.discreteMouseScroll ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity;
+			double d0 = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity().get();
 			if (this.minecraft.getOverlay() == null) {
 				if (this.minecraft.screen != null) {
 					double d1 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
@@ -238,7 +238,7 @@ public class VirtualMouseHelper extends MouseHandler {
 		double d1 = d0 - this.lastMouseEventTime;
 		this.lastMouseEventTime = d0;
 		if (this.isMouseGrabbed() && this.minecraft.isWindowActive()) {
-			double d4 = this.minecraft.options.sensitivity * (double)0.6F + (double)0.2F;
+			double d4 = this.minecraft.options.sensitivity().get() * (double)0.6F + (double)0.2F;
 			double d5 = d4 * d4 * d4 * 8.0D;
 			double d2;
 			double d3;
@@ -257,7 +257,7 @@ public class VirtualMouseHelper extends MouseHandler {
 			this.accumulatedDX = 0.0D;
 			this.accumulatedDY = 0.0D;
 			int i = 1;
-			if (this.minecraft.options.invertYMouse) {
+			if (this.minecraft.options.invertYMouse().get()) {
 				i = -1;
 			}
 

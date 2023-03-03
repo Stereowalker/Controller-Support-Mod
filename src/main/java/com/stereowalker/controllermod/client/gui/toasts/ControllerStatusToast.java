@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -108,8 +107,8 @@ public class ControllerStatusToast implements Toast {
 	}
 
 	public enum Type {
-		CONNECT(new TranslatableComponent("controller.connected")),
-		DISCONNECT(new TranslatableComponent("controller.disconnected"));
+		CONNECT(Component.translatable("controller.connected")),
+		DISCONNECT(Component.translatable("controller.disconnected"));
 
 		Component text;
 		private Type(Component text) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -15,20 +16,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Matrix4f;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -165,9 +164,9 @@ public class OnScreenKeyboard {
 			for (int i = 0; i < layout.xSize; i++) {
 				String ke = StringEscapeUtils.unescapeJava(layout.unicode(isCapsLocked, i, j));
 				if (xPos == i && yPos == j) {
-					layers.get(j).add(new TextComponent(ke).withStyle(Style.EMPTY.withColor(getKeyboardColors("Highlighted-Text")[0])));
+					layers.get(j).add(Component.literal(ke).withStyle(Style.EMPTY.withColor(getKeyboardColors("Highlighted-Text")[0])));
 				} else {
-					layers.get(j).add(new TextComponent(ke).withStyle(Style.EMPTY.withColor(getKeyboardColors("Text")[0])));
+					layers.get(j).add(Component.literal(ke).withStyle(Style.EMPTY.withColor(getKeyboardColors("Text")[0])));
 				}
 			}
 		}
@@ -225,8 +224,7 @@ public class OnScreenKeyboard {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		bufferbuilder.end();
-		BufferUploader.end(bufferbuilder);
+		BufferUploader.drawWithShader(bufferbuilder.end());
 		RenderSystem.disableBlend();
 		RenderSystem.enableTexture();
 		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());

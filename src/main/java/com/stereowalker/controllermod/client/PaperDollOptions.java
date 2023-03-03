@@ -4,13 +4,12 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
@@ -27,7 +26,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
@@ -201,10 +199,10 @@ public class PaperDollOptions {
 		matrixstack.scale(1.0F, 1.0F, -1.0F);
 		matrixstack.translate(0.0D, 0.0D, 1000.0D);
 		matrixstack.scale((float)scale, (float)scale, (float)scale);
-		Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-		Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
-		quaternion.mul(quaternion1);
-		matrixstack.mulPose(quaternion);
+		Quaternionf quaternionf = new Quaternionf().rotateZ((float)Math.PI);
+        Quaternionf quaternionf2 = new Quaternionf().rotateX(f1 * 20.0f * ((float)Math.PI / 180));
+		quaternionf.mul(quaternionf2);
+		matrixstack.mulPose(quaternionf);
 		float f2 = entity.yBodyRot;
 		float f3 = entity.yRot;
 		float f4 = entity.xRot;
@@ -217,8 +215,8 @@ public class PaperDollOptions {
 		entity.yHeadRotO = renderHeadYaw;
 
 		EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
-		quaternion1.conj();
-		entityrenderermanager.overrideCameraOrientation(quaternion1);
+		quaternionf2.conjugate();
+		entityrenderermanager.overrideCameraOrientation(quaternionf2);
 		entityrenderermanager.setRenderShadow(false);
 		MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
 		RenderSystem.runAsFancy(() -> {
@@ -268,7 +266,7 @@ public class PaperDollOptions {
 		}
 
 		public MutableComponent getDisplayText() {
-			return new TranslatableComponent("gui.paper_doll."+displayText+"");
+			return Component.translatable("gui.paper_doll."+displayText+"");
 		}
 		
 		public boolean showInMenu() {
