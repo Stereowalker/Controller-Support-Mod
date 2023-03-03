@@ -1,3 +1,4 @@
+[8.0.0]
 - Disables the mod when the loading overlay is active
 - Renamed the deadzone option in the config
 - The on-screen keyboard deadzone can now be adjusted in the configs
