@@ -56,16 +56,17 @@ public class ControllerMod extends MinecraftMod
 		instance = this;
 		ConfigBuilder.registerConfig(CONFIG);
 		controllers = new ArrayList<Controller>();
-	}
-
-	@Override
-	public void onModStartupInClient() {
 		eventBus().addListener((Consumer<RegisterGuiOverlaysEvent>)event -> {
-			event.registerAboveAll("tired", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+			event.registerAboveAll("paperdoll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
 				gui.setupOverlayRenderState(true, false);
 				PaperDollOptions.renderPlayerDoll(gui, mStack);
 			});
 		});
+	}
+
+	@Override
+	public void onModStartupInClient() {
+		
 	}
 
 	@Override
