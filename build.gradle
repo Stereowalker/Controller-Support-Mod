@@ -1,5 +1,6 @@
 plugins {
   	id "com.matthewprenger.cursegradle" version "1.4.0"
+  	id "com.modrinth.minotaur" version "2.+"
 	id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
@@ -120,6 +121,20 @@ curseforge {
 	options {
     	debug = false // defaults to false
   	}	
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") 
+    projectId = modId
+    versionNumber = "${project.version}"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = [modMinecraftVersion]
+    loaders = ["${project.modLoader}".toLowerCase()]
+	changelog = file('changelog.md').text
+    dependencies {
+    	required.project "unionlib"
+    }
 }
 
 jar.finalizedBy('reobfJar')
