@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -18,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -51,9 +51,14 @@ public class GuiMixin extends GuiComponent {
 		Gui.fill(poseStack, minX, minY, maxX + (ControllerMod.getSafeArea()*2), maxY + (ControllerMod.getSafeArea()*2), color);
 	}
 	
-	@Redirect(method = {"lambda$renderEffects$0","method_18620"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"))
-	public void render_all_blit(PoseStack poseStack, int x, int y, int blitOffset, int width, int height, TextureAtlasSprite sprite) {
-		Gui.blit(poseStack, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), blitOffset, width, height, sprite);
+	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "i")
+	public int render_all_blit_i(int i) {
+		return i + ControllerMod.getSafeArea();
+	}
+	
+	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "j")
+	public int render_all_blit_j(int j) {
+		return j + ControllerMod.getSafeArea();
 	}
 	
 	@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
