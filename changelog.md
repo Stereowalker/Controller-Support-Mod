@@ -1,4 +1,1 @@
-- Disables the mod when the loading overlay is active
-- Renamed the deadzone option in the config
-- The on-screen keyboard deadzone can now be adjusted in the configs
-- Ported to 1.19.3
+- Changed the way safe area works for potion effects to reduce conflict with other mods

@@ -1,3 +1,6 @@
+[8.0.1]
+- Changed the way safe area works for potion effects to reduce conflict with other mods
+
 [8.0.0]
 - Disables the mod when the loading overlay is active
 - Renamed the deadzone option in the config
