@@ -181,7 +181,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		builder.put(model, key);
 
 		ImmutableMap.Builder<ResourceLocation,List<String>> builder2 = ImmutableMap.builder();
-		builder2.putAll(builder);
+		builder.forEach((k, v) -> {
+			if (k != null)
+				builder2.put(k,v);
+			else
+				ControllerMod.LOGGER.warn("Caught a null key with values {}", v);
+		});
 		buttonOnController = builder2.build();
 	}
 
@@ -231,9 +236,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public List<String> getButtonOnController(ControllerModel model) {
-		if (model == null)
-			model = ControllerModel.CUSTOM;
-		return buttonOnController.get(model.getKey());
+		List<String> buttons = buttonOnController.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		if (buttons == null || buttons.isEmpty()) {
+			return Lists.newArrayList(" ");
+		}
+		else {
+			return buttons;
+		}
 	}
 
 	public int[] getButtonOnControllerID(ControllerModel model) {
@@ -351,7 +360,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @return the isAxisInverted
 	 */
 	public boolean isAxisInverted(ControllerModel model) {
-		return axisInverted.get(model);
+		Boolean inverted = axisInverted.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		if (inverted == null) {
+			return false;
+		}
+		else {
+			return inverted.booleanValue();
+		}
 	}
 
 	/**
