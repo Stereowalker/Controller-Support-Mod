@@ -314,7 +314,7 @@ public class ControllerOptions {
 					for(ResourceLocation key : ControllerModelManager.ALL_MODELS.keySet()) {
 						ControllerModel model = ControllerModelManager.ALL_MODELS.get(key);
 						for(ControllerMapping keybinding : this.controllerBindings) {
-							if (s.equals(model.getModelName() + "_binding_" + keybinding.getDescripti())) {
+							if (s.equals(model.toString() + "_binding_" + keybinding.getDescripti())) {
 								String[] pts = s1.split(":");
 								keybinding.bind(key, Lists.newArrayList(pts[0].split(";")));
 								if (pts.length > 1) keybinding.setInputType(model, pts[1].equals("null") ? null : InputType.valueOf(pts[1]));
