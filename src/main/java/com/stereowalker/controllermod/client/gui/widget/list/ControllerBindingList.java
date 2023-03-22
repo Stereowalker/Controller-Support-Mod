@@ -166,7 +166,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			ScreenHelper.setWidgetPosition(this.btnReset, p_230432_4_ + 190 + 50, p_230432_3_);
 			this.btnReset.active = !this.controllerBinding.isDefault(model);
 			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
-			ScreenHelper.setWidgetPosition(this.btnReset, p_230432_4_ + 98, p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnChangeKeyBinding, p_230432_4_ + 98, p_230432_3_);
 			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
 			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
 			this.btnChangeKeyBinding.adjustSecondOverlay(0, 0);
