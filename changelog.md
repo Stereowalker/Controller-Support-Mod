@@ -1,2 +1,2 @@
-- Fix Dualshock 4 and Xbox 360 controllers not saving controls properly
-- Disables the mod when the loading overlay is active
+- Changed the way safe area works for potion effects to reduce conflict with other mods
+- Fix controls not being read from the controller options file
