@@ -1,3 +1,7 @@
+[8.0.2]
+- Fix controls not being read from the controller options file
+- Fix binding button not showing
+
 [8.0.1]
 - Changed the way safe area works for potion effects to reduce conflict with other mods
 

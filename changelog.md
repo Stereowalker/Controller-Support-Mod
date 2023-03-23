@@ -1,1 +1,2 @@
-- Changed the way safe area works for potion effects to reduce conflict with other mods
+- Fix controls not being read from the controller options file
+- Fix binding button not showing
