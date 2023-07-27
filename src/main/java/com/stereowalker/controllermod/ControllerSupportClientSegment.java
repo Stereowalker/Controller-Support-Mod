@@ -1,9 +1,7 @@
 package com.stereowalker.controllermod;
 
 import com.stereowalker.controllermod.client.ControllerHandler;
-import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.mod.ClientSegment;
 
@@ -29,8 +27,5 @@ public class ControllerSupportClientSegment extends ClientSegment {
 		ControllerMod.instance.controllerHandler = new ControllerHandler(ControllerMod.instance, mc);
 		ControllerMod.instance.controllerHandler.setup(mc.getWindow().getWindow());
 		ControllerMod.instance.onScreenKeyboard = new OnScreenKeyboard(mc);
-		ControllerMod.instance.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
-		ControllerBindings.registerAll();
-		ControllerMod.instance.controllerOptions.loadOptions();
 	}
 }

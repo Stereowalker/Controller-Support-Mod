@@ -13,10 +13,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
+import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.unionlib.resource.ReloadListener;
 
 import net.minecraft.Util.OS;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -34,7 +36,6 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 		Map<ResourceLocation,ControllerModel> models = new HashMap<>();
 		ControllerModel.DEFAULTS.forEach(def -> models.put(def.defaultName, def));
 		for (Entry<ResourceLocation, Resource> resource : manager.listResources("controllermodels", (s) -> s.toString().endsWith(".json")).entrySet()) {
-			System.out.println(resource);
 			ResourceLocation modelId = new ResourceLocation(
 					resource.getKey().getNamespace(),
 					resource.getKey().getPath().replace("controllermodels/", "").replace(".json", "")
@@ -74,9 +75,6 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 				ControllerMod.debug("Failed to read textures!", e);
 			}
 		}
-
-
-		System.out.println("Look 2 me");
 		ALL_MODELS.putAll(models);
 		return models;
 	}
@@ -89,6 +87,9 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 		ControllerMod mod = ControllerMod.getInstance();
 
 		if (firstTime) {
+			mod.controllerOptions = new ControllerOptions(Minecraft.getInstance(), Minecraft.getInstance().gameDirectory);
+			ControllerBindings.registerAll();
+			mod.controllerOptions.loadOptions();
 			mod.connectControllers();
 			firstTime = false;
 		} else {
