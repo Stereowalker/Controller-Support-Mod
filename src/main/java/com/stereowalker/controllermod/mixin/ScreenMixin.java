@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.stereowalker.controllermod.ControllerMod;
@@ -18,6 +17,7 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.Listening
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
@@ -29,13 +29,13 @@ public abstract class ScreenMixin extends AbstractContainerEventHandler implemen
 	@Shadow protected Font font;
 
 	@Inject(method = "render", at = @At("TAIL"))
-	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
+	public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
 		if (!((Object)this instanceof LevelLoadingScreen)) {
 			int x = (int)(ControllerUtil.virtualmouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getWidth());
 			int y = (int)(ControllerUtil.virtualmouse.ypos() * (double)Minecraft.getInstance().getWindow().getGuiScaledHeight() / (double)Minecraft.getInstance().getWindow().getHeight());
 			if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController) {
 				if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
-					ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(pPoseStack, font, x, y);
+					ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(guiGraphics, font, x, y);
 				} else {
 					renderPonter(x, y, 8.0D);
 				}

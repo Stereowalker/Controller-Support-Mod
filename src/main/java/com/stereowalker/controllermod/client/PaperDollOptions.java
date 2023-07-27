@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.joml.Quaternionf;
-import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,11 +15,10 @@ import com.stereowalker.controllermod.client.controller.ControllerModel;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -29,10 +27,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class PaperDollOptions {
 	
 	public Map<DollType, Boolean> show = Maps.newHashMap();
@@ -72,7 +67,7 @@ public class PaperDollOptions {
 	public static final float maxYaw = 210.0F;
 	public static final float minYaw = 120.0F;
 	@SuppressWarnings("resource")
-	public static void renderPlayerDoll(Gui gui, PoseStack poseStack) {
+	public static void renderPlayerDoll(GuiGraphics guiGraphics) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		PaperDollOptions paperDoll = ControllerMod.getInstance().controllerOptions.paperDoll;
 		float diff = lastHeadYaw - player.yHeadRot;
@@ -117,42 +112,34 @@ public class PaperDollOptions {
 			}
 
 			if (ControllerMod.CONFIG.show_coordinates && !Minecraft.getInstance().player.isReducedDebugInfo()) {
-				renderPosition(gui, poseStack);
+				renderPosition(guiGraphics);
 			}
 
 			if ((!Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getSingleplayerServer().isPublished()) && ControllerMod.CONFIG.ingame_player_names) {
-				renderNames(gui, poseStack);
+				renderNames(guiGraphics);
 			}
 			if (ControllerMod.CONFIG.show_button_hints) {
-				renderButtonHints(gui, poseStack);
+				renderButtonHints(guiGraphics);
 			}
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
-			RenderSystem.enableBlend();
-			RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 		}
 	}
 
 	@SuppressWarnings("resource")
-	@OnlyIn(Dist.CLIENT)
-	public static void renderButtonHints(Gui gui, PoseStack matrixStack) {
+	public static void renderButtonHints(GuiGraphics guiGraphics) {
 		ControllerMapping map = ControllerMod.getInstance().controllerOptions.controllerKeyBindInventory;
 		ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 		if (map.isBoundToButton(model)) {
 			int x1 = ControllerMod.getSafeArea() - 2;
-			int y1 = gui.screenHeight - 12;
+			int y1 = guiGraphics.guiHeight() - 12;
 			ResourceLocation icon = model.getOrCreate(map.getButtonOnController(model))[0].getIcon();
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderTexture(0, icon);
-			Gui.blit(matrixStack, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
-
-			Minecraft.getInstance().font.drawShadow(matrixStack, I18n.get(map.getDescripti()), x1 + 20, y1 - 3, 0xffffff);
+			guiGraphics.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
+			guiGraphics.drawString(Minecraft.getInstance().font, I18n.get(map.getDescripti()), x1 + 20, y1 - 3, 0xffffff, true);
+			
 		}
 	}
 	
 	@SuppressWarnings("resource")
-	@OnlyIn(Dist.CLIENT)
-	public static void renderPosition(Gui gui, PoseStack matrixStack) {
+	public static void renderPosition(GuiGraphics guiGraphics) {
 		Minecraft.getInstance().getProfiler().push("display-position");
 		RenderSystem.disableDepthTest();
 
@@ -163,33 +150,24 @@ public class PaperDollOptions {
 		int k = Minecraft.getInstance().font.width(coordinatesText);
 		int y = 50;
 
-		matrixStack.pushPose();
 
 		//ARGB
-		Gui.fill(matrixStack, ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
-		RenderSystem.enableDepthTest();
-
-		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, ControllerMod.getSafeArea() + 3.0F, y+1, 0x555555);
-		Minecraft.getInstance().font.draw(matrixStack, coordinatesText, ControllerMod.getSafeArea() + 2.0F, y, 0xffffff);
-		matrixStack.popPose();
-
-		RenderSystem.disableBlend();
+		guiGraphics.fill(RenderType.guiOverlay(), ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
+		
+		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 3, y+1, 0x555555);
+		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 2, y, 0xffffff);
 		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	@SuppressWarnings("resource")
-	@OnlyIn(Dist.CLIENT)
-	public static void renderNames(Gui gui, PoseStack matrixStack) {
+	public static void renderNames(GuiGraphics guiGraphics) {
 		Minecraft.getInstance().getProfiler().push("playerName");
 		Component playerName = Minecraft.getInstance().player.getName();
-		Minecraft.getInstance().font.draw(matrixStack, playerName, gui.screenWidth - Minecraft.getInstance().font.width(playerName), ControllerMod.getSafeArea(), ChatFormatting.WHITE.getColor());
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+		guiGraphics.drawString(Minecraft.getInstance().font, playerName, guiGraphics.guiWidth() - Minecraft.getInstance().font.width(playerName), ControllerMod.getSafeArea(), ChatFormatting.WHITE.getColor());
 		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	@SuppressWarnings("deprecation")
-	@OnlyIn(Dist.CLIENT)
 	public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity entity) {
 		float f = (float)Math.atan((double)(mouseX / 40.0F));
 		float f1 = (float)Math.atan((double)(mouseY / 40.0F));

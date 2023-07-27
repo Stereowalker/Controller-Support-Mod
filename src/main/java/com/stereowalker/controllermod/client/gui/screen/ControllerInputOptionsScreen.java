@@ -5,16 +5,16 @@ import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
+import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -23,8 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ControllerInputOptionsScreen extends Screen {
-	private final Screen previousScreen;
+public class ControllerInputOptionsScreen extends DefaultScreen {
 	/** The ID of the button that has been pressed. */
 	public ControllerMapping keyToSet;
 	private int[] previousInputs;
@@ -33,8 +32,7 @@ public class ControllerInputOptionsScreen extends Screen {
 	private Button buttonReset;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
-		super(Component.translatable("options.controller_input.title"));
-		this.previousScreen = previousScreen;
+		super(Component.translatable("options.controller_input.title"), previousScreen);
 		this.keyToSet = keyToSet;
 		this.previousInputs = previousInputs;
 		this.mod = ControllerMod.getInstance();
@@ -124,10 +122,8 @@ public class ControllerInputOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		this.keyBindingList.render(matrixStack, mouseX, mouseY, partialTicks);
-		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
+	public void drawOnScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		this.keyBindingList.render(guiGraphics, mouseX, mouseY, partialTicks);
 		boolean flag = false;
 
 		for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
@@ -138,6 +134,5 @@ public class ControllerInputOptionsScreen extends Screen {
 		}
 
 		this.buttonReset.active = flag;
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
 }

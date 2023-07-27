@@ -14,6 +14,7 @@ import com.google.gson.JsonParser;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
+import com.stereowalker.unionlib.resource.ReloadListener;
 
 import net.minecraft.Util.OS;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ControllerModelManager extends SimplePreparableReloadListener<Map<ResourceLocation,ControllerModel>> {
+public class ControllerModelManager extends SimplePreparableReloadListener<Map<ResourceLocation,ControllerModel>> implements ReloadListener {
 	public static final Map<ResourceLocation,ControllerModel> ALL_MODELS = new HashMap<ResourceLocation,ControllerModel>();
 
 	@Override
@@ -96,6 +97,11 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 			mod.controllerOptions.loadOptions();
 			mod.connectControllers();
 		}
+	}
+	
+	@Override
+	public ResourceLocation id() {
+		return new ResourceLocation(ControllerMod.MOD_ID, "model_manager");
 	}
 
 }

@@ -2,28 +2,23 @@ package com.stereowalker.controllermod.client.gui.screen;
 
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.PaperDollOptions.DollType;
+import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class PaperDollOptionsScreen extends Screen {
-	private final Screen previousScreen;
+public class PaperDollOptionsScreen extends DefaultScreen {
 	private ControllerOptions settings;
 
 	public PaperDollOptionsScreen(Screen p_i51123_1_) {
-		super(Component.translatable("options.paper_doll.title"));
-		this.previousScreen = p_i51123_1_;
+		super(Component.translatable("options.paper_doll.title"), p_i51123_1_);
 		this.settings = ControllerMod.getInstance().controllerOptions;
 	}
 
@@ -60,14 +55,11 @@ public class PaperDollOptionsScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+	public void removed() {
+		settings.saveOptions();
 	}
 
 	@Override
-	public void removed() {
-		settings.saveOptions();
+	public void drawOnScreen(GuiGraphics arg0, int arg1, int arg2, float arg3) {
 	}
 }

@@ -2,32 +2,28 @@ package com.stereowalker.controllermod.client.gui.screen;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
-import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class ControllerSettingsScreen extends Screen {
-	private final Screen previousScreen;
+public class ControllerSettingsScreen extends DefaultScreen {
 	private Button nextController;
 	private Button prevController;
 	private Button controller;
 	private ControllerMod mod;
 
 	public ControllerSettingsScreen(Screen screenIn) {
-		super(Component.translatable("options.controller_settings.title"));
-		this.previousScreen = screenIn;
+		super(Component.translatable("options.controller_settings.title"), screenIn);
 		this.mod = ControllerMod.getInstance();
 	}
 
@@ -93,9 +89,6 @@ public class ControllerSettingsScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiGraphics arg0, int arg1, int arg2, float arg3) {
 	}
 }

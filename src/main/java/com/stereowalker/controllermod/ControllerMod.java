@@ -16,9 +16,12 @@ import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.UnionLibClientSegment;
+import com.stereowalker.unionlib.api.collectors.ReloadListeners;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.mod.ServerSegment;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,7 +41,7 @@ public class ControllerMod extends MinecraftMod
 	public static int getSafeArea() {return Mth.ceil((1.0f - (CONFIG.safe_area/100.0f)) * 10.0f);}
 	//
 	public static ControllerMod instance;
-	private ControllerHandler controllerHandler;
+	public ControllerHandler controllerHandler;
 	public ControllerModelManager controllerModelManager;
 	public OnScreenKeyboard onScreenKeyboard;
 	public static final String MOD_ID = "controllermod";
@@ -51,7 +54,7 @@ public class ControllerMod extends MinecraftMod
 
 	public ControllerMod() 
 	{
-		super(MOD_ID, new ResourceLocation(MOD_ID, "textures/gui/controller_icon2.png"), LoadType.CLIENT);
+		super(MOD_ID, () -> new ControllerSupportClientSegment(), null);
 		MinecraftForge.EVENT_BUS.register(this);
 		instance = this;
 		ConfigBuilder.registerConfig(CONFIG);
@@ -68,22 +71,11 @@ public class ControllerMod extends MinecraftMod
 	public void onModStartupInClient() {
 		
 	}
-
+	
 	@Override
-	public void registerClientRelaodableResources(ReloadListeners listeners) {
+	public void registerClientRelaodableResources(ReloadListeners reloadListener) {
 		this.controllerModelManager = new ControllerModelManager();
-		listeners.listenTo(this.controllerModelManager);
-	}
-
-	@Override
-	public void initClientAfterMinecraft(Minecraft mc) {
-		LOGGER.info("Setting up all connected controlllers");
-		this.controllerHandler = new ControllerHandler(this, mc);
-		this.controllerHandler.setup(mc.getWindow().getWindow());
-		this.onScreenKeyboard = new OnScreenKeyboard(mc);
-		this.controllerOptions = new ControllerOptions(mc, mc.gameDirectory);
-		ControllerBindings.registerAll();
-		this.controllerOptions.loadOptions();
+		reloadListener.listenTo(this.controllerModelManager);
 	}
 
 	public void disconnectControllers() {
@@ -108,11 +100,6 @@ public class ControllerMod extends MinecraftMod
 
 	public ControllerHandler getControllerHandler() {
 		return controllerHandler;
-	}
-
-	@Override
-	public Screen getConfigScreen(Minecraft mc, Screen previousScreen) {
-		return new ConfigScreen(previousScreen, CONFIG);
 	}
 
 	public int getTotalConnectedControllers() {

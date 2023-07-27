@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
@@ -20,16 +20,16 @@ import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerBindingList extends ContainerObjectSelectionList<ControllerBindingList.Entry> {
 	private final ControllerInputOptionsScreen controlsScreen;
 	private int maxListLabelWidth;
@@ -71,7 +71,6 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		return super.getRowWidth() + 72;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public class CategoryEntry extends ControllerBindingList.Entry {
 		private final Component labelText;
 		private final int labelWidth;
@@ -82,14 +81,15 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		}
 
 		@Override
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.labelText, (float)(ControllerBindingList.this.minecraft.screen.width / 2 - this.labelWidth / 2), (float)(p_230432_3_ + p_230432_6_ - 9 - 1), 16777215);
+		public void render(GuiGraphics guiGraphics, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+			guiGraphics.drawString(ControllerBindingList.this.minecraft.font, this.labelText, ControllerBindingList.this.minecraft.screen.width / 2 - this.labelWidth / 2, p_230432_3_ + p_230432_6_ - 9 - 1, 16777215);
 		}
 
-		@Override
-		public boolean changeFocus(boolean focus) {
-			return false;
-		}
+        @Override
+        @Nullable
+        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+            return null;
+        }
 
 		@Override
 		public List<? extends GuiEventListener> children() {
@@ -102,11 +102,9 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<ControllerBindingList.Entry> {
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public class KeyEntry extends ControllerBindingList.Entry {
 		/** The controllerBinding specified for this KeyEntry */
 		private final ControllerMapping controllerBinding;
@@ -150,11 +148,11 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		}
 
 		@Override
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+		public void render(GuiGraphics guiGraphics, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			boolean flag = ControllerBindingList.this.controlsScreen.keyToSet == this.controllerBinding;
 			ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
-			ControllerBindingList.this.minecraft.font.draw(p_230432_1_, this.keyDesc, (float)(p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
+			guiGraphics.drawString(ControllerBindingList.this.minecraft.font, this.keyDesc, p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth, p_230432_3_ + p_230432_6_ / 2 - 9 / 2, 16777215);
 			ScreenHelper.setWidgetPosition(this.btnInputType, p_230432_4_ + 166, p_230432_3_);
 
 			if (controllerBinding.isAxis()) {
@@ -162,10 +160,10 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 			} else {
 				this.btnInputType.setMessage(controllerBinding.getInputType(model).getDisplayName());
 			}
-			this.btnInputType.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			this.btnInputType.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
 			ScreenHelper.setWidgetPosition(this.btnReset, p_230432_4_ + 190 + 50, p_230432_3_);
 			this.btnReset.active = !this.controllerBinding.isDefault(model);
-			this.btnReset.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			this.btnReset.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
 			ScreenHelper.setWidgetPosition(this.btnChangeKeyBinding, p_230432_4_ + 98, p_230432_3_);
 			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
 			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
@@ -192,7 +190,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 					//                  keyCodeModifierConflict &= keybinding.hasKeyCodeModifierConflict(keybinding);
 				}
 			}
-
+			
 			if (flag) {
 				this.btnChangeKeyBinding.setFirstOverlay(null);
 				this.btnChangeKeyBinding.setSecondOverlay(null);
@@ -208,8 +206,8 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 				else
 					this.btnChangeKeyBinding.setMessage(this.btnChangeKeyBinding.getMessage().copy().withStyle(keyCodeModifierConflict ? ChatFormatting.GOLD : ChatFormatting.RED));
 			}
-
-			this.btnChangeKeyBinding.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			
+			this.btnChangeKeyBinding.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
 		}
 
 		@Override

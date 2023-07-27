@@ -11,29 +11,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.PaperDollOptions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 @Mixin(Gui.class)
-public class GuiMixin extends GuiComponent {
+public class GuiMixin {
 
 	@Shadow public int screenWidth;
     @Shadow public int screenHeight;
     @Shadow @Final private Minecraft minecraft;
-	@Shadow private void renderSlot(int x, int y, float partialTick, Player player, ItemStack stack, int i) {}
+	@Shadow private void renderSlot(GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {}
 	
 	
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(FFF)F", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void render2(PoseStack arg0, float arg1, CallbackInfo ci, Window w, Font font, float f) {
-		PaperDollOptions.renderPlayerDoll((Gui)(Object)this, arg0);
+	public void render2(GuiGraphics guiGraphics, float arg1, CallbackInfo ci, Window w, Font font) {
+		PaperDollOptions.renderPlayerDoll(guiGraphics);
 	}
 	
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledWidth()I"))
@@ -46,10 +45,10 @@ public class GuiMixin extends GuiComponent {
 		return window.getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
 	}
 	
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;fill(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V"))
-	public void render_all_blit(PoseStack poseStack, int minX, int minY, int maxX, int maxY, int color) {
-		Gui.fill(poseStack, minX, minY, maxX + (ControllerMod.getSafeArea()*2), maxY + (ControllerMod.getSafeArea()*2), color);
-	}
+//	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;fill(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V"))
+//	public void render_all_blit(PoseStack poseStack, int minX, int minY, int maxX, int maxY, int color) {
+//		Gui.fill(poseStack, minX, minY, maxX + (ControllerMod.getSafeArea()*2), maxY + (ControllerMod.getSafeArea()*2), color);
+//	}
 	
 	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "i")
 	public int render_all_blit_i(int i) {
@@ -61,9 +60,9 @@ public class GuiMixin extends GuiComponent {
 		return j + ControllerMod.getSafeArea();
 	}
 	
-	@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
-	public void renderSlot_rediect(Gui gui, int x, int y, float partialTick, Player player, ItemStack stack, int i) {
-		renderSlot(x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), partialTick, player, stack, i);
+	@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
+	public void renderSlot_rediect(Gui gui, GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {
+		renderSlot(guiGraphics, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), partialTick, player, stack, seed);
 	}
 	
 	@Inject(method = {"renderVignette","renderSpyglassOverlay","renderTextureOverlay"},  at = @At("HEAD"))
@@ -78,8 +77,8 @@ public class GuiMixin extends GuiComponent {
         this.screenHeight = this.minecraft.getWindow().getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
 	}
 	
-	@Override
-	public void blit(PoseStack poseStack, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight) {
-		super.blit(poseStack, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), uOffset, vOffset, uWidth, vHeight);
-	}
+//	@Override
+//	public void blit(PoseStack poseStack, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight) {
+//		super.blit(poseStack, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), uOffset, vOffset, uWidth, vHeight);
+//	}
 }
