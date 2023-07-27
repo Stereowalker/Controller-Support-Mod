@@ -4,13 +4,10 @@ import org.lwjgl.glfw.GLFWScrollCallbackI;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.util.Mth;
 
-@Environment(EnvType.CLIENT)
 public class VirtualMouseHelper extends MouseHandler {
 
 	public VirtualMouseHelper(Minecraft minecraftIn) {

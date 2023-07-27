@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
@@ -60,7 +58,6 @@ public class ControllerMap {
 	}
 
 
-	@Environment(value=EnvType.CLIENT)
 	public static final class Button {
 		public ControllerModel model;
 		public String value;

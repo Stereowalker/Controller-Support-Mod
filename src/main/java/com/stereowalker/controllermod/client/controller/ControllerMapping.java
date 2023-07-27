@@ -14,15 +14,12 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(EnvType.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
 
 	private static final Map<UseCase, Map<List<ControllerMap.Button>, ControllerMapping>> MAP = Maps.newHashMap();

@@ -10,8 +10,6 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.TriggerSetupScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
@@ -152,7 +150,6 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<TriggerAxesList.Entry> {
 	}
 }

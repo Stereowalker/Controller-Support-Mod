@@ -6,8 +6,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.stereowalker.controllermod.ControllerMod;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -16,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 @Mixin(AbstractContainerScreen.class)
-@Environment(EnvType.CLIENT)
 public abstract class AbstractContainerScreenMixin <T extends AbstractContainerMenu> extends Screen implements MenuAccess<T> {
 
 	public AbstractContainerScreenMixin(T pMenu, Inventory pPlayerInventory, Component pTitle) {

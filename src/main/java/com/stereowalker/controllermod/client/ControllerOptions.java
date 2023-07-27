@@ -28,14 +28,11 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType
 import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.DataFixTypes;
 
-@Environment(EnvType.CLIENT)
 public class ControllerOptions {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Splitter KEY_VALUE_SPLITTER = Splitter.on(':').limit(2);

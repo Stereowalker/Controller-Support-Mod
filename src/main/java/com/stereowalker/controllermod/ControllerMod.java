@@ -10,26 +10,16 @@ import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
 import com.stereowalker.controllermod.client.controller.Controller;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
-import com.stereowalker.unionlib.UnionLibClientSegment;
 import com.stereowalker.unionlib.api.collectors.ReloadListeners;
-import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
-import com.stereowalker.unionlib.mod.ServerSegment;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Mth;
 
-@Environment(EnvType.CLIENT)
 public class ControllerMod extends MinecraftMod
 {
 	//

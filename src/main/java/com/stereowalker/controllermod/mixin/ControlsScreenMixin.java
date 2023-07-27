@@ -12,17 +12,13 @@ import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsSc
 import com.stereowalker.controllermod.client.gui.screen.ControllerSettingsScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import net.minecraft.network.chat.Component;
 
 @Mixin(ControlsScreen.class)
-@Environment(EnvType.CLIENT)
 public abstract class ControlsScreenMixin extends OptionsSubScreen {
 
 	public ControlsScreenMixin(Screen pLastScreen, Options pOptions, Component pTitle) {
