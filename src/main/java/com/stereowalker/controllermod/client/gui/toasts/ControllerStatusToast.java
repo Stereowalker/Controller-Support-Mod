@@ -5,15 +5,13 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -55,31 +53,21 @@ public class ControllerStatusToast implements Toast {
 
 	@SuppressWarnings({ "resource" })
 	@Override
-	public Toast.Visibility render(PoseStack matrixStack, ToastComponent toastGui, long drawTime) {
+	public Toast.Visibility render(GuiGraphics guiGraphics, ToastComponent toastGui, long drawTime) {
 		if (this.newDisplay) {
 			this.firstDrawTime = drawTime;
 			this.newDisplay = false;
 		}
-
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, TEXTURE_TOASTS);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int i = this.width();
-		toastGui.blit(matrixStack, 0, 0, 0, 32, i, this.height());
-		matrixStack.pushPose();
-		RenderSystem.enableBlend();
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, ICON);
-		toastGui.blit(matrixStack, 6, 6, 0 * 20, 0 * 20, 20, 20);
-		RenderSystem.enableBlend();
-		matrixStack.popPose();
+		guiGraphics.blit(TEXTURE_TOASTS, 0, 0, 0, 32, i, this.height());
+		guiGraphics.blit(ICON, 6, 6, 0 * 20, 0 * 20, 20, 20);
 		if (this.subtitles == null) {
-			toastGui.getMinecraft().font.draw(matrixStack, type.getText(), 33.0F, 12.0F, -11534256);
+			guiGraphics.drawString(toastGui.getMinecraft().font, type.getText(), 33, 12, -11534256);
 		} else {
-			toastGui.getMinecraft().font.draw(matrixStack, type.getText(), 33.0F, 7.0F, -11534256);
+			guiGraphics.drawString(toastGui.getMinecraft().font, type.getText(), 33, 7, -11534256);
 
 			for(int k1 = 0; k1 < this.subtitles.size(); ++k1) {
-				toastGui.getMinecraft().font.draw(matrixStack, this.subtitles.get(k1), 33.0F, (float)(18 + k1 * 12), -16777216);
+				guiGraphics.drawString(toastGui.getMinecraft().font, this.subtitles.get(k1), 33, 18 + k1 * 12, -16777216);
 			}
 		}
 

@@ -32,7 +32,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.DataFixTypes;
 
@@ -341,7 +340,7 @@ public class ControllerOptions {
 		} catch (RuntimeException runtimeexception) {
 		}
 
-		return NbtUtils.update(this.mc.getFixerUpper(), DataFixTypes.OPTIONS, nbt, i);
+		return DataFixTypes.OPTIONS.updateToCurrentVersion(this.mc.getFixerUpper(), nbt, i);
 	}
 
 	/**

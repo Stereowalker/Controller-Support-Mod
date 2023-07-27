@@ -3,8 +3,9 @@ package com.stereowalker.controllermod.client.gui.widget.list;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.screen.TriggerSetupScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
@@ -13,13 +14,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 
-@Environment(EnvType.CLIENT)
 public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesList.Entry> {
 	private ControllerMod mod;
 
@@ -47,7 +50,6 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		return super.getRowWidth() + 72;
 	}
 
-	@Environment(EnvType.CLIENT)
 	public class CategoryEntry extends TriggerAxesList.Entry {
 		private final Component labelText;
 		private final int labelWidth;
@@ -58,14 +60,15 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 
 		@Override
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			TriggerAxesList.this.minecraft.font.draw(p_230432_1_, this.labelText, (float)(TriggerAxesList.this.minecraft.screen.width / 2 - this.labelWidth / 2), (float)(p_230432_3_ + p_230432_6_ - 9 - 1), 16777215);
+		public void render(GuiGraphics guiGraphics, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+			guiGraphics.drawString(TriggerAxesList.this.minecraft.font, this.labelText, TriggerAxesList.this.minecraft.screen.width / 2 - this.labelWidth / 2, p_230432_3_ + p_230432_6_ - 9 - 1, 16777215);
 		}
 
-		@Override
-		public boolean changeFocus(boolean focus) {
-			return false;
-		}
+        @Override
+        @Nullable
+        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+            return null;
+        }
 
 		@Override
 		public List<? extends GuiEventListener> children() {
@@ -78,7 +81,6 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
 	public class TriggerEntry extends TriggerAxesList.Entry {
 		private final Button btnTrigger;
 		private final Component labelText;
@@ -106,11 +108,10 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 
 		@Override
-		public void render(PoseStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			TriggerAxesList.this.minecraft.font.draw(p_230432_1_, this.labelText, (float)(p_230432_4_), (float)(p_230432_3_ + p_230432_6_ / 2 - 9 / 2), 16777215);
-
+		public void render(GuiGraphics guiGraphics, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+			guiGraphics.drawString(TriggerAxesList.this.minecraft.font, this.labelText, p_230432_4_, p_230432_3_ + p_230432_6_ / 2 - 9 / 2, 16777215);
 			ScreenHelper.setWidgetPosition(this.btnTrigger, p_230432_4_ + 190, p_230432_3_);
-			this.btnTrigger.render(p_230432_1_, p_230432_7_, p_230432_8_, p_230432_10_);
+			this.btnTrigger.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
 			
 			if (isPostitve)
 				if (mod.controllerOptions.positiveTriggerAxes.contains(axis))
@@ -124,10 +125,11 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 					this.btnTrigger.setMessage(Component.translatable("gui.trigger.mark").withStyle(ChatFormatting.GREEN));
 		}
 
-		@Override
-		public boolean changeFocus(boolean focus) {
-			return false;
-		}
+        @Override
+        @Nullable
+        public ComponentPath nextFocusPath(FocusNavigationEvent event) {
+            return null;
+        }
 
 		@Override
 		public List<? extends GuiEventListener> children() {

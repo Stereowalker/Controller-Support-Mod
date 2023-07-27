@@ -1,27 +1,21 @@
 package com.stereowalker.controllermod.client.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.widget.list.TriggerAxesList;
+import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-@Environment(EnvType.CLIENT)
-public class TriggerSetupScreen extends Screen {
-	private final Screen previousScreen;
+public class TriggerSetupScreen extends DefaultScreen {
 	private TriggerAxesList triggerAxesList;
 	private ControllerMod mod;
 
 	public TriggerSetupScreen(Screen previousScreen) {
-		super(Component.translatable("trigger_setup.title"));
-		this.previousScreen = previousScreen;
+		super(Component.translatable("trigger_setup.title"), previousScreen);
 		this.mod = ControllerMod.getInstance();
 	}
 
@@ -40,10 +34,7 @@ public class TriggerSetupScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		this.triggerAxesList.render(matrixStack, mouseX, mouseY, partialTicks);
-		GuiComponent.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 15, 16777215);
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		this.triggerAxesList.render(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 }
