@@ -227,6 +227,7 @@ public class ControllerOptions {
 	public ControllerOptions(ControllerOptions old) {
 		this.mc = old.mc;
 		this.optionsFile = old.optionsFile;
+		this.controllerBindings = old.controllerBindings;
 	}
 
 	public void setKeyBindingCode(ControllerModel model, ControllerMapping keyBindingIn, List<String> inputIn) {

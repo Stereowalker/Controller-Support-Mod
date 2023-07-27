@@ -35,12 +35,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	//private final int buttonOnKeyboardMouse;
 	private ImmutableMap<ResourceLocation,List<String>> buttonOnController;
 	private final ImmutableMap<ResourceLocation,List<String>> defaultButtonOnController;
-	private ImmutableMap<ControllerModel,InputType> inputType;
+	private ImmutableMap<ResourceLocation,InputType> inputType;
 	private final UseCase useCase;
 	private final boolean fromKeybind;
 
 	private final boolean isAxis;
-	private ImmutableMap<ControllerModel,Boolean> axisInverted;
+	private ImmutableMap<ResourceLocation,Boolean> axisInverted;
 	////
 	public int downTicks;
 	public boolean toggled;
@@ -63,13 +63,13 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		this.category = category;
 		this.descri = description;
 		ImmutableMap.Builder<ResourceLocation,List<String>> builder = ImmutableMap.builder();
-		ImmutableMap.Builder<ControllerModel,InputType> inputTypeBuilder = ImmutableMap.builder();
-		ImmutableMap.Builder<ControllerModel,Boolean> axisInvertedBuilder = ImmutableMap.builder();
+		ImmutableMap.Builder<ResourceLocation,InputType> inputTypeBuilder = ImmutableMap.builder();
+		ImmutableMap.Builder<ResourceLocation,Boolean> axisInvertedBuilder = ImmutableMap.builder();
 		Map<ResourceLocation,List<String>> builder2 = Maps.newHashMap();
 		buttonId.accept(builder2);
-		System.out.println(description);
+		//System.out.println(description);
 		builder2.put(ControllerModel.CUSTOM.defaultName, Lists.newArrayList(" "));
-		inputTypeBuilder.put(ControllerModel.CUSTOM, InputType.PRESS);
+		inputTypeBuilder.put(ControllerModel.CUSTOM.defaultName, InputType.PRESS);
 		for (Entry<ResourceLocation, ControllerModel> model : ControllerModelManager.ALL_MODELS.entrySet()) {
 			if (model.getValue() == null) {
 				ControllerMod.LOGGER.error("Cannot create mapping for "+description+" because "+model.getKey()+" is not regsitered in the controller model registry");
@@ -90,9 +90,9 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 					}
 					builder2.put(model.getKey(), before);
 				}
-				inputTypeBuilder.put(model.getValue(), inputType == null ? InputType.PRESS : inputType);
+				inputTypeBuilder.put(model.getKey(), inputType == null ? InputType.PRESS : inputType);
 				System.out.println(model.getKey());
-				axisInvertedBuilder.put(model.getValue(), isAxisInvertedIn);
+				axisInvertedBuilder.put(model.getKey(), isAxisInvertedIn);
 			}
 		}
 		builder.putAll(builder2);
@@ -189,12 +189,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public void setInputType(ControllerModel model, InputType type) {
-		Map<ControllerModel,InputType> builder = Maps.newHashMap();
+		Map<ResourceLocation,InputType> builder = Maps.newHashMap();
 		builder.putAll(inputType);
-		builder.remove(model);
-		builder.put(model, type);
+		builder.remove(modelKey(model));
+		builder.put(modelKey(model), type);
 
-		ImmutableMap.Builder<ControllerModel,InputType> builder2 = ImmutableMap.builder();
+		ImmutableMap.Builder<ResourceLocation,InputType> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		inputType = builder2.build();
 	}
@@ -228,13 +228,17 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	public InputConstants.Key getButtonOnKeyboardOrMouse() {
 		return buttonOnKeyboardMouse;
 	}
+	
+	ResourceLocation modelKey(ControllerModel model) {
+		return model == null ? ControllerModel.CUSTOM.getKey() : model.getKey();
+	}
 
 	public InputType getInputType(ControllerModel model) {
-		return inputType.get(model);
+		return inputType.get(modelKey(model));
 	}
 
 	public List<String> getButtonOnController(ControllerModel model) {
-		List<String> buttons = buttonOnController.get(model == null ? ControllerModel.CUSTOM.getKey() : model.getKey());
+		List<String> buttons = buttonOnController.get(modelKey(model));
 		if (buttons == null || buttons.isEmpty()) {
 			return Lists.newArrayList(" ");
 		}
@@ -259,8 +263,8 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	}
 
 	public boolean isDown(ControllerModel model) {
-		if (model != null && inputType.get(model) != null) {
-			switch (inputType.get(model)) {
+		if (model != null && inputType.get(modelKey(model)) != null) {
+			switch (inputType.get(modelKey(model))) {
 			case PRESS: return isPressed();
 			case TOGGLE: return isToggled();
 			case HOLD: return isHeld();
@@ -377,12 +381,12 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 	 * @param isAxisInverted the isAxisInverted to set
 	 */
 	public void setAxisInverted(ControllerModel model, boolean isAxisInverted) {
-		Map<ControllerModel,Boolean> builder = Maps.newHashMap();
+		Map<ResourceLocation,Boolean> builder = Maps.newHashMap();
 		builder.putAll(this.axisInverted);
-		builder.remove(model);
-		builder.put(model, isAxisInverted);
+		builder.remove(modelKey(model));
+		builder.put(modelKey(model), isAxisInverted);
 
-		ImmutableMap.Builder<ControllerModel,Boolean> builder2 = ImmutableMap.builder();
+		ImmutableMap.Builder<ResourceLocation,Boolean> builder2 = ImmutableMap.builder();
 		builder2.putAll(builder);
 		this.axisInverted = builder2.build();
 	}
