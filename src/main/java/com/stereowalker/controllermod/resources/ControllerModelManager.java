@@ -24,10 +24,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerModelManager extends SimplePreparableReloadListener<Map<ResourceLocation,ControllerModel>> implements ReloadListener {
 	public static final Map<ResourceLocation,ControllerModel> ALL_MODELS = new HashMap<ResourceLocation,ControllerModel>();
 

@@ -20,8 +20,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesList.Entry> {
 	private ControllerMod mod;
@@ -152,7 +150,6 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public abstract static class Entry extends ContainerObjectSelectionList.Entry<TriggerAxesList.Entry> {
 	}
 }

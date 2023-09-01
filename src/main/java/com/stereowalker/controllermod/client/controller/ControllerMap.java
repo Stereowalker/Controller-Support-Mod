@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
@@ -60,7 +58,6 @@ public class ControllerMap {
 	}
 
 
-	@OnlyIn(Dist.CLIENT)
     public static final class Button {
 		public ControllerModel model;
 		public String value;

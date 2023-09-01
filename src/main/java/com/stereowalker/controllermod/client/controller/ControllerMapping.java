@@ -18,11 +18,8 @@ import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.resources.ResourceLocation;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerMapping implements Comparable<ControllerMapping> {
 
 	private static final Map<UseCase, Map<List<ControllerMap.Button>, ControllerMapping>> MAP = Maps.newHashMap();

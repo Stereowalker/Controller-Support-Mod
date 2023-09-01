@@ -30,13 +30,9 @@ import com.stereowalker.controllermod.resources.ControllerModelManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.DataFixTypes;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerOptions {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Splitter KEY_VALUE_SPLITTER = Splitter.on(':').limit(2);
@@ -334,15 +330,15 @@ public class ControllerOptions {
 		}
 	}
 
-	private CompoundTag dataFix(CompoundTag nbt) {
+	private CompoundTag dataFix(CompoundTag pNbt) {
 		int i = 0;
 
 		try {
-			i = Integer.parseInt(nbt.getString("version"));
+			i = Integer.parseInt(pNbt.getString("version"));
 		} catch (RuntimeException runtimeexception) {
 		}
 
-		return NbtUtils.update(this.mc.getFixerUpper(), DataFixTypes.OPTIONS, nbt, i);
+		return DataFixTypes.OPTIONS.updateToCurrentVersion(this.mc.getFixerUpper(), pNbt, i);
 	}
 
 	/**

@@ -18,10 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerUtil {
 	public static VirtualMouseHelper virtualmouse = new VirtualMouseHelper(Minecraft.getInstance());
 

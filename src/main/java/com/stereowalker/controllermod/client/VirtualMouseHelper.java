@@ -6,110 +6,21 @@ import java.util.Arrays;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWDropCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
 import org.lwjgl.glfw.GLFWScrollCallbackI;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class VirtualMouseHelper extends MouseHandler {
 
 	public VirtualMouseHelper(Minecraft minecraftIn) {
 		super(minecraftIn);
-	}
-
-	/**
-	 * Will be called when a mouse button is pressed or released.
-	 *  
-	 * @see GLFWMouseButtonCallbackI
-	 */
-	public void mouseButtonCallback(long handle, int button, int action, int mods) {
-		if (handle == this.minecraft.getWindow().getWindow()) {
-			boolean flag = action == 1;
-			if (Minecraft.ON_OSX && button == 0) {
-				if (flag) {
-					if ((mods & 2) == 2) {
-						button = 1;
-						++this.fakeRightMouse;
-					}
-				} else if (this.fakeRightMouse > 0) {
-					button = 1;
-					--this.fakeRightMouse;
-				}
-			}
-
-			if (flag) {
-				if (this.minecraft.options.touchscreen().get() && this.clickDepth++ > 0) {
-					return;
-				}
-
-				this.activeButton = button;
-				this.mousePressedTime = Blaze3D.getTime();
-			} else if (this.activeButton != -1) {
-				if (this.minecraft.options.touchscreen().get() && --this.clickDepth > 0) {
-					return;
-				}
-
-				this.activeButton = -1;
-			}
-
-			boolean[] aboolean = new boolean[]{false};
-			if (this.minecraft.getOverlay() == null) {
-				if (this.minecraft.screen == null) {
-					if (!this.mouseGrabbed && flag) {
-						this.grabMouse();
-					}
-					if (net.minecraftforge.client.ForgeHooksClient.onMouseButtonPre(button, action, mods)) return;
-				} else {
-					double d0 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
-					double d1 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
-					int p_198023_3_f = button;
-					if (flag) {
-						Screen.wrapScreenError(() -> {
-							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseClickedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = this.minecraft.screen.mouseClicked(d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseClickedPost(this.minecraft.screen, d0, d1, p_198023_3_f, aboolean[0]);
-						}, "mouseClicked event handler", this.minecraft.screen.getClass().getCanonicalName());
-					} else {
-						Screen.wrapScreenError(() -> {
-							aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseReleasedPre(this.minecraft.screen, d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = this.minecraft.screen.mouseReleased(d0, d1, p_198023_3_f);
-							if (!aboolean[0]) aboolean[0] = net.minecraftforge.client.ForgeHooksClient.onScreenMouseReleasedPost(this.minecraft.screen, d0, d1, p_198023_3_f, aboolean[0]);
-						}, "mouseReleased event handler", this.minecraft.screen.getClass().getCanonicalName());
-					}
-				}
-			}
-
-			if (!aboolean[0] && (this.minecraft.screen == null || this.minecraft.screen.passEvents) && this.minecraft.getOverlay() == null) {
-				if (button == 0) {
-					this.isLeftPressed = flag;
-				} else if (button == 2) {
-					this.isMiddlePressed = flag;
-				} else if (button == 1) {
-					this.isRightPressed = flag;
-				}
-
-				KeyMapping.set(InputConstants.Type.MOUSE.getOrCreate(button), flag);
-				if (flag) {
-					if (this.minecraft.player.isSpectator() && button == 2) {
-						this.minecraft.gui.getSpectatorGui().onMouseMiddleClick();
-					} else {
-						KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(button));
-					}
-				}
-			}
-			net.minecraftforge.client.ForgeHooksClient.onMouseButtonPost(button, action, mods);
-		}
 	}
 
 	/**
@@ -164,7 +75,7 @@ public class VirtualMouseHelper extends MouseHandler {
 			});
 		}, (p_228028_1_, p_228028_3_, p_228028_4_, p_228028_5_) -> {
 			this.minecraft.execute(() -> {
-				this.mouseButtonCallback(p_228028_1_, p_228028_3_, p_228028_4_, p_228028_5_);
+				this.onPress(p_228028_1_, p_228028_3_, p_228028_4_, p_228028_5_);
 			});
 		}, (p_228029_1_, p_228029_3_, p_228029_5_) -> {
 			this.minecraft.execute(() -> {
@@ -269,29 +180,6 @@ public class VirtualMouseHelper extends MouseHandler {
 		} else {
 			this.accumulatedDX = 0.0D;
 			this.accumulatedDY = 0.0D;
-		}
-	}
-
-	/**
-	 * Will set the focus to ingame if the Minecraft window is the active with focus. Also clears any GUI screen
-	 * currently displayed
-	 */
-	@Override
-	public void grabMouse() {
-		if (this.minecraft.isWindowActive()) {
-			if (!this.mouseGrabbed) {
-				if (!Minecraft.ON_OSX) {
-					KeyMapping.setAll();
-				}
-
-				this.mouseGrabbed = true;
-				this.xpos = (double)(this.minecraft.getWindow().getWidth() / 2);
-				this.ypos = (double)(this.minecraft.getWindow().getHeight() / 2);
-				InputConstants.grabOrReleaseMouse(this.minecraft.getWindow().getWindow(), 212995, this.xpos, this.ypos);
-				this.minecraft.setScreen((Screen)null);
-				//            this.minecraft.leftClickCounter = 10000;
-				this.ignoreFirstMove = true;
-			}
 		}
 	}
 

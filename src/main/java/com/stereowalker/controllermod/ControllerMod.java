@@ -12,29 +12,20 @@ import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
 import com.stereowalker.controllermod.client.PaperDollOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
-import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
-import com.stereowalker.unionlib.UnionLibClientSegment;
 import com.stereowalker.unionlib.api.collectors.ReloadListeners;
-import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
-import com.stereowalker.unionlib.mod.ServerSegment;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(value = ControllerMod.MOD_ID)
-@OnlyIn(Dist.CLIENT)
 public class ControllerMod extends MinecraftMod
 {
 	//
@@ -62,7 +53,7 @@ public class ControllerMod extends MinecraftMod
 		eventBus().addListener((Consumer<RegisterGuiOverlaysEvent>)event -> {
 			event.registerAboveAll("paperdoll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
 				gui.setupOverlayRenderState(true, false);
-				PaperDollOptions.renderPlayerDoll(gui, mStack);
+				PaperDollOptions.renderPlayerDoll(mStack);
 			});
 		});
 	}

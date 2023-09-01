@@ -12,11 +12,8 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Mixin(AbstractContainerScreen.class)
-@OnlyIn(Dist.CLIENT)
 public abstract class AbstractContainerScreenMixin <T extends AbstractContainerMenu> extends Screen implements MenuAccess<T> {
 
 	public AbstractContainerScreenMixin(T pMenu, Inventory pPlayerInventory, Component pTitle) {

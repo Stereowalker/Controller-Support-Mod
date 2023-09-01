@@ -17,11 +17,8 @@ import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.controls.ControlsScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Mixin(ControlsScreen.class)
-@OnlyIn(Dist.CLIENT)
 public abstract class ControlsScreenMixin extends OptionsSubScreen {
 
 	public ControlsScreenMixin(Screen pLastScreen, Options pOptions, Component pTitle) {

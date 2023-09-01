@@ -19,10 +19,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ControllerInputOptionsScreen extends DefaultScreen {
 	/** The ID of the button that has been pressed. */
 	public ControllerMapping keyToSet;
