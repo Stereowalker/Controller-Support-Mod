@@ -54,7 +54,8 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	
 	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferUploader;reset()V"))
 	public void setScreen2_inject(CallbackInfo ci) {
-		ControllerMapping.handleUnbindAll();
+		if (ControllerMod.getInstance().getControllerHandler() != null)
+			ControllerMapping.handleUnbindAll();
 	}
 
 	boolean fromGame = false;

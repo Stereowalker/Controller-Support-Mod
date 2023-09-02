@@ -15,8 +15,8 @@ import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.api.collectors.ConfigCollector;
 import com.stereowalker.unionlib.api.collectors.ReloadListeners;
-import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,10 @@ public class ControllerMod extends MinecraftMod
 		super(MOD_ID, () -> new ControllerSupportClientSegment(), null);
 		MinecraftForge.EVENT_BUS.register(this);
 		instance = this;
-		ConfigBuilder.registerConfig(CONFIG);
+	}
+	
+	@Override
+	public void onModConstruct() {
 		controllers = new ArrayList<Controller>();
 		eventBus().addListener((Consumer<RegisterGuiOverlaysEvent>)event -> {
 			event.registerAboveAll("paperdoll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
@@ -61,6 +64,11 @@ public class ControllerMod extends MinecraftMod
 	@Override
 	public void onModStartupInClient() {
 		
+	}
+	
+	@Override
+	public void setupConfigs(ConfigCollector collector) {
+		collector.registerConfig(CONFIG);
 	}
 	
 	@Override

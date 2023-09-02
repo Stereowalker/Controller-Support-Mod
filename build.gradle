@@ -82,8 +82,9 @@ dependencies {
 	implementation "org.spongepowered:mixin:"+modMixinVersion+""
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
-	implementation fg.deobf("curse.maven:xareo-317780:4381159")
-	implementation fg.deobf("curse.maven:archi-419699:4384409")
+	implementation fg.deobf("curse.maven:xareo-317780:4716770")
+	implementation fg.deobf("curse.maven:map_atlases-519759:4732649")
+	implementation fg.deobf("curse.maven:archi-419699:4663010")
 	implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
 	//implementation fg.deobf("curse.maven:rei-310111:4401136")
 }
