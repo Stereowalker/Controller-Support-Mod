@@ -153,7 +153,7 @@ public class ControllerOptions {
 
 	public final ControllerMapping controllerBindScroll = new ControllerMapping(NEW, "key.controller.scroll", (builder) -> {
 		collect(builder, Lists.newArrayList("#right_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
-	}, false, UseCase.ANY_SCREEN);
+	}, false, UseCase.SCROLL);
 
 	public final ControllerMapping controllerKeyBindForward = new ControllerMapping(Minecraft.getInstance().options.keyUp, "key.override.forward", (builder) -> {
 		collect(builder, Lists.newArrayList("#left_stick_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
@@ -206,6 +206,23 @@ public class ControllerOptions {
 	public final ControllerMapping controllerKeyBindTogglePerspective = new ControllerMapping(Minecraft.getInstance().options.keyTogglePerspective, "key.override.togglePerspective", (builder) -> {
 		collect(builder, Lists.newArrayList("#dpad_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, UseCase.INGAME);
+	
+	//Other mods
+	public final ControllerMapping controllerBindMapAtlasesPanHorizontal = new ControllerMapping("category.map_atlases.minimap", "key.map_atlases.pan_horizontal", (builder) -> {
+		collect(builder, Lists.newArrayList("#right_stick_horizontal"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
+	}, false, UseCase.MAP_ATLASES_MOD);
+
+	public final ControllerMapping controllerBindMapAtlasesPanVertical = new ControllerMapping("category.map_atlases.minimap", "key.map_atlases.pan_vertical", (builder) -> {
+		collect(builder, Lists.newArrayList("#right_stick_vertical"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
+	}, false, UseCase.MAP_ATLASES_MOD);
+
+	public final ControllerMapping controllerBindMapAtlasesZoomIn = new ControllerMapping("category.map_atlases.minimap", "key.map_atlases.zoom_in",  (builder) -> {
+		collect(builder, Lists.newArrayList("#right_trigger"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
+	}, InputType.PRESS, UseCase.MAP_ATLASES_MOD);
+
+	public final ControllerMapping controllerBindMapAtlasesZoomOut = new ControllerMapping("category.map_atlases.minimap", "key.map_atlases.zoom_out",  (builder) -> {
+		collect(builder, Lists.newArrayList("#left_trigger"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
+	}, InputType.PRESS, UseCase.MAP_ATLASES_MOD);
 
 	public ControllerMapping[] controllerBindings = ArrayUtils.addAll(new ControllerMapping[] {this.controllerBindBack, this.controllerBindPause, this.controllerBindHotbarLeft, this.controllerBindHotbarRight, this.controllerBindSplit, this.controllerBindQuickMove,
 			this.controllerBindCameraHorizontal, this.controllerBindCameraVertical, this.controllerBindMouseHorizontal, this.controllerBindMouseVertical, this.controllerBindMoveHorizontal, this.controllerBindMoveVertical, this.controllerBindScroll},
@@ -213,7 +230,9 @@ public class ControllerOptions {
 					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight, this.controllerKeyBindSprint, this.controllerKeyBindSneak, //Movement
 					this.controllerBindKeyboard, this.controllerBindKeyboardArrowLeft, this.controllerBindKeyboardArrowRight, this.controllerBindKeyboardBackspace,
 					this.controllerBindKeyboardCaps, this.controllerBindKeyboardUp, this.controllerBindKeyboardDown, this.controllerBindKeyboardLeft, this.controllerBindKeyboardRight, 
-					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace});
+					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace, 
+					
+			this.controllerBindMapAtlasesPanHorizontal, this.controllerBindMapAtlasesPanVertical, this.controllerBindMapAtlasesZoomIn, this.controllerBindMapAtlasesZoomOut});
 	private final File optionsFile;
 
 	public ControllerOptions(Minecraft mcIn, File mcDataDir) {
