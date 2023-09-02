@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +23,7 @@ import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.client.gui.screen.ControllerInputOptionsScreen;
+import com.stereowalker.controllermod.compat.MapAtlasesCompat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -46,12 +48,12 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 	public MinecraftMixin(String p_18765_) {
 		super(p_18765_);
 	}
-	
+
 	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;releaseAll()V"))
 	public void setScreen1_inject(CallbackInfo ci) {
 		ControllerMapping.releaseAll();
 	}
-	
+
 	@Inject(method = "setScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferUploader;reset()V"))
 	public void setScreen2_inject(CallbackInfo ci) {
 		if (ControllerMod.getInstance().getControllerHandler() != null)
@@ -69,13 +71,16 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 			Controller controller = ControllerMod.getInstance().getActiveController();
 			if (controller != null) {
 				List<UseCase> case1 = null;
+				if (MapAtlasesCompat.isFullscreenMapActive()) {
+					case1 = Lists.newArrayList(UseCase.MAP_ATLASES_MOD, UseCase.ANY_SCREEN, UseCase.ANYWHERE);
+				}
 				//Inventory Keybinds
-				if(screen instanceof AbstractContainerScreen) {
+				else if(screen instanceof AbstractContainerScreen) {
 					//					if(fromGame) {
 					//						ControllerUtil.unpressAllKeys();
 					//						fromGame = false;
 					//					}
-					case1 = Lists.newArrayList(UseCase.CONTAINER, UseCase.ANY_SCREEN, UseCase.ANYWHERE);
+					case1 = Lists.newArrayList(UseCase.CONTAINER, UseCase.SCROLL, UseCase.ANY_SCREEN, UseCase.ANYWHERE);
 				}
 
 				//Ingame Menu Keybinds
@@ -84,7 +89,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 						ControllerUtil.unpressAllKeys();
 						fromGame = false;
 					}
-					case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
+					case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.SCROLL, UseCase.ANYWHERE);
 				}
 
 				//Any other menu
@@ -95,14 +100,14 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 								ControllerUtil.unpressAllKeys();
 								fromGame = false;
 							}
-							case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
+							case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.SCROLL, UseCase.ANYWHERE);
 						}
 					} else {
 						if(fromGame) {
 							ControllerUtil.unpressAllKeys();
 							fromGame = false;
 						}
-						case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE);
+						case1 = Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.SCROLL, UseCase.ANYWHERE);
 					}
 				}
 
@@ -111,9 +116,9 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 					fromGame = true;
 					case1 = Lists.newArrayList(UseCase.INGAME, UseCase.ANYWHERE);
 				}
-				
+
 				if (ControllerMod.getInstance().getControllerHandler().forceRelease()){
-					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.ANYWHERE, UseCase.CONTAINER, UseCase.INGAME));
+					ControllerMod.getInstance().getControllerHandler().processControllerInput(controller, Lists.newArrayList(UseCase.ANY_SCREEN, UseCase.SCROLL, UseCase.ANYWHERE, UseCase.CONTAINER, UseCase.INGAME, UseCase.MAP_ATLASES_MOD));
 				} else {
 					if (case1 != null) {
 						if (!case1.contains(UseCase.INGAME) && ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
@@ -131,10 +136,18 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 						ControllerMod.getInstance().onScreenKeyboard.switchKeyboard();
 					}
 				}
-				
+
 				float scrollAxis = settings.controllerBindScroll.getAxis();
 				float mouseXAxis = settings.controllerBindMouseHorizontal.getAxis();
 				float mouseYAxis = settings.controllerBindMouseVertical.getAxis();
+				if (MapAtlasesCompat.isFullscreenMapActive()) {
+					float[] pan = MapAtlasesCompat.Pan(settings);
+					mouseXAxis = pan[0];
+					mouseYAxis = pan[1];
+					if (mouseXAxis != 0 || mouseYAxis != 0) {
+						ControllerUtil.virtualmouse.onPress(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_1, 1, 0);
+					}
+				}
 
 				if (case1 != null && case1.contains(UseCase.CONTAINER)) {
 					ControllerUtil.updateMousePosition(mouseXAxis, mouseYAxis, controller, false, false);
