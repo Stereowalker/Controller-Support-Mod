@@ -103,6 +103,10 @@ public class ControllerOptions {
 		collect(builder, Lists.newArrayList("#face_button_right"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
 	
+	public final ControllerMapping controllerBindKeyboardEnter = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_enter",  (builder) -> {
+		collect(builder, Lists.newArrayList("#left_trigger"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
+	}, InputType.PRESS, UseCase.KEYBOARD);
+	
 	public final ControllerMapping controllerBindKeyboardUp = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_up",  (builder) -> {
 		collect(builder, Lists.newArrayList("#left_stick_up"), Lists.newArrayList(ControllerModelManager.ALL_MODELS.keySet()).toArray(new ResourceLocation[0]));
 	}, InputType.PRESS, UseCase.KEYBOARD);
@@ -230,7 +234,7 @@ public class ControllerOptions {
 					this.controllerKeyBindForward, this.controllerKeyBindBack, this.controllerKeyBindLeft, this.controllerKeyBindRight, this.controllerKeyBindSprint, this.controllerKeyBindSneak, //Movement
 					this.controllerBindKeyboard, this.controllerBindKeyboardArrowLeft, this.controllerBindKeyboardArrowRight, this.controllerBindKeyboardBackspace,
 					this.controllerBindKeyboardCaps, this.controllerBindKeyboardUp, this.controllerBindKeyboardDown, this.controllerBindKeyboardLeft, this.controllerBindKeyboardRight, 
-					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace, 
+					this.controllerBindKeyboardSelect, this.controllerBindKeyboardSpace,  this.controllerBindKeyboardEnter, 
 					
 			this.controllerBindMapAtlasesPanHorizontal, this.controllerBindMapAtlasesPanVertical, this.controllerBindMapAtlasesZoomIn, this.controllerBindMapAtlasesZoomOut});
 	private final File optionsFile;

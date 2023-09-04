@@ -52,6 +52,7 @@
 	"key.controller.keyboard_down": "Navigate Down",
 	"key.controller.keyboard_space": "Space",
 	"key.controller.keyboard_select": "Select Letter",
+	"key.controller.keyboard_enter": "Enter",
 	"key.map_atlases.pan_horizontal": "Pan Map Horizontal",
 	"key.map_atlases.pan_vertical": "Pan Map Vertical",
 	"key.map_atlases.zoom_out": "Zoom Out",

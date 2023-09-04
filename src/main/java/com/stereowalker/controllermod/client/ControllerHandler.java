@@ -102,6 +102,10 @@ public class ControllerHandler {
 					int key = GLFW.GLFW_KEY_RIGHT;
 					ControllerUtil.pushDown(options.controllerBindKeyboardArrowRight.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
 				}
+				if (options.controllerBindKeyboardEnter.isBoundToButton(controller.getModel())) {
+					int key = GLFW.GLFW_KEY_ENTER;
+					ControllerUtil.pushDown(options.controllerBindKeyboardEnter.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 1, 0), () -> minecraft.keyboardHandler.keyPress(handle, key, 0, 0, 0));
+				}
 				if (options.controllerBindKeyboardSpace.isBoundToButton(controller.getModel())) {
 					int key = GLFW.GLFW_KEY_SPACE;
 					ControllerUtil.pushDown(options.controllerBindKeyboardSpace.getButtonOnController(controller.getModel()), controller, InputType.PRESS, ControllerMod.CONFIG.deadzone, () -> minecraft.keyboardHandler.charTyped(handle, key, mods), () -> {});
