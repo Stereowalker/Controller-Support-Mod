@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.GameRenderer;
 public abstract class ScreenMixin extends AbstractContainerEventHandler implements Renderable {
 	@Shadow protected Font font;
 
-	@Inject(method = "render", at = @At("TAIL"))
+	@Inject(method = "renderWithTooltip", at = @At("TAIL"))
 	public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick, CallbackInfo ci) {
 		if (!((Object)this instanceof LevelLoadingScreen)) {
 			int x = (int)(ControllerUtil.virtualmouse.xpos() * (double)Minecraft.getInstance().getWindow().getGuiScaledWidth() / (double)Minecraft.getInstance().getWindow().getWidth());
