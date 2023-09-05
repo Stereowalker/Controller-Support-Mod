@@ -40,7 +40,7 @@ dependencies {
 	modImplementation "curse.maven:forge_config_api-547434:4583000"
 	modImplementation "curse.maven:map_atlasses-436298:4592038"
 	//modImplementation "curse.maven:archi-419699:3929414"
-	//modImplementation "curse.maven:cloth-348521:3972425"
+	modImplementation "curse.maven:cloth-348521:4633442"
 	//modImplementation "curse.maven:rei-310111:4082323"
 	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
 
@@ -82,8 +82,9 @@ curseforge {
 		apiKey = "$System.env.CURSEFORGEKEY"
 		changelog = file('changelog.md')
 		releaseType = 'release'
-		addGameVersion(modMinecraftVersion)
         addGameVersion("${project.modLoader}")
+		addGameVersion(modMinecraftVersion)
+		addGameVersion("1.20")
         relations {
         	requiredDependency 'unionlib'
         }
@@ -106,7 +107,7 @@ modrinth {
     versionNumber = "${project.version}"
     versionType = "release"
     uploadFile = remapJar
-    gameVersions = [modMinecraftVersion]
+    gameVersions = [modMinecraftVersion, "1.20"]
     loaders = ["${project.modLoader}".toLowerCase()]
 	changelog = file('changelog.md').text
     dependencies {
