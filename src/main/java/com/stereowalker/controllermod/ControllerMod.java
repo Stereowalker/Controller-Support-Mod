@@ -13,8 +13,8 @@ import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.api.collectors.ConfigCollector;
 import com.stereowalker.unionlib.api.collectors.ReloadListeners;
-import com.stereowalker.unionlib.config.ConfigBuilder;
 import com.stereowalker.unionlib.mod.MinecraftMod;
 
 import net.minecraft.resources.ResourceLocation;
@@ -41,12 +41,20 @@ public class ControllerMod extends MinecraftMod
 	{
 		super(MOD_ID, () -> new ControllerSupportClientSegment(), null);
 		instance = this;
-		ConfigBuilder.registerConfig(MOD_ID, CONFIG);
+	}
+	
+	@Override
+	public void onModConstruct() {
 		controllers = new ArrayList<Controller>();
 	}
 
 	@Override
 	public void onModStartupInClient() {
+	}
+	
+	@Override
+	public void setupConfigs(ConfigCollector collector) {
+		collector.registerConfig(CONFIG);
 	}
 	
 	@Override
