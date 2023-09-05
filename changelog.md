@@ -1,2 +1,5 @@
-- Fix controls not being read from the controller options file
-- Fix binding button not showing
+- Ported to 1.20.1
+- Added support for the Map Atlases mod
+- Added an "Enter" key for the On-Screen Keyboard
+- Attack/Destroy now show up in button hints
+- The Cursor should now display above most elements

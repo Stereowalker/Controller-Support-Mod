@@ -1,12 +1,6 @@
-[8.0.2]
-- Fix controls not being read from the controller options file
-- Fix binding button not showing
-
-[8.0.1]
-- Changed the way safe area works for potion effects to reduce conflict with other mods
-
-[8.0.0]
-- Disables the mod when the loading overlay is active
-- Renamed the deadzone option in the config
-- The on-screen keyboard deadzone can now be adjusted in the configs
-- Ported to 1.19.3
+[9.0.1]
+- Ported to 1.20.1
+- Added support for the Map Atlases mod
+- Added an "Enter" key for the On-Screen Keyboard
+- Attack/Destroy now show up in button hints
+- The Cursor should now display above most elements
