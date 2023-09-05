@@ -10,8 +10,6 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
-import com.stereowalker.controllermod.client.controller.ControllerMapping;
-import com.stereowalker.controllermod.client.controller.ControllerModel;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,16 +18,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 
 public class PaperDollOptions {
-	
+
 	public Map<DollType, Boolean> show = Maps.newHashMap();
 	public DollType lastDisplayedShow = DollType.NONE;
 	public DollType currentDoll = DollType.NONE;
@@ -119,25 +115,11 @@ public class PaperDollOptions {
 				renderNames(guiGraphics);
 			}
 			if (ControllerMod.CONFIG.show_button_hints) {
-				renderButtonHints(guiGraphics);
+				ButtonHints.render(guiGraphics);
 			}
 		}
 	}
 
-	@SuppressWarnings("resource")
-	public static void renderButtonHints(GuiGraphics guiGraphics) {
-		ControllerMapping map = ControllerMod.getInstance().controllerOptions.controllerKeyBindInventory;
-		ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
-		if (map.isBoundToButton(model)) {
-			int x1 = ControllerMod.getSafeArea() - 2;
-			int y1 = guiGraphics.guiHeight() - 12;
-			ResourceLocation icon = model.getOrCreate(map.getButtonOnController(model))[0].getIcon();
-			guiGraphics.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
-			guiGraphics.drawString(Minecraft.getInstance().font, I18n.get(map.getDescripti()), x1 + 20, y1 - 3, 0xffffff, true);
-			
-		}
-	}
-	
 	@SuppressWarnings("resource")
 	public static void renderPosition(GuiGraphics guiGraphics) {
 		Minecraft.getInstance().getProfiler().push("display-position");
@@ -153,7 +135,7 @@ public class PaperDollOptions {
 
 		//ARGB
 		guiGraphics.fill(RenderType.guiOverlay(), ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
-		
+
 		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 3, y+1, 0x555555);
 		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 2, y, 0xffffff);
 		Minecraft.getInstance().getProfiler().pop();
@@ -209,7 +191,7 @@ public class PaperDollOptions {
 		entity.yHeadRot = f6;
 		matrixstack.popPose();
 	}
-	
+
 	public enum DollType {
 		ALWAYS_ON("AlwaysOn", "always_on", false, (player) -> true),
 		CRAWLING("Crawling", "crawling", true, (player) -> player.isVisuallyCrawling()),
@@ -246,7 +228,7 @@ public class PaperDollOptions {
 		public MutableComponent getDisplayText() {
 			return Component.translatable("gui.paper_doll."+displayText+"");
 		}
-		
+
 		public boolean showInMenu() {
 			return this != NONE && this != ALWAYS_ON;
 		}
