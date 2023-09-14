@@ -1,3 +1,6 @@
+[9.0.2]
+- Updated to UnionLib 10.2
+
 [9.0.1]
 - Added support for the Map Atlases mod
 - Added an "Enter" key for the On-Screen Keyboard
