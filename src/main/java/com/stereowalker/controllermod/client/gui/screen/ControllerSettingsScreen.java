@@ -6,10 +6,10 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
+import com.stereowalker.unionlib.api.gui.GuiRenderer;
 import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -87,6 +87,6 @@ public class ControllerSettingsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiGraphics arg0, int arg1, int arg2, float arg3) {
+	public void drawOnScreen(GuiRenderer arg0, int arg1, int arg2, float arg3) {
 	}
 }
