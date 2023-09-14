@@ -2,10 +2,10 @@ package com.stereowalker.controllermod.client.gui.screen;
 
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.gui.widget.list.TriggerAxesList;
+import com.stereowalker.unionlib.api.gui.GuiRenderer;
 import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class TriggerSetupScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.triggerAxesList.render(guiGraphics, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY, float partialTicks) {
+		guiRenderer.renderSelectionList(triggerAxesList, mouseX, mouseY, partialTicks);
 	}
 }

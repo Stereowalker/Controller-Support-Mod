@@ -11,10 +11,10 @@ import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.controllermod.client.gui.widget.list.ControllerBindingList;
+import com.stereowalker.unionlib.api.gui.GuiRenderer;
 import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -119,8 +119,8 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.keyBindingList.render(guiGraphics, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY, float partialTicks) {
+		guiRenderer.renderSelectionList(keyBindingList, mouseX, mouseY, partialTicks);
 		boolean flag = false;
 
 		for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
