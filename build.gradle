@@ -45,7 +45,7 @@ dependencies {
 	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.modLoaderVersion}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.modLoaderVersion}+${project.modMinecraftVersion}"
 	implementation 'com.electronwill.night-config:core:3.6.3'
 	implementation 'com.electronwill.night-config:toml:3.6.3'
 }
