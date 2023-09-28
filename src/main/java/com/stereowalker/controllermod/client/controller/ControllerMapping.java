@@ -418,15 +418,23 @@ public class ControllerMapping implements Comparable<ControllerMapping> {
 		interactions.addAll(controller.getAxesMoved());
 		interactions.forEach(interaction -> cases.forEach(use -> {
 			if (MAP.get(use) != null) {
-				down.add(MAP.get(use).get(Lists.newArrayList(controller.getModel().getOrCreate(Lists.newArrayList(interaction)))));
-
+				List<String> disabledInteractions = Lists.newArrayList();
 				interactions.forEach(interaction2 -> {
+					int prevSize = down.size();
 					down.add(MAP.get(use).get(Lists.newArrayList(controller.getModel().getOrCreate(Lists.newArrayList(interaction, interaction2)))));
+					if (down.size() == prevSize) {
+						disabledInteractions.add(interaction);
+						disabledInteractions.add(interaction2);
+					}
 				});
+				if (!disabledInteractions.contains(interaction))
+					down.add(MAP.get(use).get(Lists.newArrayList(controller.getModel().getOrCreate(Lists.newArrayList(interaction)))));
 			}
 
 		}));
 		down.removeIf((bind) -> bind == null);
+//		if (down.size() > 0)System.out.println();
+//		down.forEach(System.out::print);
 		return down;
 	}
 
