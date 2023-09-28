@@ -31,7 +31,6 @@ import com.stereowalker.controllermod.resources.ControllerModelManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.DataFixTypes;
 
 public class ControllerOptions {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -361,7 +360,8 @@ public class ControllerOptions {
 		} catch (RuntimeException runtimeexception) {
 		}
 
-		return DataFixTypes.OPTIONS.updateToCurrentVersion(this.mc.getFixerUpper(), nbt, i);
+//		return DataFixTypes.OPTIONS.updateToCurrentVersion(this.mc.getFixerUpper(), nbt, i);
+		return nbt;
 	}
 
 	/**
