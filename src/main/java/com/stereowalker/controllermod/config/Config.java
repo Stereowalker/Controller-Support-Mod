@@ -9,6 +9,9 @@ public class Config implements ConfigObject {
 	@UnionConfig.Entry(group = "General", name = "Debug Mode")
 	public boolean debug = false;
 	
+	@UnionConfig.Entry(group = "Debug", name = "Show Buttons Pressed")
+	public boolean debugButtons = false;
+	
 	@UnionConfig.Entry(group = "Controller", name = "Use Any Model")
 	@UnionConfig.Comment(comment = "This prevents the mod from restricting you from changing what model the mod sees your controller as")
 	public boolean useAnyModel = false;

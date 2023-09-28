@@ -1,5 +1,7 @@
 package com.stereowalker.controllermod;
 
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -7,6 +9,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
+import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.ListeningMode;
 import com.stereowalker.unionlib.api.collectors.InsertCollector;
@@ -51,6 +54,17 @@ public class ControllerSupportClientSegment extends ClientSegment {
 						ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(renderer, Minecraft.getInstance().font, x, y);
 					} else {
 						renderPonter(x, y, 8.0D);
+						if (ControllerMod.CONFIG.debugButtons) {
+							Controller controller = ControllerMod.getInstance().getActiveController();
+							List<String> downs = controller.getButtonsDown();
+							if (!downs.isEmpty()) {
+								for (int i = 0; i < Math.min(2, downs.size()); i++) {
+									ResourceLocation icon = controller.getModel().getOrCreate(downs)[i].getIcon();
+									if (icon != null)
+										renderer.blit(icon, x + 2 + (i * 20), y + 2, 0, 0, 20, 20, 20, 20);
+								}
+							}
+						}
 					}
 				} 
 			}
