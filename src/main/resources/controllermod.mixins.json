@@ -10,7 +10,6 @@
 		"AbstractContainerScreenMixin",
 		"GuiMixin",
 		"MinecraftMixin",
-		"ScreenMixin",
 		"ControlsScreenMixin",
 		"KeyboardInputMixin",
 		"GameRendererMixin"
