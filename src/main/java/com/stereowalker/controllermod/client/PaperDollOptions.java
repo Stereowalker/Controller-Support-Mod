@@ -100,10 +100,10 @@ public class PaperDollOptions {
 				}
 				if (paperDoll.currentDoll != DollType.NONE) {
 					paperDollShownTicks = 0;
-					drawEntityOnScreen(20, 40, 17, -30, 0, Minecraft.getInstance().player);
+					drawEntityOnScreen(guiGraphics.pose(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
 				} else if (paperDollShownTicks < 200) {
 					paperDollShownTicks++;
-					drawEntityOnScreen(20, 40, 17, -30, 0, Minecraft.getInstance().player);
+					drawEntityOnScreen(guiGraphics.pose(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
 				}
 			}
 
@@ -150,10 +150,9 @@ public class PaperDollOptions {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity entity) {
+	public static void drawEntityOnScreen(PoseStack matrixstack, int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity entity) {
 		float f = (float)Math.atan((double)(mouseX / 40.0F));
 		float f1 = (float)Math.atan((double)(mouseY / 40.0F));
-		PoseStack matrixstack = new PoseStack();
 		matrixstack.pushPose();
 		matrixstack.translate((float)posX, (float)posY, 1050.0F);
 		matrixstack.scale(1.0F, 1.0F, -1.0F);
