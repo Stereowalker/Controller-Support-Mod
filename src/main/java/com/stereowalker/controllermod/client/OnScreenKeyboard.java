@@ -198,15 +198,15 @@ public class OnScreenKeyboard {
 		//minecraft.screen.itemRenderer.blitOffset = 400.0f;
 //		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		Matrix4f matrix4f = renderer.guiGraphics().pose().last().pose();
-		renderer.fillGradient(j2 - 3, k2 - 4, j2 + width + 3, k2 - 3,/*400,*/getKeyboardColors("Background")[0], getKeyboardColors("Background")[0]);
-		renderer.fillGradient(j2 - 3, k2 + height + 3, j2 + width + 3, k2 + height + 4,/*400,*/getKeyboardColors("Background")[1], getKeyboardColors("Background")[1]);
-		renderer.fillGradient(j2 - 3, k2 - 3, j2 + width + 3, k2 + height + 3,/*400,*/getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
-		renderer.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + height + 3,/*400,*/getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
-		renderer.fillGradient(j2 + width + 3, k2 - 3, j2 + width + 4, k2 + height + 3,/*400,*/getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
-		renderer.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + height + 3 - 1,/*400,*/getKeyboardColors("Border")[0], getKeyboardColors("Border")[1]);
-		renderer.fillGradient(j2 + width + 2, k2 - 3 + 1, j2 + width + 3, k2 + height + 3 - 1,/*400,*/getKeyboardColors("Border")[0], getKeyboardColors("Border")[1]);
-		renderer.fillGradient(j2 - 3, k2 - 3, j2 + width + 3, k2 - 3 + 1,/*400,*/getKeyboardColors("Border")[0], getKeyboardColors("Border")[0]);
-		renderer.fillGradient(j2 - 3, k2 + height + 2, j2 + width + 3, k2 + height + 3,/*400,*/getKeyboardColors("Border")[1], getKeyboardColors("Border")[1]);
+		renderer.fillGradient(j2 - 3, k2 - 4, j2 + width + 3, k2 - 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[0]);
+		renderer.fillGradient(j2 - 3, k2 + height + 3, j2 + width + 3, k2 + height + 4, 400, getKeyboardColors("Background")[1], getKeyboardColors("Background")[1]);
+		renderer.fillGradient(j2 - 3, k2 - 3, j2 + width + 3, k2 + height + 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
+		renderer.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + height + 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
+		renderer.fillGradient(j2 + width + 3, k2 - 3, j2 + width + 4, k2 + height + 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
+		renderer.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + height + 3 - 1, 400, getKeyboardColors("Border")[0], getKeyboardColors("Border")[1]);
+		renderer.fillGradient(j2 + width + 2, k2 - 3 + 1, j2 + width + 3, k2 + height + 3 - 1, 400, getKeyboardColors("Border")[0], getKeyboardColors("Border")[1]);
+		renderer.fillGradient(j2 - 3, k2 - 3, j2 + width + 3, k2 - 3 + 1, 400, getKeyboardColors("Border")[0], getKeyboardColors("Border")[0]);
+		renderer.fillGradient(j2 - 3, k2 + height + 2, j2 + width + 3, k2 + height + 3, 400, getKeyboardColors("Border")[1], getKeyboardColors("Border")[1]);
 //		RenderSystem.enableDepthTest();
 //		RenderSystem.disableTexture();
 //		RenderSystem.enableBlend();
@@ -214,7 +214,7 @@ public class OnScreenKeyboard {
 //		RenderSystem.disableBlend();
 //		RenderSystem.enableTexture();
 		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-		renderer.guiGraphics().pose().translate(0.0D, 0.0D, 400.0D);
+		renderer.poseStack().translate(0.0D, 0.0D, 400.0D);
 		int l1 = k2 + 1;
 		for(int i2 = 0; i2 < layers.size(); ++i2) {
 			int m1 = j2;
