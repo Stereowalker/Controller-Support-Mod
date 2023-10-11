@@ -3,9 +3,9 @@ package com.stereowalker.controllermod.client;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
+import com.stereowalker.unionlib.api.gui.GuiRenderer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -14,8 +14,7 @@ import net.minecraft.world.phys.HitResult;
 public class ButtonHints {
 
 
-	@SuppressWarnings("resource")
-	public static void render(GuiGraphics guiGraphics) {
+	public static void render(GuiRenderer renderer, int width, int height) {
 		ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 		ControllerMapping map1 = ControllerMod.getInstance().controllerOptions.controllerKeyBindInventory;
 		ControllerMapping map2 = ControllerMod.getInstance().controllerOptions.controllerKeyBindAttack;
@@ -24,19 +23,19 @@ public class ButtonHints {
 		//Left 1
 		if (!desc1.isEmpty()) {
 			int x1 = ControllerMod.getSafeArea() - 2;
-			int y1 = guiGraphics.guiHeight() - 12;
+			int y1 = height - 12;
 			ResourceLocation icon = model.getOrCreate(map1.getButtonOnController(model))[0].getIcon();
-			guiGraphics.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
-			guiGraphics.drawString(Minecraft.getInstance().font, desc1, x1 + 20, y1 - 3, 0xffffff, true);
+			renderer.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
+			renderer.drawString(desc1, x1 + 20, y1 - 3, 0xffffff, true);
 
 		}
 		//Left 2
 		if (!desc2.isEmpty()) {
-			int x1 = guiGraphics.guiWidth() - 62;
-			int y1 = guiGraphics.guiHeight() - 12;
+			int x1 = width - 62;
+			int y1 = height - 12;
 			ResourceLocation icon = model.getOrCreate(map2.getButtonOnController(model))[0].getIcon();
-			guiGraphics.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
-			guiGraphics.drawString(Minecraft.getInstance().font, desc2, x1 + 20, y1 - 3, 0xffffff, true);
+			renderer.blit(icon, x1, y1 - 10, 0, 0, 20, 20, 20, 20);
+			renderer.drawString(desc2, x1 + 20, y1 - 3, 0xffffff, true);
 
 		}
 	}

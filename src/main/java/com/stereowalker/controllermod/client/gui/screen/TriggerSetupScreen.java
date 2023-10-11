@@ -34,7 +34,7 @@ public class TriggerSetupScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY, float partialTicks) {
-		guiRenderer.renderSelectionList(triggerAxesList, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY) {
+		guiRenderer.renderSelectionList(triggerAxesList, mouseX, mouseY);
 	}
 }
