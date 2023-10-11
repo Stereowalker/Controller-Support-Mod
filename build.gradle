@@ -36,7 +36,7 @@ dependencies {
   		officialMojangMappings()
   		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
 	}
-	modImplementation "net.fabricmc:fabric-loader:${project.modFabricLoaderVersion}"
+	modImplementation "net.fabricmc:fabric-loader:0.14.22"
 	modImplementation "curse.maven:forge_config_api-547434:4583000"
 	modImplementation "curse.maven:map_atlasses-436298:4592038"
 	//modImplementation "curse.maven:archi-419699:3929414"
