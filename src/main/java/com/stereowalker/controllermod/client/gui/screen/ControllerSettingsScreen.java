@@ -87,6 +87,6 @@ public class ControllerSettingsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiRenderer arg0, int arg1, int arg2, float arg3) {
+	public void drawOnScreen(GuiRenderer arg0, int arg1, int arg2) {
 	}
 }

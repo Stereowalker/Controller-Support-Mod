@@ -10,13 +10,12 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
+import com.stereowalker.unionlib.api.gui.GuiRenderer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -63,7 +62,7 @@ public class PaperDollOptions {
 	public static final float maxYaw = 210.0F;
 	public static final float minYaw = 120.0F;
 	@SuppressWarnings("resource")
-	public static void renderPlayerDoll(GuiGraphics guiGraphics) {
+	public static void renderPlayerDoll(GuiRenderer renderer, int width, int height) {
 		LocalPlayer player = Minecraft.getInstance().player;
 		PaperDollOptions paperDoll = ControllerMod.getInstance().controllerOptions.paperDoll;
 		float diff = lastHeadYaw - player.yHeadRot;
@@ -100,28 +99,28 @@ public class PaperDollOptions {
 				}
 				if (paperDoll.currentDoll != DollType.NONE) {
 					paperDollShownTicks = 0;
-					drawEntityOnScreen(guiGraphics.pose(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
+					drawEntityOnScreen(renderer.poseStack(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
 				} else if (paperDollShownTicks < 200) {
 					paperDollShownTicks++;
-					drawEntityOnScreen(guiGraphics.pose(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
+					drawEntityOnScreen(renderer.poseStack(), 20, 40, 17, -30, 0, Minecraft.getInstance().player);
 				}
 			}
 
 			if (ControllerMod.CONFIG.show_coordinates && !Minecraft.getInstance().player.isReducedDebugInfo()) {
-				renderPosition(guiGraphics);
+				renderPosition(renderer);
 			}
 
 			if ((!Minecraft.getInstance().hasSingleplayerServer() || Minecraft.getInstance().getSingleplayerServer().isPublished()) && ControllerMod.CONFIG.ingame_player_names) {
-				renderNames(guiGraphics);
+				renderNames(renderer, width);
 			}
 			if (ControllerMod.CONFIG.show_button_hints) {
-				ButtonHints.render(guiGraphics);
+				ButtonHints.render(renderer, width, height);
 			}
 		}
 	}
 
 	@SuppressWarnings("resource")
-	public static void renderPosition(GuiGraphics guiGraphics) {
+	public static void renderPosition(GuiRenderer renderer) {
 		Minecraft.getInstance().getProfiler().push("display-position");
 		RenderSystem.disableDepthTest();
 
@@ -134,18 +133,18 @@ public class PaperDollOptions {
 
 
 		//ARGB
-		guiGraphics.fill(RenderType.guiOverlay(), ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
+		renderer.fillOverlay(ControllerMod.getSafeArea(), y - 2, 3 + k + 1, y + j, 0x22020202);
 
-		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 3, y+1, 0x555555);
-		guiGraphics.drawString(Minecraft.getInstance().font, coordinatesText, ControllerMod.getSafeArea() + 2, y, 0xffffff);
+		renderer.drawString(coordinatesText, ControllerMod.getSafeArea() + 3, y+1, 0x555555, false);
+		renderer.drawString(coordinatesText, ControllerMod.getSafeArea() + 2, y, 0xffffff, false);
 		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	@SuppressWarnings("resource")
-	public static void renderNames(GuiGraphics guiGraphics) {
+	public static void renderNames(GuiRenderer renderer, int width) {
 		Minecraft.getInstance().getProfiler().push("playerName");
 		Component playerName = Minecraft.getInstance().player.getName();
-		guiGraphics.drawString(Minecraft.getInstance().font, playerName, guiGraphics.guiWidth() - Minecraft.getInstance().font.width(playerName), ControllerMod.getSafeArea(), ChatFormatting.WHITE.getColor());
+		renderer.drawString(playerName, width - Minecraft.getInstance().font.width(playerName), ControllerMod.getSafeArea(), ChatFormatting.WHITE.getColor(), false);
 		Minecraft.getInstance().getProfiler().pop();
 	}
 

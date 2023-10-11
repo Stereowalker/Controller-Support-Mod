@@ -119,8 +119,8 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY, float partialTicks) {
-		guiRenderer.renderSelectionList(keyBindingList, mouseX, mouseY, partialTicks);
+	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY) {
+		guiRenderer.renderSelectionList(keyBindingList, mouseX, mouseY);
 		boolean flag = false;
 
 		for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
