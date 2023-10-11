@@ -29,12 +29,6 @@ public class GuiMixin {
     @Shadow @Final private Minecraft minecraft;
 	@Shadow private void renderSlot(GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {}
 	
-	
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;lerp(FFF)F", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void render2(GuiGraphics guiGraphics, float arg1, CallbackInfo ci, Window w, Font font) {
-		PaperDollOptions.renderPlayerDoll(guiGraphics);
-	}
-	
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledWidth()I"))
 	public int render_reditect_width(Window window) {
 		return window.getGuiScaledWidth() - (ControllerMod.getSafeArea()*2);
