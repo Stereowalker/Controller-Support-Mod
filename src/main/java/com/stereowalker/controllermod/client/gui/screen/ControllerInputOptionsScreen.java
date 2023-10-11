@@ -27,6 +27,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	private ControllerBindingList keyBindingList;
 	private ControllerMod mod;
 	private Button buttonReset;
+	static int maxDelay = 20;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
 		super(Component.translatable("options.controller_input.title"), previousScreen);
@@ -80,6 +81,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	}
 
 	private int awaitingTicks = 0;
+	private int comboDelay = 0;
 	@Override
 	public void tick() {
 		if (ControllerMod.getInstance().controllerOptions.enableController && ControllerMod.getInstance().getActiveController() != null) {
@@ -89,7 +91,14 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 				else buttons = ControllerMod.getInstance().getActiveController().getButtonsDown();
 				ControllerUtil.listeningMode = ListeningMode.CHANGE_MAPPINGS;
 				awaitingTicks++;
-				if (awaitingTicks > 5 && awaitingTicks < 100 && buttons.size() > 0 && buttons.size() <= 2) {
+				if (buttons.size() > 0 && buttons.size() <= 2 && comboDelay < maxDelay)
+					comboDelay++;
+				else if (buttons.size() == 2)
+					comboDelay = maxDelay;
+				else if (buttons.size() == 0 || buttons.size() > 2)
+					comboDelay = 0;
+				
+				if (awaitingTicks > 5 && awaitingTicks < 100 && comboDelay >= maxDelay) {
 					ControllerMod.debug(buttons.toString());
 					ControllerMod.getInstance().controllerOptions.setKeyBindingCode(ControllerMod.getInstance().getActiveController().getModel(), keyToSet, keyToSet.isAxis() ? Lists.newArrayList(buttons.get(0)) : buttons);
 					keyToSet = null;
@@ -107,6 +116,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 			}
 			else {
 				awaitingTicks = 0;
+				comboDelay = 0;
 				ControllerUtil.listeningMode = ListeningMode.LISTEN_TO_MAPPINGS;
 			}
 		} else {
