@@ -200,7 +200,7 @@ public class OnScreenKeyboard {
 		//float f = minecraft.screen.itemRenderer.blitOffset;
 		//minecraft.screen.itemRenderer.blitOffset = 400.0f;
 //		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		Matrix4f matrix4f = renderer.guiGraphics().pose().last().pose();
+		Matrix4f matrix4f = renderer.poseStack().last().pose();
 		renderer.fillGradient(j2 - 3, k2 - 4, j2 + width + 3, k2 - 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[0]);
 		renderer.fillGradient(j2 - 3, k2 + height + 3, j2 + width + 3, k2 + height + 4, 400, getKeyboardColors("Background")[1], getKeyboardColors("Background")[1]);
 		renderer.fillGradient(j2 - 3, k2 - 3, j2 + width + 3, k2 + height + 3, 400, getKeyboardColors("Background")[0], getKeyboardColors("Background")[1]);
