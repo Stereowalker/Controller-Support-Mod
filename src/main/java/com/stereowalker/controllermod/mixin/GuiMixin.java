@@ -44,15 +44,15 @@ public class GuiMixin {
 //		Gui.fill(poseStack, minX, minY, maxX + (ControllerMod.getSafeArea()*2), maxY + (ControllerMod.getSafeArea()*2), color);
 //	}
 	
-	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "i")
-	public int render_all_blit_i(int i) {
-		return i + ControllerMod.getSafeArea();
-	}
+//	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "i")
+//	public int render_all_blit_i(int i) {
+//		return i + ControllerMod.getSafeArea();
+//	}
 	
-	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "j")
-	public int render_all_blit_j(int j) {
-		return j + ControllerMod.getSafeArea();
-	}
+//	@ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/MobEffectTextureManager;get(Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"), name = "j")
+//	public int render_all_blit_j(int j) {
+//		return j + ControllerMod.getSafeArea();
+//	}
 	
 	@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
 	public void renderSlot_rediect(Gui gui, GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {
