@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.joml.Quaternionf;
 
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stereowalker.controllermod.ControllerMod;
@@ -172,6 +173,7 @@ public class PaperDollOptions {
 		entity.yHeadRot = renderHeadYaw;
 		entity.yHeadRotO = renderHeadYaw;
 
+		Lighting.setupForEntityInInventory();
 		EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
 		quaternionf2.conjugate();
 		entityrenderermanager.overrideCameraOrientation(quaternionf2);

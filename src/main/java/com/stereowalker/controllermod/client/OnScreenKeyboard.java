@@ -197,6 +197,7 @@ public class OnScreenKeyboard {
 			k2 = minecraft.screen.height - height - 6;
 		}
 
+		renderer.poseStack().pushPose();
 		//float f = minecraft.screen.itemRenderer.blitOffset;
 		//minecraft.screen.itemRenderer.blitOffset = 400.0f;
 //		RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -236,7 +237,7 @@ public class OnScreenKeyboard {
 		//        }
 
 		multibuffersource$buffersource.endBatch();
-//		renderer.poseStack().popPose();
+		renderer.poseStack().popPose();
 //		minecraft.screen.itemRenderer.blitOffset = f;
 	}
 
