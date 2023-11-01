@@ -1,1 +1,5 @@
-- Updated to UnionLib 10.2
+- Updated to UnionLib 10.2.3
+- Added a debug option to show what buttons are being held
+- Combo bindings now disable the bindings of the buttons that make up the combo
+- Added a 1 second delay when trying to bind so that combos can easily be bound
+- Passed gui grapgics posestack to paperdoll
