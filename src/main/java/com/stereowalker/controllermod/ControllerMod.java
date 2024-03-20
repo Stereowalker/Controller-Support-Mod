@@ -2,7 +2,6 @@ package com.stereowalker.controllermod;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import com.stereowalker.controllermod.client.ControllerHandler;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.OnScreenKeyboard;
-import com.stereowalker.controllermod.client.PaperDollOptions;
 import com.stereowalker.controllermod.client.controller.Controller;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 import com.stereowalker.controllermod.config.Config;
@@ -21,7 +19,6 @@ import com.stereowalker.unionlib.mod.MinecraftMod;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
@@ -53,12 +50,6 @@ public class ControllerMod extends MinecraftMod
 	@Override
 	public void onModConstruct() {
 		controllers = new ArrayList<Controller>();
-		eventBus().addListener((Consumer<RegisterGuiOverlaysEvent>)event -> {
-			event.registerAboveAll("paperdoll", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-				gui.setupOverlayRenderState(true, false);
-				PaperDollOptions.renderPlayerDoll(mStack);
-			});
-		});
 	}
 
 	@Override
