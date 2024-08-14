@@ -1,18 +1,19 @@
 {
   "schemaVersion": 1,
-  "id": "controllermod",
-  "version": "${version}",
+  "id": "${mod_id}",
+  "version": "${mod_version}",
 
-  "name": "Controller Support",
-  "description": "Grants the ablility to play Minecraft with controllers and gives opportunity to those who want to play split-screen.",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
-    "Stereowalker"
+    "${mod_authors}"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/controller-mod"
+    "homepage": "${mod_page}",
+    "issues": "${mod_issue_tracker}"
   },
 
-  "license": "All Rights Reserved",
+  "license": "${mod_license}",
   "icon": "pack.png",
 
   "environment": "*",
@@ -22,16 +23,17 @@
     ]
   },
   "mixins": [
-    "controllermod.mixins.json"
+    "${mod_id}.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.20",
-    "minecraft": ">=1.19",
+    "fabricloader": [">=${loader_version_min}", "<${loader_version_max}"],
+    "fabric": "*",
+    "minecraft": [">=${minecraft_version_min}", "<${minecraft_version_max}"],
     "java": ">=17",
-	"unionlib": [">=10.2.3", "<10.3.0"]
+	"unionlib": [">=${unionlib_version_min}", "<${unionlib_version_max}"]
   },
-  "accessWidener": "controllermod.accesswidener",
+  "accessWidener": "${mod_id}.accesswidener",
   "suggests": {
     "another-mod": "*"
   }

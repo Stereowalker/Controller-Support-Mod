@@ -1,73 +1,27 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
-  	id "com.matthewprenger.cursegradle" version "1.4.0"
-  	id "com.modrinth.minotaur" version "2.+"
+	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "com.modrinth.minotaur" version "2.+"
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-version = modMinecraftVersion + "-" +modVersion +"-"+modLoader
-group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = modFilename
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', '+modLoader+' Version: ' + modLoaderVersion)
 
 loom {
-    accessWidenerPath = file("src/main/resources/"+modId+".accesswidener")
-}
-
-repositories {
-	maven {url = "https://repo.spongepowered.org/maven"} // mixin
-	maven {url "https://www.cursemaven.com"} //cursemaven
-	maven {url "https://modmaven.dev/" } //UnionLib
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
-}
-
-dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.modMinecraftVersion}"
-	mappings loom.layered() {
-  		officialMojangMappings()
-  		parchment("org.parchmentmc.data:"+mappingsChannel+"-"+mappingsVersion+"@zip")
-	}
-	modImplementation "net.fabricmc:fabric-loader:0.14.22"
-	modImplementation "curse.maven:forge_config_api-547434:4583000"
-	modImplementation "curse.maven:map_atlasses-436298:4592038"
-	//modImplementation "curse.maven:archi-419699:3929414"
-	modImplementation "curse.maven:cloth-348521:4633442"
-	//modImplementation "curse.maven:rei-310111:4082323"
-	modImplementation "com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+""
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.modLoaderVersion}+${project.modMinecraftVersion}"
-	implementation 'com.electronwill.night-config:core:3.6.3'
-	implementation 'com.electronwill.night-config:toml:3.6.3'
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+	mixin.defaultRefmapName.set("${_mod_id}.refmap.json")
+	accessWidenerPath = file("src/main/resources/${project._mod_id}.accesswidener")
+	runs {
+		client {runDir "run/${project._loader}-Client"}
+		server {runDir "run/${project._loader}-Server"}
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
@@ -76,50 +30,50 @@ jar {
 	}
 }
 
-curseforge {
-    project {
-    	id = modCurseId
-		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('changelog.md')
-		releaseType = 'release'
-        addGameVersion("${project.modLoader}")
-		addGameVersion(modMinecraftVersion)
-		addGameVersion("1.20")
-        relations {
-        	requiredDependency 'unionlib'
-        }
-		mainArtifact(file("${project.buildDir}/libs/"+modFilename+"-${project.version}.jar")) {
-			displayName = modFilename+"-${project.version}"
-		}
-		afterEvaluate {
-			uploadTask.dependsOn(remapJar)
-		}
-	}
-	options {
-    	debug = false // defaults to false
-    	forgeGradleIntegration = false
-  	}	
+// Should exist on all loaders and is loader specific
+repositories {
+	maven {url "https://modmaven.dev/" }// UnionLib
+	maven {url "https://girafi.dk/maven/"}
+	maven {url "https://www.cursemaven.com"} //CurseForge
+    maven {url "https://repo.spongepowered.org/maven"} // mixin
+    maven {url 'https://maven.parchmentmc.org'}//Parchment
+    maven {url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"}//Fuzs Mod Resources
 }
 
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN") 
-    projectId = modId
-    versionNumber = "${project.version}"
-    versionType = "release"
-    uploadFile = remapJar
-    gameVersions = [modMinecraftVersion, "1.20"]
-    loaders = ["${project.modLoader}".toLowerCase()]
-	changelog = file('changelog.md').text
-    dependencies {
-    	required.project "unionlib"
-    }
+dependencies {
+	minecraft "com.mojang:minecraft:${project._minecraft_version}"
+	mappings loom.layered() {
+  		officialMojangMappings()
+  		//parchment("org.parchmentmc.data:parchment-"+mappingsVersion+"@zip")
+	}
+	modImplementation "net.fabricmc:fabric-loader:${project._loader_version}"
+	modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.0"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project._loader_api_version}"
+
+	modImplementation ("com.stereowalker.unionlib:UnionLib:${_minecraft_version}-${_unionlib_version}-${_loader}")
+	///modImplementation "curse.maven:map_atlasses-436298:4592038"
+	//modImplementation "curse.maven:archi-419699:3929414"
+	///modImplementation "curse.maven:cloth-348521:4633442"
+	//modImplementation "curse.maven:rei-310111:4082323"
+}
+
+// These aren't loader specific and should exist on all loaders
+println('Java: ' + System.getProperty('java.version'))
+println('JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Mod Name: ' + _mod_name + ', Mod Version: ' + _mod_version + ', Minecraft Version: ' + _minecraft_version + ', '+"${_loader} Version: " + _loader_version)
+
+version = _minecraft_version + "-" +_mod_version +"-${_loader}"
+group = modGroup
+base {
+    archivesName = _mod_name
 }
 
 publishing {
-	tasks.publish.dependsOn 'build'
-    publications {
+	publications {
         mavenJava(MavenPublication) {
-			artifact project.file("${project.buildDir}/libs/"+modFilename+"-${project.version}.jar")
+			afterEvaluate {
+                artifact remapJar
+            }
         
         	groupId = project.group
 			artifactId = project.archivesBaseName
@@ -136,4 +90,64 @@ publishing {
 			url = "https://modmaven.dev/artifactory/local-releases/"
         }
     }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: _minecraft_version,
+            minecraft_version_min: _minecraft_version_min, minecraft_version_max: _minecraft_version_max,
+            loader_version_min: _loader_version_min, loader_version_max: _loader_version_max,
+            mod_page: _mod_page, mod_version: _mod_version, mod_issue_tracker: _mod_issue_tracker,
+            mod_name: _mod_name, mod_license: _mod_license, mod_id: _mod_id,
+            mod_authors: _mod_authors, mod_description: _mod_description, loader_file: _loader_file,
+            unionlib_version_min: _unionlib_version_min, unionlib_version_max: _unionlib_version_max,
+    ]
+    inputs.properties replaceProperties
+    filesMatching([_loader_file, 'pack.mcmeta']) {
+        expand replaceProperties// + [project: project]
+    }
+}
+
+curseforge {
+    project {
+    	id = "${_curseforge_id}"
+		apiKey = "$System.env.CURSEFORGEKEY"
+		changelog = file('changelog.md')
+		changelogType = "markdown"
+		releaseType = 'release'
+		addGameVersion("${_minecraft_version}")
+		addGameVersion("1.21")
+        addGameVersion("${_loader}")
+		addGameVersion("Quilt")
+		relations {
+      		requiredDependency 'unionlib'
+		}
+		mainArtifact(jar) {
+			displayName = _mod_name+"-$project.version"
+		}
+	}		
+}
+
+modrinth {
+    projectId = "${_modrinth_id}"
+    token = "$System.env.MODRINTH_TOKEN"
+    versionNumber = "${project.version}"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = ["${_minecraft_version}", "1.21"]
+    loaders = ["${_loader}".toLowerCase(), "quilt"]
+	changelog = file('changelog.md').text
+    dependencies {
+        required.project "unionlib"
+    }
+}
+
+task uploadToAllSites {
+    dependsOn "curseforge"
+    dependsOn "modrinth"
+    group = "publishing"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
