@@ -21,25 +21,32 @@ public class VirtualMouseHelper extends MouseHandler {
 	 */
 	public void scrollCallback(long handle, double xoffset, double yoffset) {
 		if (handle == Minecraft.getInstance().getWindow().getWindow()) {
-			double d0 = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity().get();
+			double d0 = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(xoffset) : xoffset) * this.minecraft.options.mouseWheelSensitivity().get();
+			double d1 = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(yoffset) : yoffset) * this.minecraft.options.mouseWheelSensitivity().get();
 			if (this.minecraft.getOverlay() == null) {
 				if (this.minecraft.screen != null) {
-					double d1 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
-					double d2 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
-					if (this.minecraft.screen.mouseScrolled(d1, d2, d0)) return;
+					double d2 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
+					double d3 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
+					if (this.minecraft.screen.mouseScrolled(d2, d3, d0, d1)) return;
 					this.minecraft.screen.afterMouseAction();
 				} else if (this.minecraft.player != null) {
-					if (this.accumulatedScroll != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScroll)) {
-						this.accumulatedScroll = 0.0D;
+					if (this.accumulatedScrollX != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScrollX)) {
+						this.accumulatedScrollX = 0.0D;
+					}
+					if (this.accumulatedScrollY != 0.0D && Math.signum(d1) != Math.signum(this.accumulatedScrollY)) {
+						this.accumulatedScrollY = 0.0D;
 					}
 
-					this.accumulatedScroll += d0;
-					int f1 = (int)this.accumulatedScroll;
-					if (f1 == 0.0F) {
+					this.accumulatedScrollX += d0;
+					this.accumulatedScrollY += d1;
+					int f0 = (int)this.accumulatedScrollX;
+					int f1 = (int)this.accumulatedScrollY;
+					if (f0 == 0.0F && f1 == 0.0F) {
 						return;
 					}
 
-					this.accumulatedScroll -= (double)f1;
+					this.accumulatedScrollX -= (double)f0;
+					this.accumulatedScrollY -= (double)f1;
 					//               if (net.minecraftforge.client.ForgeHooksClient.onMouseScrolled(this, d0)) return;
 					if (this.minecraft.player.isSpectator()) {
 						if (this.minecraft.gui.getSpectatorGui().isMenuActive()) {

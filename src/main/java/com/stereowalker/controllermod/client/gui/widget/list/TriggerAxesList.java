@@ -25,7 +25,7 @@ public class TriggerAxesList extends ContainerObjectSelectionList<TriggerAxesLis
 	private ControllerMod mod;
 
 	public TriggerAxesList(TriggerSetupScreen controls, Minecraft mcIn, ControllerMod modIn) {
-		super(mcIn, controls.width + 45, controls.height, 43, controls.height - 32, 20);
+		super(mcIn, controls.width, controls.layout.getContentHeight(), controls.layout.getHeaderHeight(), 20);
 		this.mod = modIn;
 		this.addEntry(new TriggerAxesList.CategoryEntry(Component.translatable("gui.positive_triggers")));
 		for (int i = 0; i < mod.getActiveController().getAxes().capacity(); i++) {

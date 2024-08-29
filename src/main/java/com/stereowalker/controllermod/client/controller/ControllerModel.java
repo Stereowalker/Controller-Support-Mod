@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerMap.Button;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.Util;
 import net.minecraft.Util.OS;
@@ -17,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ControllerModel {
-	public static final ControllerModel CUSTOM = new ControllerModel(new ResourceLocation("minecraft:custom_unknown"), "custom", "", OS.UNKNOWN, new Integer[] {}, new Integer[] {}, Lists.newArrayList()) {
+	public static final ControllerModel CUSTOM = new ControllerModel(VersionHelper.toLoc("minecraft:custom_unknown"), "custom", "", OS.UNKNOWN, new Integer[] {}, new Integer[] {}, Lists.newArrayList()) {
 		@Override
 		public List<Integer> getControllerPositiveTriggers() {
 			return ControllerMod.getInstance().controllerOptions.positiveTriggerAxes;
@@ -28,10 +29,10 @@ public class ControllerModel {
 			return ControllerMod.getInstance().controllerOptions.negativeTriggerAxes;
 		}
 	};
-	public static final ControllerModel XBOX_360_WINDOWS = new ControllerModel(new ResourceLocation("minecraft:xbox_360_windows"), "xbox_360", "78696e70757401000000000000000000", OS.WINDOWS, new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList());
-	public static final ControllerModel XBOX_360_LINUX = new ControllerModel(new ResourceLocation("minecraft:xbox_360_linux"), "xbox_360", "03000000de280000ff11000001000000", OS.LINUX, new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList());
-	public static final ControllerModel PS4_WINDOWS = new ControllerModel(new ResourceLocation("minecraft:ps4_windows"), "ps4", "030000004c050000cc09000000000000", OS.WINDOWS, new Integer[] {3,4}, new Integer[] {}, Lists.newArrayList());
-//	public static final ControllerModel PS4_LINUX = new ControllerModel(new ResourceLocation("minecraft:ps4_linux"), "ps4", "050000004c05MISC0000cc09000000810000", OS.LINUX, new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList("button13", "button14", "button15", "button16"));
+	public static final ControllerModel XBOX_360_WINDOWS = new ControllerModel(VersionHelper.toLoc("minecraft:xbox_360_windows"), "xbox_360", "78696e70757401000000000000000000", OS.WINDOWS, new Integer[] {4,5}, new Integer[] {}, Lists.newArrayList());
+	public static final ControllerModel XBOX_360_LINUX = new ControllerModel(VersionHelper.toLoc("minecraft:xbox_360_linux"), "xbox_360", "03000000de280000ff11000001000000", OS.LINUX, new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList());
+	public static final ControllerModel PS4_WINDOWS = new ControllerModel(VersionHelper.toLoc("minecraft:ps4_windows"), "ps4", "030000004c050000cc09000000000000", OS.WINDOWS, new Integer[] {3,4}, new Integer[] {}, Lists.newArrayList());
+//	public static final ControllerModel PS4_LINUX = new ControllerModel(VersionHelper.toLoc("minecraft:ps4_linux"), "ps4", "050000004c05MISC0000cc09000000810000", OS.LINUX, new Integer[] {2,5}, new Integer[] {}, Lists.newArrayList("button13", "button14", "button15", "button16"));
 	public static final List<ControllerModel> DEFAULTS = Lists.newArrayList(CUSTOM, XBOX_360_WINDOWS, XBOX_360_LINUX, PS4_WINDOWS);
 	String modelName;
 	String GUID;
@@ -82,12 +83,12 @@ public class ControllerModel {
 
 	@Deprecated
     private static void addOButton(ControllerModel model, String name, String icon, String buttonId) {
-    	Button button = new Button(name, model, new ResourceLocation("controllermod:textures/gui/"+icon+""), buttonId);
+    	Button button = new Button(name, model, VersionHelper.toLoc("controllermod:textures/gui/"+icon+""), buttonId);
     	model.map.put(buttonId, button);
     }
 
     private static void addButton(ControllerModel model, String name, String alias, String icon, String buttonId) {
-    	Button button = new Button(name+"."+alias, model, new ResourceLocation("controllermod:textures/gui/"+icon+""), buttonId);
+    	Button button = new Button(name+"."+alias, model, VersionHelper.toLoc("controllermod:textures/gui/"+icon+""), buttonId);
     	model.map.put(buttonId, button);
     	model.aliases.put(alias, buttonId);
     }

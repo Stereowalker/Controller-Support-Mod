@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -19,6 +20,7 @@ import com.stereowalker.unionlib.api.collectors.OverlayCollector.Order;
 import com.stereowalker.unionlib.client.gui.screens.config.ConfigScreen;
 import com.stereowalker.unionlib.insert.ClientInserts;
 import com.stereowalker.unionlib.mod.ClientSegment;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
@@ -35,7 +37,7 @@ public class ControllerSupportClientSegment extends ClientSegment {
 	
 	@Override
 	public ResourceLocation getModIcon() {
-		return new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/controller_icon2.png");
+		return VersionHelper.toLoc(ControllerMod.MOD_ID, "textures/gui/controller_icon2.png");
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class ControllerSupportClientSegment extends ClientSegment {
 					if (ControllerUtil.listeningMode == ListeningMode.KEYBOARD) {
 						ControllerMod.getInstance().onScreenKeyboard.drawKeyboard(renderer, Minecraft.getInstance().font, x, y);
 					} else {
-						renderPonter(x, y, 8.0D);
+						renderPonter(x, y, 8.0F);
 						if (ControllerMod.CONFIG.debugButtons) {
 							Controller controller = ControllerMod.getInstance().getActiveController();
 							List<String> downs = controller.getButtonsDown();
@@ -81,7 +83,7 @@ public class ControllerSupportClientSegment extends ClientSegment {
 		});
 	}
 
-	private static void renderPonter(int x, int y, double size) {
+	private static void renderPonter(int x, int y, float size) {
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -93,13 +95,12 @@ public class ControllerSupportClientSegment extends ClientSegment {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, ControllerMod.Locations.CURSOR);
 		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex(-size+x, size+y, -90.0F).uv(0.0F, 1.0F).endVertex();
-		bufferbuilder.vertex(size+x, size+y, -90.0F).uv(1.0F, 1.0F).endVertex();
-		bufferbuilder.vertex(size+x, -size+y, -90.0F).uv(1.0F, 0.0F).endVertex();
-		bufferbuilder.vertex(-size+x, -size+y, -90.0F).uv(0.0F, 0.0F).endVertex();
-		tessellator.end();
+		BufferBuilder bufferbuilder = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferbuilder.addVertex(-size+x, size+y, -90.0F).setUv(0.0F, 1.0F);
+		bufferbuilder.addVertex(size+x, size+y, -90.0F).setUv(1.0F, 1.0F);
+		bufferbuilder.addVertex(size+x, -size+y, -90.0F).setUv(1.0F, 0.0F);
+		bufferbuilder.addVertex(-size+x, -size+y, -90.0F).setUv(0.0F, 0.0F);
+		BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 		RenderSystem.depthMask(true);
 		RenderSystem.enableDepthTest();
 		RenderSystem.defaultBlendFunc();

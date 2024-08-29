@@ -27,6 +27,7 @@ import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
 import com.stereowalker.controllermod.client.controller.UseCase;
 import com.stereowalker.controllermod.resources.ControllerModelManager;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -83,7 +84,7 @@ public class ControllerOptions {
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
 		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("button13"));
-		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, new ResourceLocation("controllermod:ps4_linux"));
+		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, VersionHelper.toLoc("controllermod:ps4_linux"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 	public final ControllerMapping controllerBindKeyboardBackspace = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard_backspace",  (builder) -> {
@@ -307,7 +308,7 @@ public class ControllerOptions {
 					}
 
 					if ("controllerModel".equals(s)) {
-						this.controllerModel = ControllerModelManager.ALL_MODELS.get(new ResourceLocation(s1));
+						this.controllerModel = ControllerModelManager.ALL_MODELS.get(VersionHelper.toLoc(s1));
 					}
 
 					this.paperDoll.readOptions(s, s1);

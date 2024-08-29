@@ -9,10 +9,10 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants.Type;
 import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.controller.ControllerUtil.InputType;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 
 public class ControllerBindings {
 
@@ -21,8 +21,8 @@ public class ControllerBindings {
 		builder.put(ControllerModel.XBOX_360_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
 		builder.put(ControllerModel.XBOX_360_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
 		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
-		builder.put(new ResourceLocation("controllermod:ps4_linux"), Lists.newArrayList("#face_button_down"));
-		builder.put(new ResourceLocation("controllermod:nintendo_wii_u_pro"), Lists.newArrayList("#face_button_down"));
+		builder.put(VersionHelper.toLoc("controllermod:ps4_linux"), Lists.newArrayList("#face_button_down"));
+		builder.put(VersionHelper.toLoc("controllermod:nintendo_wii_u_pro"), Lists.newArrayList("#face_button_down"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
 //	public static final ControllerBinding CLOSE_INVENTORY_INPUT = new ControllerBinding("close_invenetory", "button3", InputType.PRESS, ControllerConflictContext.CONTAINER);

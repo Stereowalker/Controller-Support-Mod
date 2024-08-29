@@ -20,12 +20,9 @@ public class TriggerSetupScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void init() {
+	public void initialize() {
 		this.triggerAxesList = new TriggerAxesList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.triggerAxesList);
-		this.addRenderableWidget(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
-			this.minecraft.setScreen(this.previousScreen);
-		}).bounds(this.width / 2 - 155 + 210, this.height - 29, 100, 20).build());
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class ControllerSettingsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void init() {
+	public void initialize() {
 		ControllerOptions options = this.mod.controllerOptions;
 		options.lastGUID = ControllerMod.getInstance().getActiveController().getGUID();
 		options.saveOptions();
@@ -73,9 +73,6 @@ public class ControllerSettingsScreen extends DefaultScreen {
 		else {
 			trigger.active = false;
 		}
-		this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("gui.done"), (p_212984_1_) -> {
-			this.minecraft.setScreen(this.previousScreen);
-		}).bounds(this.width / 2 - 100, this.height  / 6 + 168, 200, 20).build());
 		nextController.active = options.controllerNumber<ControllerMod.getInstance().getTotalConnectedControllers();
 		prevController.active = options.controllerNumber>0;
 		controller.active = hasName && controllerPresent;

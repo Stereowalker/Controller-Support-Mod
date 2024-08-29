@@ -23,7 +23,7 @@ public class PaperDollOptionsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void init() {
+	public void initialize() {
 		int i = 0;
 		for (DollType dollType : DollType.values()) {
 			if (dollType.showInMenu()) {
@@ -31,9 +31,6 @@ public class PaperDollOptionsScreen extends DefaultScreen {
 				i++;
 			}
 		}
-		this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("gui.done"), (p_212984_1_) -> {
-			this.minecraft.setScreen(this.previousScreen);
-		}).bounds(this.width / 2 - 100, this.height  / 6 + 168, 200, 20).build());
 	}
 	
 	public void addOption(int index, DollType getter) {

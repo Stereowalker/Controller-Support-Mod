@@ -81,7 +81,7 @@ public class PaperDollOptions {
 			}
 			renderHeadYaw = newRenderHeadYaw;
 		}
-		if (!Minecraft.getInstance().options.renderDebug) {
+		if (!Minecraft.getInstance().gui.getDebugOverlay().showDebugScreen()) {
 			if (ControllerMod.CONFIG.show_paper_doll) {
 				boolean renderDoll = false;
 				for (DollType dollShow : DollType.values()) {

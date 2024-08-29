@@ -16,6 +16,7 @@ import com.stereowalker.unionlib.client.gui.screens.DefaultScreen;
 import com.stereowalker.unionlib.util.ScreenHelper;
 
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	private ControllerBindingList keyBindingList;
 	private ControllerMod mod;
 	private Button buttonReset;
+	private Button buttonModel;
 	static int maxDelay = 20;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
@@ -37,7 +39,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	}
 
 	@Override
-	public void init() {
+	public void initialize() {
 		boolean isModelEnforced = ControllerMod.getInstance().getActiveController().getActualModel() != null && !ControllerMod.CONFIG.useAnyModel;
 		if (!isModelEnforced && !ControllerUtil.isControllerAvailable(mod.controllerOptions.controllerNumber)) {
 			this.mod.controllerOptions.controllerModel = ControllerModel.CUSTOM;
@@ -45,25 +47,35 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 		}
 		this.keyBindingList = new ControllerBindingList(this, this.minecraft, ControllerMod.getInstance());
 		this.addWidget(this.keyBindingList);
-		this.buttonReset = this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
+		this.buttonReset = ScreenHelper.buttonBuilder(Component.translatable("controls.resetAll"), (p_213125_1_) -> {
 			for(ControllerMapping keybinding : mod.controllerOptions.controllerBindings) {
 				keybinding.setToDefault(ControllerMod.getInstance().getActiveController().getModel());
 			}
 
 			ControllerMapping.resetMapping();
-		}).bounds(this.width / 2 - 165, this.height - 29, 100, 20).build());
-		Button model = this.addRenderableWidget(ScreenHelper.buttonBuilder(Component.empty(), (p_212984_1_) -> {
+		})/*.bounds(this.width / 2 - 165, this.height - 29, 100, 20)*/.width(100).build();
+		this.buttonModel = ScreenHelper.buttonBuilder(Component.empty(), (p_212984_1_) -> {
 			this.mod.controllerOptions.controllerModel = ControllerModel.nextModel(this.mod.controllerOptions.controllerModel);
 			this.minecraft.setScreen(new ControllerInputOptionsScreen(previousScreen, keyToSet, new int[] {0}));
-		}).bounds(this.width / 2 - 155 + 95, this.height - 29, 120, 20).build());
-		model.active = !isModelEnforced;
+		})/*.bounds(this.width / 2 - 155 + 95, this.height - 29, 120, 20)*/.width(120).build();
+		this.buttonModel.active = !isModelEnforced;
 		if (isModelEnforced)
-			model.setMessage(Component.translatable("gui.model").append(" : ").append(ControllerMod.getInstance().getActiveController().getModel().getDisplayName(false)));
+			this.buttonModel.setMessage(Component.translatable("gui.model").append(" : ").append(ControllerMod.getInstance().getActiveController().getModel().getDisplayName(false)));
 		else
-			model.setMessage(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)));
-		this.addRenderableWidget(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
-			this.minecraft.setScreen(this.previousScreen);
-		}).bounds(this.width / 2 - 145 + 210, this.height - 29, 100, 20).build());
+			this.buttonModel.setMessage(Component.translatable("gui.model").append(" : ").append(this.mod.controllerOptions.controllerModel.getDisplayName(ControllerMod.CONFIG.debug)));
+//		this.addRenderableWidget(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, (p_213124_1_) -> {
+//			this.minecraft.setScreen(this.previousScreen);
+//		}).bounds(this.width / 2 - 145 + 210, this.height - 29, 100, 20).build());
+	}
+	
+	@Override
+	protected void addFooter() {
+		LinearLayout linearlayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+		linearlayout.addChild(this.buttonReset);
+		linearlayout.addChild(this.buttonModel);
+		linearlayout.addChild(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, p_325377_ -> this.minecraft.setScreen(this.previousScreen)).width(100).build());
+//	
+//		this.layout.addToFooter(ScreenHelper.buttonBuilder(CommonComponents.GUI_DONE, p_333159_ -> this.onClose()).width(200).build());
 	}
 
 	@Override
@@ -127,6 +139,12 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	public boolean isAwaitingInput() {
 		return awaitingTicks > 0;
 	}
+	
+	@Override
+    protected void repositionElements() {
+        this.layout.arrangeElements();
+        this.keyBindingList.updateSize(this.width, this.layout);
+    }
 
 	@Override
 	public void drawOnScreen(GuiRenderer guiRenderer, int mouseX, int mouseY) {
