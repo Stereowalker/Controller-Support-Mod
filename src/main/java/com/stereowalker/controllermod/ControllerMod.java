@@ -16,6 +16,7 @@ import com.stereowalker.controllermod.resources.ControllerModelManager;
 import com.stereowalker.unionlib.api.collectors.ConfigCollector;
 import com.stereowalker.unionlib.api.collectors.ReloadListeners;
 import com.stereowalker.unionlib.mod.MinecraftMod;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -38,7 +39,7 @@ public class ControllerMod extends MinecraftMod
 	public List<Controller> controllers;
 	public ControllerOptions controllerOptions;
 	public static final Controller EMPTY_CONTROLLER = new Controller(-1, "Empty", "Empty", 0);
-	public static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/controller_button.png");
+	public static final ResourceLocation CONTROLLER_BUTTON_TEXTURES = VersionHelper.toLoc(ControllerMod.MOD_ID, "textures/gui/controller_button.png");
 
 	public ControllerMod() 
 	{
@@ -130,10 +131,10 @@ public class ControllerMod extends MinecraftMod
 
 	public ResourceLocation location(String name)
 	{
-		return new ResourceLocation(MOD_ID, name);
+		return VersionHelper.toLoc(MOD_ID, name);
 	}
 
 	public static class Locations {
-		public static final ResourceLocation CURSOR = new ResourceLocation(ControllerMod.MOD_ID, "textures/gui/pointer.png");
+		public static final ResourceLocation CURSOR = VersionHelper.toLoc(ControllerMod.MOD_ID, "textures/gui/pointer.png");
 	}
 }

@@ -20,20 +20,20 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(Gui.class)
 public class GuiMixin {
 
-	@Shadow public int screenWidth;
-    @Shadow public int screenHeight;
+	//@Shadow public int screenWidth;
+    //@Shadow public int screenHeight;
     @Shadow @Final private Minecraft minecraft;
-	@Shadow private void renderSlot(GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {}
+	//@Shadow private void renderSlot(GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {}
 	
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledWidth()I"))
-	public int render_reditect_width(Window window) {
-		return window.getGuiScaledWidth() - (ControllerMod.getSafeArea()*2);
-	}
+	//@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledWidth()I"))
+	//public int render_reditect_width(Window window) {
+		//return window.getGuiScaledWidth() - (ControllerMod.getSafeArea()*2);
+	//}
 	
-	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledHeight()I"))
-	public int render_reditect_height(Window window) {
-		return window.getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
-	}
+	//@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;getGuiScaledHeight()I"))
+	//public int render_reditect_height(Window window) {
+		//return window.getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
+	//}
 	
 //	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;fill(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V"))
 //	public void render_all_blit(PoseStack poseStack, int minX, int minY, int maxX, int maxY, int color) {
@@ -50,22 +50,22 @@ public class GuiMixin {
 //		return j + ControllerMod.getSafeArea();
 //	}
 	
-	@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
-	public void renderSlot_rediect(Gui gui, GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {
-		renderSlot(guiGraphics, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), partialTick, player, stack, seed);
-	}
+	//@Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIFLnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V"))
+	//public void renderSlot_rediect(Gui gui, GuiGraphics guiGraphics, int x, int y, float partialTick, Player player, ItemStack stack, int seed) {
+		//renderSlot(guiGraphics, x + ControllerMod.getSafeArea(), y + ControllerMod.getSafeArea(), partialTick, player, stack, seed);
+	//}
 	
-	@Inject(method = {"renderVignette","renderSpyglassOverlay","renderTextureOverlay"},  at = @At("HEAD"))
-	public void disableSafeZone(CallbackInfo ci) {
-        this.screenWidth = this.minecraft.getWindow().getGuiScaledWidth();
-        this.screenHeight = this.minecraft.getWindow().getGuiScaledHeight();
-	}
+	//@Inject(method = {"renderVignette","renderSpyglassOverlay","renderTextureOverlay"},  at = @At("HEAD"))
+	//public void disableSafeZone(CallbackInfo ci) {
+        //this.screenWidth = this.minecraft.getWindow().getGuiScaledWidth();
+        //this.screenHeight = this.minecraft.getWindow().getGuiScaledHeight();
+	//}
 	
-	@Inject(method = {"renderVignette","renderSpyglassOverlay","renderTextureOverlay"},  at = @At("TAIL"))
-	public void enableSafeZone(CallbackInfo ci) {
-        this.screenWidth = this.minecraft.getWindow().getGuiScaledWidth() - (ControllerMod.getSafeArea()*2);
-        this.screenHeight = this.minecraft.getWindow().getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
-	}
+	//@Inject(method = {"renderVignette","renderSpyglassOverlay","renderTextureOverlay"},  at = @At("TAIL"))
+	//public void enableSafeZone(CallbackInfo ci) {
+        //this.screenWidth = this.minecraft.getWindow().getGuiScaledWidth() - (ControllerMod.getSafeArea()*2);
+        //this.screenHeight = this.minecraft.getWindow().getGuiScaledHeight() - (ControllerMod.getSafeArea()*2);
+	//}
 	
 //	@Override
 //	public void blit(PoseStack poseStack, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight) {

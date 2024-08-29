@@ -13,6 +13,7 @@ import com.stereowalker.controllermod.ControllerMod;
 import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -21,7 +22,7 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 public abstract class GameRendererMixin implements ResourceManagerReloadListener, AutoCloseable {
 	@Shadow @Final private Minecraft minecraft;
 	@Inject(method = "renderLevel", at = @At(value = "INVOKE", shift = Shift.AFTER, target = "Lnet/minecraft/client/Camera;setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V"))
-	public void renderLevel_inject(float pPartialTicks, long pFinishTimeNano, PoseStack pMatrixStack, CallbackInfo ci) {
+	public void renderLevel_inject(DeltaTracker deltaTracker, CallbackInfo ci) {
 		if(ControllerUtil.isControllerAvailable(ControllerMod.getInstance().controllerOptions.controllerNumber) && ControllerMod.getInstance().controllerOptions.enableController && minecraft.screen == null) {
 			ControllerOptions settings = ControllerMod.getInstance().controllerOptions;
 			float cameraXAxis = settings.controllerBindCameraHorizontal.getAxis();
@@ -29,8 +30,8 @@ public abstract class GameRendererMixin implements ResourceManagerReloadListener
 
 			double moveModifier = 10.0D;
 
-			float newPitch = (cameraYAxis >= -1.0F && cameraYAxis < -0.1D) || (cameraYAxis <= 1.0F && cameraYAxis > 0.1D) ? (float) ((cameraYAxis * ControllerMod.CONFIG.ingame_sensitivity * moveModifier) + minecraft.player.getViewXRot((float) pPartialTicks)) : minecraft.player.getViewXRot((float) pPartialTicks);
-			float newYaw = (cameraXAxis >= -1.0F && cameraXAxis < -0.1D) || (cameraXAxis <= 1.0F && cameraXAxis > 0.1D) ? (float) ((cameraXAxis * ControllerMod.CONFIG.ingame_sensitivity * moveModifier) + minecraft.player.getViewYRot((float) pPartialTicks)) : minecraft.player.getViewYRot((float) pPartialTicks);
+			float newPitch = (cameraYAxis >= -1.0F && cameraYAxis < -0.1D) || (cameraYAxis <= 1.0F && cameraYAxis > 0.1D) ? (float) ((cameraYAxis * ControllerMod.CONFIG.ingame_sensitivity * moveModifier) + minecraft.player.getViewXRot((float) deltaTracker.getGameTimeDeltaPartialTick(false))) : minecraft.player.getViewXRot((float) (float) deltaTracker.getGameTimeDeltaPartialTick(false));
+			float newYaw = (cameraXAxis >= -1.0F && cameraXAxis < -0.1D) || (cameraXAxis <= 1.0F && cameraXAxis > 0.1D) ? (float) ((cameraXAxis * ControllerMod.CONFIG.ingame_sensitivity * moveModifier) + minecraft.player.getViewYRot((float) deltaTracker.getGameTimeDeltaPartialTick(false))) : minecraft.player.getViewYRot((float) (float) deltaTracker.getGameTimeDeltaPartialTick(false));
 
 			minecraft.player.xRot = newPitch;
 			minecraft.player.yRot = newYaw;

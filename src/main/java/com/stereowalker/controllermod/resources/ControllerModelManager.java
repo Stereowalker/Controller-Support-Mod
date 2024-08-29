@@ -16,6 +16,7 @@ import com.stereowalker.controllermod.client.ControllerOptions;
 import com.stereowalker.controllermod.client.controller.ControllerBindings;
 import com.stereowalker.controllermod.client.controller.ControllerModel;
 import com.stereowalker.unionlib.resource.ReloadListener;
+import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.Util.OS;
 import net.minecraft.client.Minecraft;
@@ -33,7 +34,7 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 		Map<ResourceLocation,ControllerModel> models = new HashMap<>();
 		ControllerModel.DEFAULTS.forEach(def -> models.put(def.defaultName, def));
 		for (Entry<ResourceLocation, Resource> resource : manager.listResources("controllermodels", (s) -> s.toString().endsWith(".json")).entrySet()) {
-			ResourceLocation modelId = new ResourceLocation(
+			ResourceLocation modelId = VersionHelper.toLoc(
 					resource.getKey().getNamespace(),
 					resource.getKey().getPath().replace("controllermodels/", "").replace(".json", "")
 					);
@@ -99,7 +100,7 @@ public class ControllerModelManager extends SimplePreparableReloadListener<Map<R
 	
 	@Override
 	public ResourceLocation id() {
-		return new ResourceLocation(ControllerMod.MOD_ID, "model_manager");
+		return VersionHelper.toLoc(ControllerMod.MOD_ID, "model_manager");
 	}
 
 }

@@ -8,6 +8,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Pair;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
@@ -217,7 +218,7 @@ public class OnScreenKeyboard {
 //		RenderSystem.defaultBlendFunc();
 //		RenderSystem.disableBlend();
 //		RenderSystem.enableTexture();
-		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+		MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
 		renderer.poseStack().translate(0.0D, 0.0D, 400.0D);
 		int l1 = k2 + 1;
 		for(int i2 = 0; i2 < layers.size(); ++i2) {

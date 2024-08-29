@@ -36,7 +36,7 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 	private ControllerMod mod;
 
 	public ControllerBindingList(ControllerInputOptionsScreen controls, Minecraft mcIn, ControllerMod modIn) {
-		super(mcIn, controls.width + 45, controls.height, 43, controls.height - 32, 20);
+		super(mcIn, controls.width, controls.layout.getContentHeight(), controls.layout.getHeaderHeight(), 20);
 		this.controlsScreen = controls;
 		this.mod = modIn;
 		ControllerMapping[] akeybinding = ArrayUtils.clone(modIn.controllerOptions.controllerBindings);
@@ -63,12 +63,12 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 
 	@Override
 	protected int getScrollbarPosition() {
-		return super.getScrollbarPosition() + 15 + 40;
+		return super.getScrollbarPosition();
 	}
 
 	@Override
 	public int getRowWidth() {
-		return super.getRowWidth() + 72;
+		return 340;
 	}
 
 	public class CategoryEntry extends ControllerBindingList.Entry {
@@ -148,23 +148,25 @@ public class ControllerBindingList extends ContainerObjectSelectionList<Controll
 		}
 
 		@Override
-		public void render(GuiGraphics guiGraphics, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+		public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			boolean flag = ControllerBindingList.this.controlsScreen.keyToSet == this.controllerBinding;
+			int i = ControllerBindingList.this.getScrollbarPosition() - this.btnReset.getWidth() - 10;
+			int j = i - 5 - this.btnInputType.getWidth();
+			int k = j - 5 - this.btnChangeKeyBinding.getWidth();
 			ControllerModel model = ControllerMod.getInstance().getActiveController().getModel();
 			ControllerMap.Button[] button = model.getOrCreate(Lists.newArrayList(controllerBinding.getButtonOnController(model)));
-			guiGraphics.drawString(ControllerBindingList.this.minecraft.font, this.keyDesc, p_230432_4_ + 65 - ControllerBindingList.this.maxListLabelWidth, p_230432_3_ + p_230432_6_ / 2 - 9 / 2, 16777215);
-			ScreenHelper.setWidgetPosition(this.btnInputType, p_230432_4_ + 166, p_230432_3_);
-
+			guiGraphics.drawString(ControllerBindingList.this.minecraft.font, this.keyDesc, left, top + p_230432_6_ / 2 - 9 / 2, 16777215);
+			ScreenHelper.setWidgetPosition(this.btnInputType, j, top);
 			if (controllerBinding.isAxis()) {
 				this.btnInputType.setMessage(controllerBinding.isAxisInverted(model) ? Component.translatable("gui.inverted") : Component.translatable("Not Inverted"));
 			} else {
 				this.btnInputType.setMessage(controllerBinding.getInputType(model).getDisplayName());
 			}
 			this.btnInputType.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
-			ScreenHelper.setWidgetPosition(this.btnReset, p_230432_4_ + 190 + 50, p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnReset, i, top);
 			this.btnReset.active = !this.controllerBinding.isDefault(model);
 			this.btnReset.render(guiGraphics, p_230432_7_, p_230432_8_, p_230432_10_);
-			ScreenHelper.setWidgetPosition(this.btnChangeKeyBinding, p_230432_4_ + 98, p_230432_3_);
+			ScreenHelper.setWidgetPosition(this.btnChangeKeyBinding, k, top);
 			this.btnChangeKeyBinding.setFirstOverlay(button[0].getIcon());
 			this.btnChangeKeyBinding.adjustFirstOverlay(0, 0);
 			this.btnChangeKeyBinding.adjustSecondOverlay(0, 0);

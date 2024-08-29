@@ -14,9 +14,9 @@ public class MapAtlasesCompat {
 	public static boolean isFullscreenMapActive() {
 		try {
 			Class.forName("pepjebs.mapatlases.screen.MapAtlasesAtlasOverviewScreen");
-			if (Minecraft.getInstance().screen instanceof pepjebs.mapatlases.screen.MapAtlasesAtlasOverviewScreen)
-				return true;
-			else
+//			if (Minecraft.getInstance().screen instanceof pepjebs.mapatlases.screen.MapAtlasesAtlasOverviewScreen)
+//				return true;
+//			else
 				return false;
 		}
 		catch (ClassNotFoundException e){return false;}
