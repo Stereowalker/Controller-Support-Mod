@@ -1,35 +1,24 @@
 plugins {
-	id 'eclipse'
+	id 'java-library'
+    id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 	id "com.modrinth.minotaur" version "2.+"
 }
 apply from: "main.gradle"
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
 
 // Should exist on all loaders and is loader specific
 repositories {
 	maven {url "https://modmaven.dev/" }// UnionLib
-	maven {url "https://girafi.dk/maven/"}
 	maven {url "https://www.cursemaven.com"} //CurseForge
     maven {url = "https://repo.spongepowered.org/maven"} // mixin
+	maven {url "https://girafi.dk/maven/"}
 }
 
 dependencies {
-	minecraft "net.minecraftforge:forge:${_minecraft_version}-" + _loader_version
-	annotationProcessor "org.spongepowered:mixin:"+modMixinVersion+":processor"
-	implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+	implementation ("net.neoforged:neoforge:${_loader_version}")
 	
 	implementation ("com.stereowalker.unionlib:UnionLib:${_minecraft_version}-${_unionlib_version}-${_loader}")
 }
-
-// These aren't loader specific and should exist on all loaders

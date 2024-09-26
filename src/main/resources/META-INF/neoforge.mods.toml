@@ -2,7 +2,7 @@ modLoader="javafml"
 loaderVersion="[${loader_version_min},${loader_version_max})"
 license="${mod_license}"
 issueTrackerURL="${mod_issue_tracker}"
-logoFile="icon.png"
+logoFile="pack.png"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
@@ -12,10 +12,14 @@ displayURL="${mod_page}"
 credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
 authors="${mod_authors}"
 description='''${mod_description}'''
+[[mixins]]
+config="${mod_id}.mixins.json"
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
 [[dependencies.${mod_id}]] #optional
-    modId="forge" #mandatory
+    modId="neoforge" #mandatory
     mandatory=true #mandatory
-    versionRange="[51,)" #mandatory
+    versionRange="[21.0.0-beta,)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
