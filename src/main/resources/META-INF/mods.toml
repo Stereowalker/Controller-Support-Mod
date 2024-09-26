@@ -1,37 +1,32 @@
-
 modLoader="javafml"
-loaderVersion="[43,)"
-license="All Rights Reserved"
-issueTrackerURL="https://github.com/Stereowalker/Controller-Support-Mod/issues"
-logoFile="pack.png"
+loaderVersion="[${loader_version_min},${loader_version_max})"
+license="${mod_license}"
+issueTrackerURL="${mod_issue_tracker}"
+logoFile="icon.png"
 [[mods]]
-modId="controllermod"
-version="${file.jarVersion}"
-displayName="Controller Support"
-updateJSONURL="https://raw.githubusercontent.com/Stereowalker/Controller-Support-Mod/master/update.json"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/controller-mod"
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+updateJSONURL=""
+displayURL="${mod_page}"
 credits="I'd like to thank all my supporters on Patreon for giving me a reason to continue modding, and you for downloading and playing with this mod"
-authors="Stereowalker"
-description='''
-Grants the ablility to play Minecraft with controllers and gives opportunity to those who want to play split-screen.
-'''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.controllermod]] #optional
+authors="${mod_authors}"
+description='''${mod_description}'''
+[[dependencies.${mod_id}]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[43,)" #mandatory
+    versionRange="[51,)" #mandatory
     ordering="NONE"
-    side="CLIENT"
-# Here's another dependency
-[[dependencies.controllermod]]
+    side="BOTH"
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2,1.21)"
+    versionRange="[${minecraft_version_min},${minecraft_version_max})"
     ordering="NONE"
-    side="CLIENT"
-[[dependencies.controllermod]]
+    side="BOTH"
+[[dependencies.${mod_id}]]
     modId="unionlib"
     mandatory=true
-    versionRange="[10.2.3, 10.3.0)"
-    ordering="NONE"
+    versionRange="[${unionlib_version_min},${unionlib_version_max})"
+    ordering="BEFORE"
     side="BOTH"

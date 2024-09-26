@@ -1,170 +1,35 @@
 plugins {
-  	id "com.matthewprenger.cursegradle" version "1.4.0"
-  	id "com.modrinth.minotaur" version "2.+"
 	id 'eclipse'
+    id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "com.modrinth.minotaur" version "2.+"
 }
-
+apply from: "main.gradle"
 apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-mixin {
-    add sourceSets.main, modId+".refmap.json"
-}
-
-version = modMinecraftVersion + "-" +modVersion +"-"+modLoader
-group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = modFilename
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-println('Mod Name: ' + modFilename + ', Mod Version: ' + modVersion + ', Minecraft Version: ' + modMinecraftVersion + ', '+modLoader+' Version: ' + modLoaderVersion)
-
+// Should exist on all loaders and is loader specific
 repositories {
+	maven {url "https://modmaven.dev/" }// UnionLib
+	maven {url "https://girafi.dk/maven/"}
+	maven {url "https://www.cursemaven.com"} //CurseForge
     maven {url = "https://repo.spongepowered.org/maven"} // mixin
-	maven {url "https://www.cursemaven.com"} //cursemaven
-	maven {url "https://modmaven.dev/" } //UnionLib
-	maven { url "https://maven.shedaniel.me/" }//Cloth
-}
-
-minecraft {
-    mappings channel: mappingsChannel, version: mappingsVersion
-    //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    runs {
-        client {
-            workingDirectory project.file('run/client')
-            property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
-			
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-			
-			args '--username', 'CodeHexIO', '--uuid', "$System.env.MINECRAFTUUIDSTEREOWALKER"
-
-            mods {
-                "${modId}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run/server')
-            property 'forge.logging.markers', 'REGISTRIES'
-			arg "-mixin.config="+modId+".mixins.json"
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${modId}" {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:' + modMinecraftVersion + '-' + modLoaderVersion
+	minecraft "net.minecraftforge:forge:${_minecraft_version}-" + _loader_version
 	annotationProcessor "org.spongepowered:mixin:"+modMixinVersion+":processor"
-	implementation "org.spongepowered:mixin:"+modMixinVersion+""
-	implementation fileTree(include: ['*.jar'], dir: 'libs')
-	implementation fg.deobf("com.stereowalker.unionlib:UnionLib:"+modMinecraftVersion+"-"+unionLibVersion+"-"+modLoader+"")
-	implementation fg.deobf("curse.maven:xareo-317780:4716770")
-	implementation fg.deobf("curse.maven:map_atlases-519759:4732649")
-	implementation fg.deobf("curse.maven:archi-419699:4663010")
-	implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:9.0.94")
-	//implementation fg.deobf("curse.maven:rei-310111:4401136")
+	implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+	
+	implementation ("com.stereowalker.unionlib:UnionLib:${_minecraft_version}-${_unionlib_version}-${_loader}")
 }
 
-jar {
-    manifest {
-        attributes([
-            "Specification-Title": modFilename,
-            "Specification-Vendor": "Stereowalker",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": modVersion,
-            "Implementation-Vendor" :"Stereowalker",
-            "MixinConfigs": modId+".mixins.json",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-curseforge {
-    project {
-    	id = modCurseId
-		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('changelog.md')
-		releaseType = 'release'
-		addGameVersion(modMinecraftVersion)
-        addGameVersion("${project.modLoader}")
-		mainArtifact(jar) {
-			displayName = modFilename+"-$project.version"
-		}
-		relations {
-      		requiredDependency 'unionlib'
-    	}
-	}
-	options {
-    	debug = false // defaults to false
-  	}	
-}
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN") 
-    projectId = modId
-    versionNumber = "${project.version}"
-    versionType = "release"
-    uploadFile = jar
-    gameVersions = [modMinecraftVersion]
-    loaders = ["${project.modLoader}".toLowerCase()]
-	changelog = file('changelog.md').text
-    dependencies {
-    	required.project "unionlib"
-    }
-}
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-        	afterEvaluate {
-                artifact project.jar
-            }
-        
-        	groupId = project.group
-			artifactId = project.archivesBaseName
-			version = project.version
-        }
-    }
-    repositories {
-        maven {
-            name = "modmaven"
-			credentials {
-				username "$System.env.ARTIFACTORYUSER"
-				password "$System.env.ARTIFACTORYPASS"
-			}
-			url = "https://modmaven.dev/artifactory/local-releases/"
-        }
-    }
-}
-
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
+// These aren't loader specific and should exist on all loaders
