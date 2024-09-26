@@ -9,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Pair;
 import com.stereowalker.controllermod.client.controller.ControllerMapping;
 import com.stereowalker.controllermod.client.controller.ControllerUtil;
@@ -23,12 +22,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("deprecation")
 //TODO: Use the newer package "org.apache.commons.text" instead of "org.apache.commons.lang3"
-@OnlyIn(Dist.CLIENT)
 public class OnScreenKeyboard {
 
 	enum Layout{

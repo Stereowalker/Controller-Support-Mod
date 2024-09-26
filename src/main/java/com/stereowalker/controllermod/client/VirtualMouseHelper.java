@@ -27,10 +27,12 @@ public class VirtualMouseHelper extends MouseHandler {
 				if (this.minecraft.screen != null) {
 					double d2 = this.xpos * (double)this.minecraft.getWindow().getGuiScaledWidth() / (double)this.minecraft.getWindow().getWidth();
 					double d3 = this.ypos * (double)this.minecraft.getWindow().getGuiScaledHeight() / (double)this.minecraft.getWindow().getHeight();
-					if (net.minecraftforge.client.event.ForgeEventFactoryClient.onScreenMouseScrollPre(this.minecraft.screen, d2, d3, d0, d1)) return;
-					if (this.minecraft.screen.mouseScrolled(d2, d3, d0, d1)) return;
+					if (!net.neoforged.neoforge.client.ClientHooks.onScreenMouseScrollPre(this, this.minecraft.screen, d0, d1)) {
+                        if (!this.minecraft.screen.mouseScrolled(d2, d3, d0, d1)) {
+                            net.neoforged.neoforge.client.ClientHooks.onScreenMouseScrollPost(this, this.minecraft.screen, d0, d1);
+                        }
+                    }
 					this.minecraft.screen.afterMouseAction();
-					net.minecraftforge.client.event.ForgeEventFactoryClient.onScreenMouseScrollPost(this.minecraft.screen, d2, d3, d0, d1);
 				} else if (this.minecraft.player != null) {
 					if (this.accumulatedScrollX != 0.0D && Math.signum(d0) != Math.signum(this.accumulatedScrollX)) {
 						this.accumulatedScrollX = 0.0D;

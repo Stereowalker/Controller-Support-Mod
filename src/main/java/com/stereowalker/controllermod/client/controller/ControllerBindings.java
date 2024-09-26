@@ -13,7 +13,7 @@ import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
 
 public class ControllerBindings {
 

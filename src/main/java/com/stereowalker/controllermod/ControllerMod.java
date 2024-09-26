@@ -20,8 +20,7 @@ import com.stereowalker.unionlib.util.VersionHelper;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.Mod;
 
 @Mod(value = ControllerMod.MOD_ID)
 public class ControllerMod extends MinecraftMod
@@ -44,7 +43,7 @@ public class ControllerMod extends MinecraftMod
 	public ControllerMod() 
 	{
 		super(MOD_ID, () -> new ControllerSupportClientSegment(), null);
-		MinecraftForge.EVENT_BUS.register(this);
+//		MinecraftForge.EVENT_BUS.register(this);
 		instance = this;
 	}
 	
