@@ -36,20 +36,6 @@ public class ControllerMap {
 			else if (input.equals("axis1")) return "LS "+uAr+dAr;
 			else if (input.equals("axis2")) return "RS "+lAr+rAr;
 			else if (input.equals("axis3")) return "RS "+uAr+dAr;
-		if (model == ControllerModel.PS4_WINDOWS)
-			if (input.equals("button12")) return "PS BUTTON";
-			else if (input.equals("axis_pos0")) return "LS "+rAr;
-			else if (input.equals("axis_neg0")) return "LS "+lAr;
-			else if (input.equals("axis_pos1")) return "LS "+dAr;
-			else if (input.equals("axis_neg1")) return "LS "+uAr;
-			else if (input.equals("axis_pos2")) return "RS "+rAr;
-			else if (input.equals("axis_neg2")) return "RS "+lAr;
-			else if (input.equals("axis_pos5")) return "RS "+dAr;
-			else if (input.equals("axis_neg5")) return "RS "+uAr;
-			else if (input.equals("axis0")) return "LS "+lAr+rAr;
-			else if (input.equals("axis1")) return "LS "+uAr+dAr;
-			else if (input.equals("axis2")) return "RS "+lAr+rAr;
-			else if (input.equals("axis5")) return "RS "+uAr+dAr;
 		if (input.equals("dpadup")) return "UP";
 		else if (input.equals("dpadri")) return "RIGHT";
 		else if (input.equals("dpaddo")) return "DOWN";
