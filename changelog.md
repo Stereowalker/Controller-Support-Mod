@@ -1,1 +1,3 @@
-- Ported to 1.21.1
+- Fix null pointer crash for controllers without buttons
+- Reduced the amount of time it takes to bind single buttons
+- Loaded Ps4 controller model for windows via resourcepack
