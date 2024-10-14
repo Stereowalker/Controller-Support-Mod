@@ -83,7 +83,7 @@ public class ControllerOptions {
 	}, InputType.PRESS, UseCase.INGAME);
 
 	public final ControllerMapping controllerBindKeyboard = new ControllerMapping(ON_SCREEN_KEYBOARD, "key.controller.keyboard",  (builder) -> {
-		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("button13"));
+		builder.put(VersionHelper.toLoc("controllermod:ps4_windows"), Lists.newArrayList("button13"));
 		collect(builder, Lists.newArrayList("#select_button"), ControllerModel.XBOX_360_WINDOWS.defaultName, ControllerModel.XBOX_360_LINUX.defaultName, VersionHelper.toLoc("controllermod:ps4_linux"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
 	
