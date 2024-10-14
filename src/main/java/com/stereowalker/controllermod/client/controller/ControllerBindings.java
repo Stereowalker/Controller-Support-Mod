@@ -21,7 +21,8 @@ public class ControllerBindings {
 	public static final ControllerMapping SELECT_INPUT = new ControllerMapping(NEW, "select", Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_LEFT), (builder) -> {
 		builder.put(ControllerModel.XBOX_360_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
 		builder.put(ControllerModel.XBOX_360_LINUX.defaultName, Lists.newArrayList("#face_button_down"));
-		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
+//		builder.put(ControllerModel.PS4_WINDOWS.defaultName, Lists.newArrayList("#face_button_down"));
+		builder.put(VersionHelper.toLoc("controllermod:ps4_windows"), Lists.newArrayList("#face_button_down"));
 		builder.put(VersionHelper.toLoc("controllermod:ps4_linux"), Lists.newArrayList("#face_button_down"));
 		builder.put(VersionHelper.toLoc("controllermod:nintendo_wii_u_pro"), Lists.newArrayList("#face_button_down"));
 	}, InputType.PRESS, UseCase.ANY_SCREEN);
