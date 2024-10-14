@@ -192,11 +192,12 @@ public class ControllerUtil {
 		float[] results = new float[buttonId.size()];
 		main_loop:
 			for (int i = 0; i < results.length; i++) {
-				for (int j = 0; j < controller.getButtons().capacity(); j++)
-					if (buttonId.get(i).equals("button"+j)) {
-						results[i] = controller.getButtons().get(j);
-						continue main_loop;
-					}
+				if (controller.getButtons() != null)
+					for (int j = 0; j < controller.getButtons().capacity(); j++)
+						if (buttonId.get(i).equals("button"+j)) {
+							results[i] = controller.getButtons().get(j);
+							continue main_loop;
+						}
 				for (int j = 0; j < controller.getAxes().capacity(); j++) {
 					List<Integer> triggers0 = controller.getModel().getControllerPositiveTriggers();
 					if (!triggers0.contains(j))
