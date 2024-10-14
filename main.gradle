@@ -50,23 +50,28 @@ publishing {
     }
 }
 
-curseforge {
-    project {
-    	id = "${_curseforge_id}"
-		apiKey = "$System.env.CURSEFORGEKEY"
-		changelog = file('changelog.md')
-		changelogType = "markdown"
-		releaseType = "${_mod_release}"
-		addGameVersion("${_minecraft_version}")
-		addGameVersion("1.21")
-        addGameVersion("${_loader}")
-		relations {
-      		requiredDependency 'unionlib'
-		}
-		mainArtifact(project._mod_jar) {
+publishMods {
+    curseforge {
+        projectId = "${_curseforge_id}"
+        accessToken = "$System.env.CURSEFORGEKEY"
+        changelog = file('changelog.md').text
+        changelogType = "markdown"
+        if ("${_mod_release}" == "release") type = STABLE
+        if ("${_mod_release}" == "beta") type = BETA
+        if ("${_mod_release}" == "alpha") type = ALPHA
+        minecraftVersions.add("${_minecraft_version}")
+		minecraftVersions.add("1.21")
+        modLoaders.add("${_loader}")
+        requires('unionlib')
+        file = project._mod_jar.archiveFile
+        displayName = _mod_name+"-$project.version"
+		/*mainArtifact(project._mod_jar) {
 			displayName = _mod_name+"-$project.version"
-		}
-	}		
+		}*/
+ 
+        if ("${_mod_environment}".contains('client')) clientRequired = true
+        if ("${_mod_environment}".contains('server')) serverRequired = true
+    }
 }
 
 modrinth {
@@ -84,7 +89,7 @@ modrinth {
 }
 
 task uploadToAllSites {
-    dependsOn "curseforge"
+    dependsOn "publishCurseforge"
     dependsOn "modrinth"
     group = "publishing"
 }
