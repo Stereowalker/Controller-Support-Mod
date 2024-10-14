@@ -1,5 +1,6 @@
 package com.stereowalker.controllermod.client.gui.screen;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
@@ -29,7 +30,7 @@ public class ControllerInputOptionsScreen extends DefaultScreen {
 	private ControllerMod mod;
 	private Button buttonReset;
 	private Button buttonModel;
-	static int maxDelay = 20;
+	static int maxDelay = 4;
 
 	public ControllerInputOptionsScreen(Screen previousScreen, ControllerMapping keyToSet, int[] previousInputs) {
 		super(Component.translatable("options.controller_input.title"), previousScreen);
