@@ -1,0 +1,26 @@
+project.ext._mod_jar = remapJar
+
+loom {
+	mixin.defaultRefmapName.set("${_mod_id}.refmap.json")
+	accessWidenerPath = file("src/main/resources/${project._mod_id}.accesswidener")
+	runs {
+		client {runDir "run/${project._loader}-Client"}
+		server {runDir "run/${project._loader}-Server"}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
+}
